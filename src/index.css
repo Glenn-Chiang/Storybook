@@ -5,11 +5,22 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
 }
 
 @layer base {
   body {
-    @apply bg-sky-400;
+    @apply text-sky-500 bg-sky-100 p-8;
+  }
+  h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  button {
+    @apply transition;
+  }
+  section {
+    @apply bg-white;
   }
 }
