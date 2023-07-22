@@ -4,12 +4,17 @@ import {
   faClipboard,
   faEdit,
   faPlus,
-  faXmark,
   faXmarkCircle,
-
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
+import Modal from "./components/Modal";
+import {
+  ConfirmButton,
+  CancelButton,
+  EditButton,
+  DeleteButton,
+} from "./components/buttons";
 
 export default function App() {
   const notes = [
@@ -71,11 +76,7 @@ function AddNoteBox() {
   );
 }
 
-function NoteForm({ note, closeForm }) {
-  const handleConfirm = () => {
-    closeForm();
-  };
-
+function NoteForm({ note, closeForm, onSubmit }) {
   const handleCancel = () => {
     closeForm();
   };
@@ -94,7 +95,7 @@ function NoteForm({ note, closeForm }) {
   );
 
   return (
-    <form className="flex flex-col items-center">
+    <form className="flex flex-col items-center" onSubmit={onSubmit}>
       <div className="flex flex-col gap-4">
         <div className="flex gap-4 flex-col">
           <label htmlFor="title">Title</label>
@@ -119,32 +120,10 @@ function NoteForm({ note, closeForm }) {
         </div>
       </div>
       <div className="flex gap-2 p-4">
-        <ConfirmButton onClick={handleConfirm} />
+        <ConfirmButton />
         <CancelButton onClick={handleCancel} />
       </div>
     </form>
-  );
-}
-
-function ConfirmButton({ onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className="text-white p-2 rounded-xl bg-teal-400 hover:bg-teal-500"
-    >
-      Confirm
-    </button>
-  );
-}
-
-function CancelButton({ onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className="text-white p-2 rounded-xl bg-rose-400 hover:bg-rose-500"
-    >
-      Cancel
-    </button>
   );
 }
 
@@ -194,42 +173,27 @@ function Note({ note }) {
   );
 }
 
-function EditButton({ onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className="bg-sky-400 hover:bg-sky-500 text-white rounded w-8 h-8 flex justify-center items-center"
-    >
-      <FontAwesomeIcon icon={faEdit} />
-    </button>
-  );
-}
-
-function DeleteButton({ onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className="bg-rose-400 text-white rounded w-8 h-8 flex justify-center items-center hover:bg-rose-500"
-    >
-      <FontAwesomeIcon icon={faXmark} />
-    </button>
-  );
-}
-
 function EditModal({ note, closeModal }) {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    
+    closeModal();
+  };
+
   return (
     <Modal>
       <h1 className="p-4 flex items-center gap-2">
         <FontAwesomeIcon icon={faEdit} />
         Edit Note
       </h1>
-      <NoteForm note={note} closeForm={closeModal} />
+      <NoteForm note={note} closeForm={closeModal} onSubmit={handleSubmit} />
     </Modal>
   );
 }
 
 function DeleteModal({ note, closeModal }) {
-  const handleConfirm = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     closeModal();
   };
 
@@ -243,23 +207,15 @@ function DeleteModal({ note, closeModal }) {
         <FontAwesomeIcon icon={faXmarkCircle} />
         Delete Note
       </h1>
-      <p className="text-center">
-        Are you sure you want to delete your note '{note.title}'?
-      </p>
-      <div className="flex gap-2 p-4">
-        <ConfirmButton onClick={handleConfirm} />
-        <CancelButton onClick={handleCancel} />
-      </div>
+      <form onSubmit={handleSubmit}>
+        <p className="text-center">
+          Are you sure you want to delete your note '{note.title}'?
+        </p>
+        <div className="flex gap-2 p-4 justify-center">
+          <ConfirmButton />
+          <CancelButton onClick={handleCancel} />
+        </div>
+      </form>
     </Modal>
-  );
-}
-
-function Modal({ children }) {
-  return (
-    <div className="fixed inset-0 h-screen w-screen bg-sky-950/60 flex items-center">
-      <div className="fixed bg-white w-1/2 inset-x-0 m-auto flex items-center flex-col p-4 rounded-xl border-sky-500 border-2">
-        {children}
-      </div>
-    </div>
   );
 }
