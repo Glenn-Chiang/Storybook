@@ -3,11 +3,20 @@ import Modal from "./Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import PostForm from "./PostForm";
+import postService from "../services/postService";
 
-export default function EditModal({ post, closeModal }) {
-  const handleSubmit = (data) => {
-    const { title, content } = data;
-    const lastUpdated = new Date()
+export default function EditModal({ post, closeModal, setPosts }) {
+
+  const handleSubmit = async (data) => {
+    const lastUpdated = new Date();
+    const updatedPost = { ...data, lastUpdated };
+
+    try {
+      await postService.update(data.id, updatedPost)
+      setPosts(posts => posts.map(post => post.id === data.id ? updatedPost : post));
+    } catch (error) {
+      console.log("Error updating post: ", error);
+    }
     closeModal();
   };
 

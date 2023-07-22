@@ -6,42 +6,34 @@ import {
   faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditButton, DeleteButton } from "./components/buttons";
 import AddPostBox from "./components/AddPostBox";
 import EditModal from "./components/EditModal";
 import DeleteModal from "./components/DeleteModal";
+import postService from "./services/postService";
 
 export default function App() {
-  const posts = [
-    {
-      id: 1,
-      title: "Post 1",
-      content: "some content",
-      dateAdded: new Date(),
-      lastUpdated: new Date(),
-    },
-    {
-      id: 2,
-      title: "Post 2",
-      content: "some other content",
-      dateAdded: new Date(),
-      lastUpdated: new Date(),
-    },
-    {
-      id: 3,
-      title: "Post 3",
-      content: "some other content",
-      dateAdded: new Date(),
-      lastUpdated: new Date(),
-    },
-  ];
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const getPosts = async () => {
+      try {
+        const posts = await postService.getAll()
+        setPosts(posts);
+      } catch (error) {
+        console.log("Error getting posts: ", error);
+      }
+    };
+    getPosts();
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <AddPostBox />
+      <AddPostBox setPosts={setPosts} />
       <h1 className="p-4 text-center">My Posts</h1>
-      <PostsList posts={posts} />
+      <PostsList posts={posts} setPosts={setPosts} />
     </div>
   );
 }
@@ -55,14 +47,14 @@ function Header() {
   );
 }
 
-function PostsList({ posts }) {
+function PostsList({ posts, setPosts }) {
   return (
     <section className="p-4 rounded-xl shadow">
       <ul className="p-4 flex flex-col gap-8">
         {posts.length > 0 ? (
           posts.map((post) => (
             <li key={post.id}>
-              <Post post={post} />
+              <Post post={post} setPosts={setPosts} />
             </li>
           ))
         ) : (
@@ -73,7 +65,7 @@ function PostsList({ posts }) {
   );
 }
 
-function Post({ post }) {
+function Post({ post, setPosts }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -106,12 +98,17 @@ function Post({ post }) {
         <DeleteButton onClick={() => setDeleteModalVisible(true)} />
       </div>
       {editModalVisible && (
-        <EditModal post={post} closeModal={() => setEditModalVisible(false)} />
+        <EditModal
+          post={post}
+          closeModal={() => setEditModalVisible(false)}
+          setPosts={setPosts}
+        />
       )}
       {deleteModalVisible && (
         <DeleteModal
           post={post}
           closeModal={() => setDeleteModalVisible(false)}
+          setPosts={setPosts}
         />
       )}
     </div>

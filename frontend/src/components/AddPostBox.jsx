@@ -1,21 +1,27 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import PostForm from "./PostForm";
+import postService from "../services/postService";
 
-export default function AddPostBox() {
+export default function AddPostBox({ setPosts }) {
   const [showForm, setShowForm] = useState(false);
 
   const handleClick = () => {
     setShowForm(true);
   };
 
-  const handleSubmit = (data) => {
-    const { title, content } = data;
+  const handleSubmit = async (data) => {
     const dateAdded = new Date();
     const lastUpdated = dateAdded;
-    const newPost = { title, content, dateAdded, lastUpdated };
-    console.log(newPost);
+    const newPost = { ...data, dateAdded, lastUpdated };
+    try {
+      const returnedPost = await postService.create(newPost); // returnedPost will have an id while newPost does not
+      setPosts((posts) => [...posts, returnedPost]);
+    } catch (error) {
+      console.log("Error creating post: ", error);
+    }
   };
 
   return (
