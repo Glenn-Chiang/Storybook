@@ -7,6 +7,7 @@ import NoteForm from "./NoteForm";
 export default function EditModal({ note, closeModal }) {
   const handleSubmit = (data) => {
     const { title, content } = data;
+    const lastUpdated = new Date()
     closeModal();
   };
 
