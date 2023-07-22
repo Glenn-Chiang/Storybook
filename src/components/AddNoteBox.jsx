@@ -1,5 +1,7 @@
 import { useState } from "react";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import NoteForm from "./NoteForm";
 
 export default function AddNoteBox() {
     const [showForm, setShowForm] = useState(false);
@@ -8,7 +10,9 @@ export default function AddNoteBox() {
       setShowForm(true);
     };
   
-    const handleSubmit = (data) => {};
+    const handleSubmit = (data) => {
+      const {title, content} = data
+    }
     
     return (
       <section className="p-4 mb-4 rounded-xl shadow flex flex-col items-center w-2/3">

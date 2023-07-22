@@ -1,6 +1,8 @@
 /* eslint-disable react/no-unescaped-entities */
-import Modal from "./components/Modal";
-import { ConfirmButton, CancelButton } from "./components/buttons";
+import Modal from "./Modal";
+import { ConfirmButton, CancelButton } from "./buttons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 
 /* eslint-disable react/prop-types */
 export default function DeleteModal({ note, closeModal }) {

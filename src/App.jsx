@@ -6,7 +6,7 @@ import { useState } from "react";
 import { EditButton, DeleteButton } from "./components/buttons";
 import AddNoteBox from "./components/AddNoteBox";
 import EditModal from "./components/EditModal";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "./components/DeleteModal";
 
 export default function App() {
   const notes = [
