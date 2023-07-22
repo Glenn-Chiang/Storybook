@@ -21,6 +21,6 @@
     @apply transition;
   }
   section {
-    @apply bg-white;
+    @apply bg-white w-96 sm:w-3/4;
   }
 }

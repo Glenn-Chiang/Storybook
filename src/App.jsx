@@ -1,36 +1,47 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-import { faClipboard } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBookReader,
+  faCalendarCheck,
+  faCalendarPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { EditButton, DeleteButton } from "./components/buttons";
-import AddNoteBox from "./components/AddNoteBox";
+import AddPostBox from "./components/AddPostBox";
 import EditModal from "./components/EditModal";
 import DeleteModal from "./components/DeleteModal";
 
 export default function App() {
-  const notes = [
+  const posts = [
     {
       id: 1,
-      title: "Note 1",
+      title: "Post 1",
       content: "some content",
+      dateAdded: new Date(),
+      lastUpdated: new Date(),
     },
     {
       id: 2,
-      title: "Note 2",
+      title: "Post 2",
       content: "some other content",
+      dateAdded: new Date(),
+      lastUpdated: new Date(),
     },
     {
       id: 3,
-      title: "Note 3",
+      title: "Post 3",
       content: "some other content",
+      dateAdded: new Date(),
+      lastUpdated: new Date(),
     },
   ];
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <AddNoteBox />
-      <NotesList notes={notes} />
+      <AddPostBox />
+      <h1 className="p-4 text-center">My Posts</h1>
+      <PostsList posts={posts} />
     </div>
   );
 }
@@ -38,51 +49,68 @@ export default function App() {
 function Header() {
   return (
     <h1 className="text-4xl font-bold p-8 flex gap-4 items-center bg-sky-100 w-screen justify-center">
-      <FontAwesomeIcon icon={faClipboard} />
-      Nodepad
+      <FontAwesomeIcon icon={faBookReader} />
+      StoryBook
     </h1>
   );
 }
 
-function NotesList({ notes }) {
+function PostsList({ posts }) {
   return (
-    <section className="p-4 rounded-xl shadow w-2/3">
-      <h1 className="p-4 text-center">My Notes</h1>
-      <ul className="p-4 flex flex-col gap-4">
-        {notes.length > 0 ? (
-          notes.map((note) => (
-            <li key={note.id}>
-              <Note note={note} />
+    <section className="p-4 rounded-xl shadow">
+      <ul className="p-4 flex flex-col gap-8">
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <li key={post.id}>
+              <Post post={post} />
             </li>
           ))
         ) : (
-          <p className="text-slate-400">You have not added any notes</p>
+          <p className="text-slate-400">You have not added any posts</p>
         )}
       </ul>
     </section>
   );
 }
 
-function Note({ note }) {
+function Post({ post }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   return (
-    <div className="flex justify-between">
-      <div className="flex flex-col items-start">
-        <h2>{note.title}</h2>
-        <p className="text-slate-400">{note.content}</p>
+    <div className="flex justify-between flex-col sm:flex-row gap-4">
+      <div className="flex flex-col items-start gap-2">
+        <h2>{post.title}</h2>
+        <p className="flex gap-4">
+          <span className="flex gap-2 items-center text-slate-400">
+            <FontAwesomeIcon icon={faCalendarPlus} />
+            Date added
+          </span>
+          <span className="text-slate-400">
+            {post.dateAdded.toLocaleString()}
+          </span>
+        </p>
+        <p className="flex gap-4">
+          <span className="flex gap-2 items-center text-slate-400">
+            <FontAwesomeIcon icon={faCalendarCheck} />
+            Last updated{" "}
+          </span>
+          <span className="text-slate-400">
+            {post.lastUpdated.toLocaleString()}
+          </span>
+        </p>
+        <p className="text-sky-600 p-2">{post.content}</p>
       </div>
-      <div className="flex flex-col text-2xl gap-2">
+      <div className="flex sm:flex-col text-2xl gap-2 justify-center">
         <EditButton onClick={() => setEditModalVisible(true)} />
         <DeleteButton onClick={() => setDeleteModalVisible(true)} />
       </div>
       {editModalVisible && (
-        <EditModal note={note} closeModal={() => setEditModalVisible(false)} />
+        <EditModal post={post} closeModal={() => setEditModalVisible(false)} />
       )}
       {deleteModalVisible && (
         <DeleteModal
-          note={note}
+          post={post}
           closeModal={() => setDeleteModalVisible(false)}
         />
       )}
