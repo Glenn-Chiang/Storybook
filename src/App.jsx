@@ -1,22 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-import {
-  faClipboard,
-  faEdit,
-  faPlus,
-  faXmarkCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faClipboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef, useState } from "react";
-import Modal from "./components/Modal";
-import {
-  ConfirmButton,
-  CancelButton,
-  EditButton,
-  DeleteButton,
-} from "./components/buttons";
-import { useForm } from "react-hook-form";
-import ErrorAlert from "./components/errorAlert";
+import { useState } from "react";
+import { EditButton, DeleteButton } from "./components/buttons";
+import AddNoteBox from "./components/AddNoteBox";
+import EditModal from "./components/EditModal";
+import DeleteModal from "./DeleteModal";
 
 export default function App() {
   const notes = [
@@ -51,87 +41,6 @@ function Header() {
       <FontAwesomeIcon icon={faClipboard} />
       Nodepad
     </h1>
-  );
-}
-
-function AddNoteBox() {
-  const [showForm, setShowForm] = useState(false);
-
-  const handleClick = () => {
-    setShowForm(true);
-  };
-
-  const handleSubmit = (data) => {};
-
-  return (
-    <section className="p-4 mb-4 rounded-xl shadow flex flex-col items-center w-2/3">
-      <h1 className="p-4">Add a Note</h1>
-      {showForm ? (
-        <NoteForm
-          closeForm={() => setShowForm(false)}
-          onSubmit={handleSubmit}
-        />
-      ) : (
-        <button
-          onClick={handleClick}
-          className="text-2xl text-white bg-sky-500 shadow-md rounded-xl w-1/6 p-1 hover:bg-sky-600"
-        >
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
-      )}
-    </section>
-  );
-}
-
-function NoteForm({ note, closeForm, onSubmit }) {
-  const handleCancel = () => {
-    closeForm();
-  };
-
-  const {
-    register,
-    handleSubmit,
-    setFocus,
-    formState: { errors },
-  } = useForm();
-
-  useEffect(() => {
-    setFocus("title");
-  }, [setFocus]);
-
-  return (
-    <form
-      className="flex flex-col items-center"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <div className="flex flex-col gap-4">
-        <div className="flex gap-4 flex-col">
-          <label htmlFor="title">Title</label>
-          <input
-            id="title"
-            defaultValue={note ? note.title : ""}
-            {...register("title", { required: "Title is required" })}
-            className="shadow text-slate-400 rounded p-1 "
-          ></input>
-        </div>
-        {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
-
-        <div className="flex gap-4 flex-col">
-          <label htmlFor="content">Content</label>
-          <textarea
-            id="content"
-            defaultValue={note ? note.content : ""}
-            {...register("content", { required: "Content is required" })}
-            className="shadow text-slate-400 rounded p-1 h-40 "
-          ></textarea>
-        </div>
-        {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
-      </div>
-      <div className="flex gap-2 p-4">
-        <ConfirmButton />
-        <CancelButton onClick={handleCancel} />
-      </div>
-    </form>
   );
 }
 
@@ -178,50 +87,5 @@ function Note({ note }) {
         />
       )}
     </div>
-  );
-}
-
-function EditModal({ note, closeModal }) {
-  const handleSubmit = (data) => {
-    closeModal();
-  };
-
-  return (
-    <Modal>
-      <h1 className="p-4 flex items-center gap-2">
-        <FontAwesomeIcon icon={faEdit} />
-        Edit Note
-      </h1>
-      <NoteForm note={note} closeForm={closeModal} onSubmit={handleSubmit} />
-    </Modal>
-  );
-}
-
-function DeleteModal({ note, closeModal }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    closeModal();
-  };
-
-  const handleCancel = () => {
-    closeModal();
-  };
-
-  return (
-    <Modal>
-      <h1 className="p-4 flex items-center gap-2">
-        <FontAwesomeIcon icon={faXmarkCircle} />
-        Delete Note
-      </h1>
-      <form onSubmit={handleSubmit}>
-        <p className="text-center">
-          Are you sure you want to delete your note '{note.title}'?
-        </p>
-        <div className="flex gap-2 p-4 justify-center">
-          <ConfirmButton />
-          <CancelButton onClick={handleCancel} />
-        </div>
-      </form>
-    </Modal>
   );
 }
