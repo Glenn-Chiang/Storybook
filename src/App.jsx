@@ -15,6 +15,8 @@ import {
   EditButton,
   DeleteButton,
 } from "./components/buttons";
+import { useForm } from "react-hook-form";
+import ErrorAlert from "./components/errorAlert";
 
 export default function App() {
   const notes = [
@@ -59,11 +61,16 @@ function AddNoteBox() {
     setShowForm(true);
   };
 
+  const handleSubmit = (data) => {};
+
   return (
     <section className="p-4 mb-4 rounded-xl shadow flex flex-col items-center w-2/3">
       <h1 className="p-4">Add a Note</h1>
       {showForm ? (
-        <NoteForm closeForm={() => setShowForm(false)} />
+        <NoteForm
+          closeForm={() => setShowForm(false)}
+          onSubmit={handleSubmit}
+        />
       ) : (
         <button
           onClick={handleClick}
@@ -81,43 +88,44 @@ function NoteForm({ note, closeForm, onSubmit }) {
     closeForm();
   };
 
-  const inputRef = useRef();
+  const {
+    register,
+    handleSubmit,
+    setFocus,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
-
-  const [titleInputValue, setTitleInputValue] = useState(
-    note ? note.title : ""
-  );
-  const [contentInputValue, setContentInputValue] = useState(
-    note ? note.content : ""
-  );
+    setFocus("title");
+  }, [setFocus]);
 
   return (
-    <form className="flex flex-col items-center" onSubmit={onSubmit}>
+    <form
+      className="flex flex-col items-center"
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <div className="flex flex-col gap-4">
         <div className="flex gap-4 flex-col">
           <label htmlFor="title">Title</label>
           <input
             id="title"
-            name="title"
-            ref={inputRef}
-            value={titleInputValue}
-            onChange={(event) => setTitleInputValue(event.target.value)}
+            defaultValue={note ? note.title : ""}
+            {...register("title", { required: "Title is required" })}
             className="shadow text-slate-400 rounded p-1 "
           ></input>
         </div>
+        {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
+
         <div className="flex gap-4 flex-col">
           <label htmlFor="content">Content</label>
           <textarea
             id="content"
-            name="content"
-            value={contentInputValue}
-            onChange={(event) => setContentInputValue(event.target.value)}
+            defaultValue={note ? note.content : ""}
+            {...register("content", { required: "Content is required" })}
             className="shadow text-slate-400 rounded p-1 h-40 "
           ></textarea>
         </div>
+        {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
       </div>
       <div className="flex gap-2 p-4">
         <ConfirmButton />
@@ -174,9 +182,7 @@ function Note({ note }) {
 }
 
 function EditModal({ note, closeModal }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    
+  const handleSubmit = (data) => {
     closeModal();
   };
 
