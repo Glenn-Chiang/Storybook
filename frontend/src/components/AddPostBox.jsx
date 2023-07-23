@@ -5,7 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import PostForm from "./PostForm";
 import postService from "../services/postService";
 
-export default function AddPostBox({ setPosts }) {
+export default function CreatePostBox({ setPosts }) {
   const [showForm, setShowForm] = useState(false);
 
   const handleClick = () => {
@@ -26,7 +26,7 @@ export default function AddPostBox({ setPosts }) {
 
   return (
     <section className="p-4 mb-4 rounded-xl shadow flex flex-col items-center">
-      <h1 className="p-4">Add a Post</h1>
+      <h1 className="p-4">Create a Post</h1>
       {showForm ? (
         <PostForm
           closeForm={() => setShowForm(false)}

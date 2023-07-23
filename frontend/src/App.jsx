@@ -58,7 +58,7 @@ function PostsList({ posts, setPosts }) {
             </li>
           ))
         ) : (
-          <p className="text-slate-400">You have not added any posts</p>
+          <p className="text-slate-400 text-center">You have not created any posts</p>
         )}
       </ul>
     </section>
