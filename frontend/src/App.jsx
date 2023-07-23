@@ -79,7 +79,7 @@ function Post({ post, setPosts }) {
             Date added
           </span>
           <span className="text-slate-400">
-            {post.dateAdded}
+            {post.dateAdded.toLocaleString()}
           </span>
         </p>
         <p className="flex gap-4">
@@ -88,7 +88,7 @@ function Post({ post, setPosts }) {
             Last updated
           </span>
           <span className="text-slate-400">
-            {post.lastUpdated}
+            {post.lastUpdated.toLocaleString()}
           </span>
         </p>
 

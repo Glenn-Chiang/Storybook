@@ -7,14 +7,14 @@ import { useForm } from "react-hook-form";
 import postService from '../services/postService'
 
 /* eslint-disable react/prop-types */
-export default function DeleteModal({ post, closeModal, setPosts }) {
+export default function DeleteModal({ post: postToDelete, closeModal, setPosts }) {
 
   const {handleSubmit} = useForm()
 
-    const onSubmit = async (data) => {
+    const onSubmit = async () => {
       try {
-        await postService.deletePost(data.id)
-        setPosts(posts => posts.filter(post => post.id !== data.id))
+        await postService.deletePost(postToDelete.id)
+        setPosts(posts => posts.filter(post => post.id !== postToDelete.id))
       } catch (error) {
         console.log('Error deleting post: ', error)
       }
@@ -33,7 +33,7 @@ export default function DeleteModal({ post, closeModal, setPosts }) {
         </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <p className="text-center">
-            Are you sure you want to delete your post '{post.title}'?
+            Are you sure you want to delete your post '{postToDelete.title}'?
           </p>
           <div className="flex gap-2 p-4 justify-center">
             <ConfirmButton />

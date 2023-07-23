@@ -5,17 +5,24 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import PostForm from "./PostForm";
 import postService from "../services/postService";
 
-export default function EditModal({ post, closeModal, setPosts }) {
-
-  const handleSubmit = async (data) => {
+export default function EditModal({ post: postToUpdate, closeModal, setPosts }) {
+  const handleSubmit = async (formData) => {
     const lastUpdated = new Date();
-    const updatedPost = { ...data, lastUpdated };
+    const updatedPost = {
+      id: postToUpdate.id,
+      dateAdded: postToUpdate.dateAdded,
+      title: formData.title,
+      content: formData.content,
+      lastUpdated,
+    };
 
     try {
-      await postService.update(data.id, updatedPost)
-      setPosts(posts => posts.map(post => post.id === data.id ? updatedPost : post));
+      await postService.update(postToUpdate.id, updatedPost);
+      setPosts((posts) =>
+        posts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
+      );
     } catch (error) {
-      console.log("Error updating post: ", error);
+      console.log("Error updating post: ", error.response.data.error);
     }
     closeModal();
   };
@@ -26,7 +33,7 @@ export default function EditModal({ post, closeModal, setPosts }) {
         <FontAwesomeIcon icon={faEdit} />
         Edit Post
       </h1>
-      <PostForm post={post} closeForm={closeModal} onSubmit={handleSubmit} />
+      <PostForm post={postToUpdate} closeForm={closeModal} onSubmit={handleSubmit} />
     </Modal>
   );
 }
