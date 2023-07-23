@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
 const postSchema = new mongoose.Schema({
-  title: String,
-  content: String,
-  dateAdded: Date,
-  lastUpdated: Date,
+  title: {type: String, required: true},
+  content: {type: String, required: true, minLength: 5},
+  dateAdded: {type: Date, required: true},
+  lastUpdated: {type: Date, required: true},
 });
 
 postSchema.set('toJSON', {
