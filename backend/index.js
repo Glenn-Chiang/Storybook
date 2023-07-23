@@ -1,38 +1,24 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const Post = require("./models/post");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const posts = [
-  {
-    id: 1,
-    title: "Post 1",
-    content: "some content",
-    dateAdded: new Date(),
-    lastUpdated: new Date(),
-  },
-  {
-    id: 2,
-    title: "Post 2",
-    content: "some other content",
-    dateAdded: new Date(),
-    lastUpdated: new Date(),
-  },
-  {
-    id: 3,
-    title: "Post 3",
-    content: "some other content",
-    dateAdded: new Date(),
-    lastUpdated: new Date(),
-  },
-];
-
 app.get("/posts", (req, res) => {
-  res.json(posts);
+  Post.find({}).then((posts) => {
+    res.json(posts);
+  });
 });
+
+app.get('/posts/:id', (req, res) => {
+  Post.findById(req.params.id).then(post => {
+    res.json(post)
+  })
+})
 
 app.post("/posts", (req, res) => {
   const body = req.body;
@@ -45,20 +31,16 @@ app.post("/posts", (req, res) => {
     return res.status(400).json({ error: "content missing" });
   }
 
-  const generateId = () => {
-    return Math.random() * 100000000000;
-  };
+  const newPost = new Post({ ...body });
 
-  const id = generateId();
-
-  const newPost = { ...body, id };
-
-  res.json(newPost);
+  newPost.save().then((savedPost) => {
+    res.json(savedPost);
+  });
 });
 
 app.put("/posts/:id", (req, res) => {
   const body = req.body;
-  const id = req.params.id
+  const id = req.params.id;
 
   if (!body.title) {
     return res.status(400).json({ error: "title missing" });
@@ -68,17 +50,15 @@ app.put("/posts/:id", (req, res) => {
     return res.status(400).json({ error: "content missing" });
   }
 
-  res.json
+  res.json;
 });
 
 app.delete("/posts/:id", (req, res) => {
+  const id = Number(req.params.id);
+  res.status(204).end(); // Doesn't return data
+});
 
-  const id = Number(req.params.id)
-  res.status(204).end() // Doesn't return data
-})
-
-const PORT = 3000;
-
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
