@@ -70,16 +70,16 @@ function Post({ post, setPosts }) {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   return (
-    <div className="flex justify-between flex-col sm:flex-row gap-4 shadow p-4 rounded-xl bg-white">
+    <div className="flex justify-between flex-col sm:flex-row gap-4 shadow p-6 rounded-xl bg-white">
       <div className="flex flex-col items-start gap-2 w-full">
-        <h2>{post.title}</h2>
+        <h2 >{post.title}</h2>
         <p className="flex gap-4">
           <span className="flex gap-2 items-center text-slate-400">
             <FontAwesomeIcon icon={faCalendarPlus} />
             Date added
           </span>
           <span className="text-slate-400">
-            {post.dateAdded.toLocaleString()}
+            {(new Date(post.dateAdded)).toLocaleString()}
           </span>
         </p>
         <p className="flex gap-4">
@@ -88,11 +88,11 @@ function Post({ post, setPosts }) {
             Last updated
           </span>
           <span className="text-slate-400">
-            {post.lastUpdated.toLocaleString()}
+            {(new Date(post.lastUpdated)).toLocaleString()}
           </span>
         </p>
 
-        <p className="text-sky-600 w-full p-2 rounded ">{post.content}</p>
+        <p className="text-sky-900/75 w-full py-2 rounded ">{post.content}</p>
 
       </div>
       <div className="flex sm:flex-col text-2xl gap-2 justify-center">
