@@ -33,11 +33,7 @@ app.get("/posts/:id", (req, res, next) => {
 app.post("/posts", (req, res, next) => {
   const body = req.body;
 
-  const newPost = new Post({
-    ...body,
-    dateAdded: new Date(),
-    lastUpdated: new Date(),
-  });
+  const newPost = new Post({ ...body });
 
   newPost
     .save()
@@ -50,11 +46,11 @@ app.post("/posts", (req, res, next) => {
 app.put("/posts/:id", (req, res, next) => {
   const body = req.body;
 
-  const post = { ...body, lastUpdated: new Date() };
+  const post = { ...body };
 
   Post.findByIdAndUpdate(req.params.id, post, {
     new: true,
-    runValidators: true, // Validation is not run by default 
+    runValidators: true, // Validation is not run by default
     context: "query",
   })
     .then((updatedPost) => res.json(updatedPost))

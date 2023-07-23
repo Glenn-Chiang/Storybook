@@ -9,7 +9,7 @@ import postService from '../services/postService'
 /* eslint-disable react/prop-types */
 export default function DeleteModal({ post, closeModal, setPosts }) {
 
-  const [handleSubmit] = useForm()
+  const {handleSubmit} = useForm()
 
     const onSubmit = async (data) => {
       try {

@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { EditButton, DeleteButton } from "./components/buttons";
-import AddPostBox from "./components/AddPostBox";
+import CreatePostBox from "./components/CreatePostBox";
 import EditModal from "./components/EditModal";
 import DeleteModal from "./components/DeleteModal";
 import postService from "./services/postService";
@@ -31,8 +31,8 @@ export default function App() {
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <AddPostBox setPosts={setPosts} />
-      <h1 className="p-4 text-center">My Posts</h1>
+      <CreatePostBox setPosts={setPosts} />
+      <h1 className="p-8 text-center">My Posts</h1>
       <PostsList posts={posts} setPosts={setPosts} />
     </div>
   );
@@ -49,8 +49,8 @@ function Header() {
 
 function PostsList({ posts, setPosts }) {
   return (
-    <section className="p-4 rounded-xl shadow">
-      <ul className="p-4 flex flex-col gap-8">
+    <section className="">
+      <ul className="flex flex-col gap-8">
         {posts.length > 0 ? (
           posts.map((post) => (
             <li key={post.id}>
@@ -70,8 +70,8 @@ function Post({ post, setPosts }) {
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   return (
-    <div className="flex justify-between flex-col sm:flex-row gap-4">
-      <div className="flex flex-col items-start gap-2">
+    <div className="flex justify-between flex-col sm:flex-row gap-4 shadow p-4 rounded-xl bg-white">
+      <div className="flex flex-col items-start gap-2 w-full">
         <h2>{post.title}</h2>
         <p className="flex gap-4">
           <span className="flex gap-2 items-center text-slate-400">
@@ -79,19 +79,21 @@ function Post({ post, setPosts }) {
             Date added
           </span>
           <span className="text-slate-400">
-            {post.dateAdded.toLocaleString()}
+            {post.dateAdded}
           </span>
         </p>
         <p className="flex gap-4">
           <span className="flex gap-2 items-center text-slate-400">
             <FontAwesomeIcon icon={faCalendarCheck} />
-            Last updated{" "}
+            Last updated
           </span>
           <span className="text-slate-400">
-            {post.lastUpdated.toLocaleString()}
+            {post.lastUpdated}
           </span>
         </p>
-        <p className="text-sky-600 p-2">{post.content}</p>
+
+        <p className="text-sky-600 w-full p-2 rounded ">{post.content}</p>
+
       </div>
       <div className="flex sm:flex-col text-2xl gap-2 justify-center">
         <EditButton onClick={() => setEditModalVisible(true)} />

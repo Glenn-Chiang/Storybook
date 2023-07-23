@@ -19,13 +19,14 @@ export default function CreatePostBox({ setPosts }) {
     try {
       const returnedPost = await postService.create(newPost); // returnedPost will have an id while newPost does not
       setPosts((posts) => [...posts, returnedPost]);
+      setShowForm(false)
     } catch (error) {
       console.log("Error creating post: ", error);
     }
   };
 
   return (
-    <section className="p-4 mb-4 rounded-xl shadow flex flex-col items-center">
+    <section className="p-4 mb-4 rounded-xl shadow flex flex-col items-center bg-white">
       <h1 className="p-4">Create a Post</h1>
       {showForm ? (
         <PostForm

@@ -32,7 +32,7 @@ export default function PostForm({ post, closeForm, onSubmit }) {
             id="title"
             defaultValue={post ? post.title : ""}
             {...register("title", { required: "Title is required" })}
-            className="shadow text-slate-400 rounded p-2 w-80"
+            className="shadow text-slate-500 rounded p-2 w-80"
           ></input>
         </div>
         {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
@@ -42,8 +42,14 @@ export default function PostForm({ post, closeForm, onSubmit }) {
           <textarea
             id="content"
             defaultValue={post ? post.content : ""}
-            {...register("content", { required: "Content is required" })}
-            className="shadow text-slate-400 rounded p-2 h-40 w-80"
+            {...register("content", {
+              required: "Content is required",
+              minLength: {
+                value: 5,
+                message: "Content must have at least 5 characters",
+              },
+            })}
+            className="shadow text-slate-500 rounded p-2 h-40 w-80"
           ></textarea>
         </div>
         {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
