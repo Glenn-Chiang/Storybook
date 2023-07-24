@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import {
-  faBookReader,
   faCalendarCheck,
   faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
@@ -12,39 +11,55 @@ import CreatePostBox from "./components/CreatePostBox";
 import EditModal from "./components/EditModal";
 import DeleteModal from "./components/DeleteModal";
 import postService from "./services/postService";
+import Header from "./components/Header";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
 
+  const sortOrders = ['newest', 'oldest']
+  const [sortOrder, setSortOrder] = useState(sortOrders[0])
+
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const posts = await postService.getAll()
+        const posts = await postService.getAll(sortOrder)
         setPosts(posts);
       } catch (error) {
         console.log("Error getting posts: ", error);
       }
     };
     getPosts();
-  }, []);
+  }, [sortOrder]);
 
   return (
     <div className="flex flex-col items-center">
       <Header />
       <CreatePostBox setPosts={setPosts} />
       <h1 className="p-8 text-center">My Posts</h1>
+      <Dropdown options={sortOrders} setOption={option => setSortOrder(option)} />
       <PostsList posts={posts} setPosts={setPosts} />
     </div>
   );
 }
 
-function Header() {
+function Dropdown({ options, setOption }) {
+  const handleChange = event => {
+    setOption(event.target.value)
+  }
   return (
-    <h1 className="text-4xl font-bold p-8 flex gap-4 items-center bg-sky-100 w-screen justify-center">
-      <FontAwesomeIcon icon={faBookReader} />
-      StoryBook
-    </h1>
-  );
+    <div className="flex gap-2 ">
+      <label htmlFor="sortDropdown">Sort by</label>
+      <select onChange={handleChange} id="sortDropdown" className="capitalize">
+        {options.map((option, index) => {
+          return (
+            <option key={index} value={option}>
+              {option}
+            </option>
+          )
+        })}
+      </select>
+    </div>
+  )
 }
 
 function PostsList({ posts, setPosts }) {

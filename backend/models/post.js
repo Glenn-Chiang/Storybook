@@ -24,7 +24,7 @@ async function main() {
   console.log('Connecting to MongoDB...')
   try {
     await mongoose.connect(url);
-    console.log('Connected to MongoDB')
+    console.log(`Connected to MongoDB at ${url}` )
   } catch(error) {
     console.log('Error connecting to MongoDB:', error.message)
   }
