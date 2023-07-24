@@ -6,6 +6,7 @@ import postService from "./services/postService";
 import Header from "./components/Header";
 import PostsList from "./components/PostsList";
 import Dropdown from "./components/Dropdown";
+import Paginator from "./components/Paginator";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
@@ -46,7 +47,29 @@ export default function App() {
   const filteredPosts = posts.filter((post) =>
     post[filterField].toLowerCase().includes(filterTerms.toLowerCase())
   );
-  const displayedPosts = filterTerms ? filteredPosts : posts;
+
+  const postsPerPage = 10;
+  const [startIndex, setStartIndex] = useState(0);
+  const currentPage = Math.floor(startIndex / postsPerPage) + 1;
+  const numPages = Math.ceil(filteredPosts.length / postsPerPage);
+
+  const handlePrev = () => {
+    if (startIndex === 0) {
+      return;
+    }
+    setStartIndex((prev) => prev - postsPerPage);
+  };
+
+  const handleNext = () => {
+    if (startIndex + postsPerPage >= filteredPosts.length) {
+      return;
+    }
+    setStartIndex((prev) => prev + postsPerPage);
+  };
+
+  const displayedPosts = filterTerms
+    ? filteredPosts.slice(startIndex, startIndex + postsPerPage)
+    : posts.slice(startIndex, startIndex + postsPerPage);
 
   const topRef = useRef(null);
 
@@ -78,6 +101,13 @@ export default function App() {
         <Filterbar setFilterTerms={setFilterTerms} />
       </div>
 
+      <Paginator
+        currentPage={currentPage}
+        numPages={numPages}
+        handlePrev={handlePrev}
+        handleNext={handleNext}
+      />
+
       {posts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">
           You have not created any posts
@@ -87,6 +117,14 @@ export default function App() {
       ) : (
         <PostsList posts={displayedPosts} setPosts={getPosts} />
       )}
+
+      <Paginator
+        currentPage={currentPage}
+        numPages={numPages}
+        handlePrev={handlePrev}
+        handleNext={handleNext}
+      />
+
       <TeleportButton forwardedRef={topRef} />
     </div>
   );
@@ -118,7 +156,7 @@ function Filterbar({ setFilterTerms }) {
     <div className="">
       <input
         onChange={handleChange}
-        className="rounded-xl p-2 shadow w-80 sm:w-96"
+        className="rounded-xl p-2 shadow w-80 sm:w-96 text-slate-500"
       />
     </div>
   );
