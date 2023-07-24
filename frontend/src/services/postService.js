@@ -1,8 +1,8 @@
 import axios from "axios";
 const baseUrl = "http://localhost:3000/posts";
 
-const getAll = async (sortOrder) => {
-  const response = await axios.get(`${baseUrl}?sort=${sortOrder}`);
+const getAll = async (sortBy, sortOrder) => {
+  const response = await axios.get(`${baseUrl}?sortBy=${sortBy}&sortOrder=${sortOrder}`);
   return response.data;
 };
 

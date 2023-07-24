@@ -16,44 +16,49 @@ import Header from "./components/Header";
 export default function App() {
   const [posts, setPosts] = useState([]);
 
-  const sortOrders = ['newest', 'oldest']
-  const [sortOrder, setSortOrder] = useState(sortOrders[0])
+  const sortFields = [{ value: 'dateAdded', label: 'Date added' }, { value: 'lastUpdated', label: 'Last updated' }]
+  const sortOrders = [{value: 'desc', label: 'newest'}, {value: 'asc', label: 'oldest'}]
+  const [sortBy, setSortBy] = useState(sortFields[0].value)
+  const [sortOrder, setSortOrder] = useState(sortOrders[0].value)
 
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const posts = await postService.getAll(sortOrder)
+        const posts = await postService.getAll(sortBy, sortOrder)
         setPosts(posts);
       } catch (error) {
         console.log("Error getting posts: ", error);
       }
     };
     getPosts();
-  }, [sortOrder]);
+  }, [sortBy, sortOrder]);
 
   return (
     <div className="flex flex-col items-center">
       <Header />
       <CreatePostBox setPosts={setPosts} />
       <h1 className="p-8 text-center">My Posts</h1>
-      <Dropdown options={sortOrders} setOption={option => setSortOrder(option)} />
+      <div className="flex gap-4 p-4">
+        <Dropdown label={'Sort by'} options={sortFields} setOption={option => setSortBy(option)} />
+        <Dropdown label={'Sort order'} options={sortOrders} setOption={option => setSortOrder(option)} />
+      </div>
       <PostsList posts={posts} setPosts={setPosts} />
     </div>
   );
 }
 
-function Dropdown({ options, setOption }) {
+function Dropdown({ label, options, setOption }) {
   const handleChange = event => {
     setOption(event.target.value)
   }
   return (
     <div className="flex gap-2 ">
-      <label htmlFor="sortDropdown">Sort by</label>
-      <select onChange={handleChange} id="sortDropdown" className="capitalize">
+      <label htmlFor="sortDropdown">{label}</label>
+      <select onChange={handleChange} id="sortDropdown" className="capitalize rounded">
         {options.map((option, index) => {
           return (
-            <option key={index} value={option}>
-              {option}
+            <option key={index} value={option.value}>
+              {option.label}
             </option>
           )
         })}
@@ -73,7 +78,7 @@ function PostsList({ posts, setPosts }) {
             </li>
           ))
         ) : (
-          <p className="text-slate-400 text-center">You have not created any posts</p>
+          <p className="text-slate-400 text-center p-4">You have not created any posts</p>
         )}
       </ul>
     </section>

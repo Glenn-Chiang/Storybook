@@ -9,7 +9,9 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/posts", (req, res, next) => {
-  Post.find({})
+  const sortBy = req.query.sortBy // dateAdded or lastUpdated
+  const sortOrder = req.query.sortOrder // newest or oldest
+  Post.find({}).sort({ [sortBy]: sortOrder})
     .then((posts) => {
       res.json(posts);
     })
