@@ -14,7 +14,7 @@ export default function DeleteModal({ post: postToDelete, closeModal, setPosts }
     const onSubmit = async () => {
       try {
         await postService.deletePost(postToDelete.id)
-        setPosts(posts => posts.filter(post => post.id !== postToDelete.id))
+        setPosts()
       } catch (error) {
         console.log('Error deleting post: ', error)
       }

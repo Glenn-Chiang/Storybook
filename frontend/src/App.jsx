@@ -5,7 +5,7 @@ import {
   faCalendarPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { EditButton, DeleteButton } from "./components/buttons";
 import CreatePostBox from "./components/CreatePostBox";
 import EditModal from "./components/EditModal";
@@ -17,32 +17,33 @@ export default function App() {
   const [posts, setPosts] = useState([]);
 
   const sortFields = [{ value: 'dateAdded', label: 'Date added' }, { value: 'lastUpdated', label: 'Last updated' }]
-  const sortOrders = [{value: 'desc', label: 'newest'}, {value: 'asc', label: 'oldest'}]
+  const sortOrders = [{ value: 'desc', label: 'newest' }, { value: 'asc', label: 'oldest' }]
   const [sortBy, setSortBy] = useState(sortFields[0].value)
   const [sortOrder, setSortOrder] = useState(sortOrders[0].value)
 
-  useEffect(() => {
-    const getPosts = async () => {
-      try {
-        const posts = await postService.getAll(sortBy, sortOrder)
-        setPosts(posts);
-      } catch (error) {
-        console.log("Error getting posts: ", error);
-      }
-    };
-    getPosts();
+  const getPosts = useCallback(async () => {
+    try {
+      const posts = await postService.getAll(sortBy, sortOrder)
+      setPosts(posts);
+    } catch (error) {
+      console.log("Error getting posts: ", error);
+    }
   }, [sortBy, sortOrder]);
+
+  useEffect(() => {
+    getPosts();
+  }, [getPosts]);
 
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <CreatePostBox setPosts={setPosts} />
+      <CreatePostBox setPosts={getPosts} />
       <h1 className="p-8 text-center">My Posts</h1>
       <div className="flex gap-4 p-4">
         <Dropdown label={'Sort by'} options={sortFields} setOption={option => setSortBy(option)} />
         <Dropdown label={'Sort order'} options={sortOrders} setOption={option => setSortOrder(option)} />
       </div>
-      <PostsList posts={posts} setPosts={setPosts} />
+      <PostsList posts={posts} setPosts={getPosts} />
     </div>
   );
 }
@@ -70,7 +71,7 @@ function Dropdown({ label, options, setOption }) {
 function PostsList({ posts, setPosts }) {
   return (
     <section className="">
-      <ul className="flex flex-col gap-8">
+      <ul className="flex flex-col gap-8 pt-4">
         {posts.length > 0 ? (
           posts.map((post) => (
             <li key={post.id}>

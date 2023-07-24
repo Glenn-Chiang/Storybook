@@ -18,9 +18,7 @@ export default function EditModal({ post: postToUpdate, closeModal, setPosts }) 
 
     try {
       await postService.update(postToUpdate.id, updatedPost);
-      setPosts((posts) =>
-        posts.map((post) => (post.id === updatedPost.id ? updatedPost : post))
-      );
+      setPosts();
     } catch (error) {
       console.log("Error updating post: ", error.response.data.error);
     }

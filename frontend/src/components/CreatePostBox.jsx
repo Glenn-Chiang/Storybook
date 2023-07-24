@@ -17,8 +17,8 @@ export default function CreatePostBox({ setPosts }) {
     const lastUpdated = dateAdded;
     const newPost = { ...data, dateAdded, lastUpdated };
     try {
-      const returnedPost = await postService.create(newPost); // returnedPost will have an id while newPost does not
-      setPosts((posts) => [...posts, returnedPost]);
+      await postService.create(newPost); // returnedPost will have an id while newPost does not
+      setPosts();
       setShowForm(false)
     } catch (error) {
       console.log("Error creating post: ", error);
