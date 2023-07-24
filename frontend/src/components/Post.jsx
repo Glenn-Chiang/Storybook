@@ -20,7 +20,7 @@ export default function Post({ post, setPosts }) {
         <p className="flex gap-4">
           <span className="flex gap-2 items-center text-slate-400">
             <FontAwesomeIcon icon={faCalendarPlus} />
-            Date added
+            Date posted
           </span>
           <span className="text-slate-400">
             {(new Date(post.dateAdded)).toLocaleString()}

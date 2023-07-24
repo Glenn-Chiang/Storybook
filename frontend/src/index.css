@@ -21,6 +21,6 @@
     @apply transition;
   }
   section {
-    @apply  w-96 sm:w-4/5;
+    @apply  w-11/12 sm:w-4/5;
   }
 }
