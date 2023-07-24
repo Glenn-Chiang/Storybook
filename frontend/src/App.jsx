@@ -1,17 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-import {
-  faCalendarCheck,
-  faCalendarPlus,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState, useCallback } from "react";
-import { EditButton, DeleteButton } from "./components/buttons";
 import CreatePostBox from "./components/CreatePostBox";
-import EditModal from "./components/EditModal";
-import DeleteModal from "./components/DeleteModal";
 import postService from "./services/postService";
 import Header from "./components/Header";
+import PostsList from './components/PostsList'
 
 export default function App() {
   const [posts, setPosts] = useState([]);
@@ -34,6 +27,14 @@ export default function App() {
     getPosts();
   }, [getPosts]);
 
+  const filterFields = [{ label: 'Title', value: 'title' }, { label: 'Content', value: 'content' }]
+  const [filterField, setFilterField] = useState(filterFields[0].value)
+  const [filterTerms, setFilterTerms] = useState('')
+
+  const filteredPosts = posts.filter(post => post[filterField].toLowerCase().includes(filterTerms.toLowerCase()))
+
+  const displayedPosts = filterTerms ? filteredPosts : posts
+
   return (
     <div className="flex flex-col items-center">
       <Header />
@@ -43,9 +44,24 @@ export default function App() {
         <Dropdown label={'Sort by'} options={sortFields} setOption={option => setSortBy(option)} />
         <Dropdown label={'Sort order'} options={sortOrders} setOption={option => setSortOrder(option)} />
       </div>
-      <PostsList posts={posts} setPosts={getPosts} />
+      <div className="flex gap-4 p-4">
+        <Dropdown label={'Filter by'} options={filterFields} setOption={option => setFilterField(option)} />
+        <Filterbar setFilterTerms={setFilterTerms} />
+      </div>
+      <PostsList posts={displayedPosts} setPosts={getPosts} />
     </div>
   );
+}
+
+function Filterbar({ setFilterTerms }) {
+  const handleChange = event => {
+    setFilterTerms(event.target.value)
+  }
+  return (
+    <div>
+      <input onChange={handleChange} className="rounded-xl p-2 shadow w-96"/>
+    </div>
+  )
 }
 
 function Dropdown({ label, options, setOption }) {
@@ -53,9 +69,9 @@ function Dropdown({ label, options, setOption }) {
     setOption(event.target.value)
   }
   return (
-    <div className="flex gap-2 ">
+    <div className="flex gap-2 items-center">
       <label htmlFor="sortDropdown">{label}</label>
-      <select onChange={handleChange} id="sortDropdown" className="capitalize rounded">
+      <select onChange={handleChange} id="sortDropdown" className="capitalize rounded-xl p-2 shadow">
         {options.map((option, index) => {
           return (
             <option key={index} value={option.value}>
@@ -68,72 +84,4 @@ function Dropdown({ label, options, setOption }) {
   )
 }
 
-function PostsList({ posts, setPosts }) {
-  return (
-    <section className="">
-      <ul className="flex flex-col gap-8 pt-4">
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <li key={post.id}>
-              <Post post={post} setPosts={setPosts} />
-            </li>
-          ))
-        ) : (
-          <p className="text-slate-400 text-center p-4">You have not created any posts</p>
-        )}
-      </ul>
-    </section>
-  );
-}
 
-function Post({ post, setPosts }) {
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
-  return (
-    <div className="flex justify-between flex-col sm:flex-row gap-4 shadow p-6 rounded-xl bg-white">
-      <div className="flex flex-col items-start gap-2 w-full">
-        <h2 >{post.title}</h2>
-        <p className="flex gap-4">
-          <span className="flex gap-2 items-center text-slate-400">
-            <FontAwesomeIcon icon={faCalendarPlus} />
-            Date added
-          </span>
-          <span className="text-slate-400">
-            {(new Date(post.dateAdded)).toLocaleString()}
-          </span>
-        </p>
-        <p className="flex gap-4">
-          <span className="flex gap-2 items-center text-slate-400">
-            <FontAwesomeIcon icon={faCalendarCheck} />
-            Last updated
-          </span>
-          <span className="text-slate-400">
-            {(new Date(post.lastUpdated)).toLocaleString()}
-          </span>
-        </p>
-
-        <p className="text-sky-900/75 w-full py-2 rounded ">{post.content}</p>
-
-      </div>
-      <div className="flex sm:flex-col text-2xl gap-2 justify-center">
-        <EditButton onClick={() => setEditModalVisible(true)} />
-        <DeleteButton onClick={() => setDeleteModalVisible(true)} />
-      </div>
-      {editModalVisible && (
-        <EditModal
-          post={post}
-          closeModal={() => setEditModalVisible(false)}
-          setPosts={setPosts}
-        />
-      )}
-      {deleteModalVisible && (
-        <DeleteModal
-          post={post}
-          closeModal={() => setDeleteModalVisible(false)}
-          setPosts={setPosts}
-        />
-      )}
-    </div>
-  );
-}
