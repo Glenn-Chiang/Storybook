@@ -4,8 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import PostForm from "./PostForm";
 import postService from "../services/postService";
+import { useContext } from "react";
+import { PostContext } from "./Post/PostContext";
 
-export default function EditModal({ post: postToUpdate, closeModal, setPosts }) {
+export default function EditModal({ closeModal, setPosts }) {
+  const postToUpdate = useContext(PostContext)
+
   const handleSubmit = async (formData) => {
     const lastUpdated = new Date();
     const updatedPost = {

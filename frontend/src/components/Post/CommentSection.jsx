@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CancelButton, ConfirmButton } from "../buttons";
 import { useForm } from "react-hook-form";
 import ErrorAlert from "../errorAlert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import commentService from '../../services/commentService'
+import { PostContext } from "./PostContext";
 
 export default function CommentSection() {
   const comments = [
@@ -53,6 +55,8 @@ export default function CommentSection() {
 }
 
 function CommentForm({closeForm}) {
+  const post = useContext(PostContext)
+
   const handleCancel = () => {
     closeForm();
   };
@@ -63,12 +67,16 @@ function CommentForm({closeForm}) {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     const comment = {
       content: formData.content
     }
-    console.log(comment)
-    closeForm()
+    try {
+      await commentService.create(post.id, comment)
+      closeForm()
+    } catch (error) {
+      console.log('Error posting comment: ', error)
+    }
   };
 
   return (

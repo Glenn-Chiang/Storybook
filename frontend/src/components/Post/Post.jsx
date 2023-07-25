@@ -12,6 +12,7 @@ import DeleteModal from "../DeleteModal";
 import { useState } from "react";
 import postService from "../../services/postService";
 import CommentSection from "./CommentSection";
+import {PostContext} from './PostContext'
 
 export default function Post({ post, setPosts }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -29,62 +30,60 @@ export default function Post({ post, setPosts }) {
   };
 
   return (
-    <div className="flex justify-between flex-col gap-4 shadow p-6 rounded-xl bg-white">
-      <div className="flex gap-4 sm:flex-row flex-col">
-        <div className="flex flex-col items-start gap-2 w-full">
-          <h2>{post.title}</h2>
-          <p className="flex gap-4">
-            <span className="flex gap-2 items-center text-slate-400">
-              <FontAwesomeIcon icon={faCalendarPlus} />
-              Date posted
-            </span>
-            <span className="text-slate-400">
-              {new Date(post.dateAdded).toLocaleString()}
-            </span>
-          </p>
-          <p className="flex gap-4">
-            <span className="flex gap-2 items-center text-slate-400">
-              <FontAwesomeIcon icon={faCalendarCheck} />
-              Last updated
-            </span>
-            <span className="text-slate-400">
-              {new Date(post.lastUpdated).toLocaleString()}
-            </span>
-          </p>
-          <p className="text-sky-900/75 w-full py-2 rounded ">{post.content}</p>
-        </div>
-        <div className="flex sm:flex-col-reverse sm:gap-4 justify-between items-end">
-          <div className="flex sm:flex-col gap-2 text-xl">
-            <LikeButton onClick={likePost} likeCount={10} />
-            <CommentButton
-              onClick={() => setCommentsVisible((prev) => !prev)}
-              commentCount={5}
-            />
+    <PostContext.Provider value={post}>
+      <div className="flex justify-between flex-col gap-4 shadow p-6 rounded-xl bg-white">
+        <div className="flex gap-4 sm:flex-row flex-col">
+          <div className="flex flex-col items-start gap-2 w-full">
+            <h2>{post.title}</h2>
+            <p className="flex gap-4">
+              <span className="flex gap-2 items-center text-slate-400">
+                <FontAwesomeIcon icon={faCalendarPlus} />
+                Date posted
+              </span>
+              <span className="text-slate-400">
+                {new Date(post.dateAdded).toLocaleString()}
+              </span>
+            </p>
+            <p className="flex gap-4">
+              <span className="flex gap-2 items-center text-slate-400">
+                <FontAwesomeIcon icon={faCalendarCheck} />
+                Last updated
+              </span>
+              <span className="text-slate-400">
+                {new Date(post.lastUpdated).toLocaleString()}
+              </span>
+            </p>
+            <p className="text-sky-900/75 w-full py-2 rounded ">{post.content}</p>
           </div>
-          <div className="flex sm:flex-col text-xl gap-2 justify-center">
-            <EditButton onClick={() => setEditModalVisible(true)} />
-            <DeleteButton onClick={() => setDeleteModalVisible(true)} />
+          <div className="flex sm:flex-col-reverse sm:gap-4 justify-between items-end">
+            <div className="flex sm:flex-col gap-2 text-xl">
+              <LikeButton onClick={likePost} likeCount={10} />
+              <CommentButton
+                onClick={() => setCommentsVisible((prev) => !prev)}
+                commentCount={5}
+              />
+            </div>
+            <div className="flex sm:flex-col text-xl gap-2 justify-center">
+              <EditButton onClick={() => setEditModalVisible(true)} />
+              <DeleteButton onClick={() => setDeleteModalVisible(true)} />
+            </div>
           </div>
         </div>
+        {commentsVisible && <CommentSection/>}
+        {editModalVisible && (
+          <EditModal
+            closeModal={() => setEditModalVisible(false)}
+            setPosts={setPosts}
+          />
+        )}
+        {deleteModalVisible && (
+          <DeleteModal
+            closeModal={() => setDeleteModalVisible(false)}
+            setPosts={setPosts}
+          />
+        )}
       </div>
-
-      {commentsVisible && <CommentSection comments={post.comments} />}
-
-      {editModalVisible && (
-        <EditModal
-          post={post}
-          closeModal={() => setEditModalVisible(false)}
-          setPosts={setPosts}
-        />
-      )}
-      {deleteModalVisible && (
-        <DeleteModal
-          post={post}
-          closeModal={() => setDeleteModalVisible(false)}
-          setPosts={setPosts}
-        />
-      )}
-    </div>
+    </PostContext.Provider>
   );
 }
 
