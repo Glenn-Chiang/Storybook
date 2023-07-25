@@ -36,7 +36,7 @@ export default function DeleteModal({ post: postToDelete, closeModal, setPosts }
             Are you sure you want to delete your post '{postToDelete.title}'?
           </p>
           <div className="flex gap-2 p-4 justify-center">
-            <ConfirmButton />
+            <ConfirmButton>Confirm</ConfirmButton>
             <CancelButton onClick={handleCancel} />
           </div>
         </form>

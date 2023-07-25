@@ -2,10 +2,10 @@
 import { faEdit, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function ConfirmButton() {
+export function ConfirmButton({children}) {
   return (
-    <button className="text-white p-2 rounded-xl bg-teal-400 hover:bg-teal-500">
-      Confirm
+    <button className="shadow text-white p-2 rounded-xl bg-teal-400 hover:bg-teal-500 w-max">
+      {children}
     </button>
   );
 }
@@ -15,7 +15,7 @@ export function CancelButton({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="text-white p-2 rounded-xl bg-rose-400 hover:bg-rose-500"
+      className="text-white p-2 rounded-xl bg-rose-400 hover:bg-rose-500 shadow"
     >
       Cancel
     </button>

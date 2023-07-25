@@ -32,7 +32,7 @@ export default function PostForm({ post, closeForm, onSubmit }) {
             id="title"
             defaultValue={post ? post.title : ""}
             {...register("title", { required: "Title is required" })}
-            className="shadow text-slate-500 rounded p-2 w-80"
+            className="shadow bg-slate-100 text-slate-500 rounded p-2 w-80"
           ></input>
         </div>
         {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
@@ -46,16 +46,16 @@ export default function PostForm({ post, closeForm, onSubmit }) {
               required: "Content is required",
               minLength: {
                 value: 5,
-                message: "Content must have at least 5 characters",
+                message: "Content must contain at least 5 characters",
               },
             })}
-            className="shadow text-slate-500 rounded p-2 h-40 w-80"
+            className="shadow bg-slate-100 text-slate-500 rounded p-2 h-40 w-80"
           ></textarea>
         </div>
         {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
       </div>
       <div className="flex gap-2 p-4">
-        <ConfirmButton />
+        <ConfirmButton>Confirm</ConfirmButton>
         <CancelButton onClick={handleCancel} />
       </div>
     </form>

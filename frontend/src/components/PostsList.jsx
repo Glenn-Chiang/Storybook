@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import Post from './Post'
+import Post from './Post/Post'
 
 export default function PostsList({ posts, setPosts }) {
   return (

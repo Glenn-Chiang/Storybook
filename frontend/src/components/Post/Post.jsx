@@ -6,19 +6,26 @@ import {
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { EditButton, DeleteButton } from "./buttons";
-import EditModal from "./EditModal";
-import DeleteModal from "./DeleteModal";
+import { EditButton, DeleteButton } from "../buttons";
+import EditModal from "../EditModal";
+import DeleteModal from "../DeleteModal";
 import { useState } from "react";
+import postService from "../../services/postService";
+import CommentSection from "./CommentSection";
 
 export default function Post({ post, setPosts }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
 
-  const likePost = () => {
+  const likePost = async () => {
     const updatedPost = { ...post, likes: post.likes + 1 };
-    return;
+    try {
+      await postService.update(post.id, updatedPost)
+      setPosts()
+    } catch (error) {
+      console.log('Error liking post: ', error)
+    }
   };
 
   return (
@@ -46,7 +53,7 @@ export default function Post({ post, setPosts }) {
           </p>
           <p className="text-sky-900/75 w-full py-2 rounded ">{post.content}</p>
         </div>
-        <div className="flex sm:flex-col-reverse justify-between items-end">
+        <div className="flex sm:flex-col-reverse sm:gap-4 justify-between items-end">
           <div className="flex sm:flex-col gap-2 text-xl">
             <LikeButton onClick={likePost} likeCount={10} />
             <CommentButton
@@ -81,50 +88,13 @@ export default function Post({ post, setPosts }) {
   );
 }
 
-function CommentSection() {
-  const comments = [
-    {
-      author: "Homelander",
-      content: "God Bless America!",
-    },
-    {
-      author: "The Deep",
-      content: "I'm going to renew my light",
-    },
-  ];
-  return (
-    <div>
-      <h2 className="py-4">Comments</h2>
-      {comments?.length > 0 ? (
-        <ul className="flex flex-col gap-4">
-          {comments.map((comment, index) => (
-            <li key={index}>
-              <Comment comment={comment} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No comments</p>
-      )}
-    </div>
-  );
-}
-
-function Comment({ comment }) {
-  return (
-    <div>
-      <p>{comment.author}</p>
-      <p className="text-slate-500">{comment.content}</p>
-    </div>
-  );
-}
 
 function LikeButton({ onClick, likeCount }) {
   return (
     <div className="flex sm:flex-row-reverse gap-1">
       <button
         onClick={onClick}
-        className="text-white bg-sky-500 hover:bg-sky-600 w-8 h-8 rounded-xl"
+        className="text-white bg-sky-500 hover:bg-teal-400 w-8 h-8 rounded-xl"
       >
         <FontAwesomeIcon icon={faArrowUp} />
       </button>

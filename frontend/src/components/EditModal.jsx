@@ -9,8 +9,7 @@ export default function EditModal({ post: postToUpdate, closeModal, setPosts }) 
   const handleSubmit = async (formData) => {
     const lastUpdated = new Date();
     const updatedPost = {
-      id: postToUpdate.id,
-      dateAdded: postToUpdate.dateAdded,
+      ...postToUpdate,
       title: formData.title,
       content: formData.content,
       lastUpdated,
@@ -20,7 +19,7 @@ export default function EditModal({ post: postToUpdate, closeModal, setPosts }) 
       await postService.update(postToUpdate.id, updatedPost);
       setPosts();
     } catch (error) {
-      console.log("Error updating post: ", error.response.data.error);
+      console.log("Error editing post: ", error.response.data.error);
     }
     closeModal();
   };
