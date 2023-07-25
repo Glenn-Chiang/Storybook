@@ -72,11 +72,14 @@ export default function App() {
     : posts.slice(startIndex, startIndex + postsPerPage);
 
   const topRef = useRef(null);
+  const scrollToTop = () => {
+    topRef.current.scrollIntoView()
+  }
 
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <CreatePostBox setPosts={getPosts} />
+      <CreatePostBox setPosts={getPosts} scrollToTop={scrollToTop}/>
       <h1 className="p-8 text-center" ref={topRef}>
         My Posts
       </h1>

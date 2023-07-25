@@ -24,7 +24,7 @@ function PageButton({ onClick, children }) {
   return (
     <button
       onClick={onClick}
-      className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl w-10 h-10"
+      className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl w-10 h-10 shadow"
     >
       {children}
     </button>

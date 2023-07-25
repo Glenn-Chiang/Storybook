@@ -25,7 +25,7 @@ export function EditButton({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="bg-sky-400 hover:bg-sky-500 text-white rounded w-8 h-8 flex justify-center items-center"
+      className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl w-8 h-8 flex justify-center items-center"
     >
       <FontAwesomeIcon icon={faEdit} />
     </button>
@@ -36,7 +36,7 @@ export function DeleteButton({ onClick }) {
   return (
     <button
       onClick={onClick}
-      className="bg-rose-400 text-white rounded w-8 h-8 flex justify-center items-center hover:bg-rose-500"
+      className="bg-rose-400 text-white rounded-xl w-8 h-8 flex justify-center items-center hover:bg-rose-500"
     >
       <FontAwesomeIcon icon={faXmark} />
     </button>
