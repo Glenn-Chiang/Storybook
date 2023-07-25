@@ -44,6 +44,11 @@ export default function App() {
   const [filterField, setFilterField] = useState(filterFields[0].value);
   const [filterTerms, setFilterTerms] = useState("");
 
+  const handleFilterChange = event => {
+    setFilterTerms(event.target.value)
+    setStartIndex(0)
+  }
+
   const filteredPosts = posts.filter((post) =>
     post[filterField].toLowerCase().includes(filterTerms.toLowerCase())
   );
@@ -51,7 +56,7 @@ export default function App() {
   const postsPerPage = 10;
   const [startIndex, setStartIndex] = useState(0);
   const currentPage = Math.floor(startIndex / postsPerPage) + 1;
-  const numPages = Math.ceil(filteredPosts.length / postsPerPage);
+  const numPages = filteredPosts.length > 0 ?  Math.ceil(filteredPosts.length / postsPerPage) : 1;
 
   const handlePrev = () => {
     if (startIndex === 0) {
@@ -101,7 +106,7 @@ export default function App() {
           options={filterFields}
           setOption={(option) => setFilterField(option)}
         />
-        <Filterbar setFilterTerms={setFilterTerms} />
+        <Filterbar handleChange={handleFilterChange} />
       </div>
 
       <Paginator
@@ -151,10 +156,8 @@ function TeleportButton({ forwardedRef }) {
   );
 }
 
-function Filterbar({ setFilterTerms }) {
-  const handleChange = (event) => {
-    setFilterTerms(event.target.value);
-  };
+function Filterbar({handleChange }) {
+
   return (
     <div className="">
       <input
