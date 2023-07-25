@@ -1,62 +1,73 @@
-const postsRouter = require('express').Router()
-const Post = require('../models/post')
+const postsRouter = require("express").Router();
+const Post = require("../models/post");
+const User = require("../models/user");
 
-postsRouter.get("/", (req, res, next) => {
+postsRouter.get("/", async (req, res, next) => {
   const sortBy = req.query.sortBy; // dateAdded or lastUpdated
   const sortOrder = req.query.sortOrder; // newest or oldest
-  Post.find({})
-    .sort({ [sortBy]: sortOrder })
-    .then((posts) => {
-      res.json(posts);
-    })
-    .catch((error) => {
-      next(error);
-    });
+
+  try {
+    const posts = await Post.find({})
+      .sort({ [sortBy]: sortOrder })
+      .populate("author", { username: 1, name: 1 });
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
 });
 
-postsRouter.get("/:id", (req, res, next) => {
-  Post.findById(req.params.id)
-    .then((post) => {
-      if (post) {
-        res.json(post);
-      } else {
-        res.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+postsRouter.get("/:id", async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).end();
+    }
+  } catch (error) {
+    next(error);
+  }
 });
 
-postsRouter.post("/", (req, res, next) => {
+postsRouter.post("/", async (req, res, next) => {
   const body = req.body;
 
-  const newPost = new Post({ ...body });
+  try {
+    const user = await User.findById(body.userId);
+    const newPost = new Post({ ...body, userId: user.id });
+    const savedPost = await newPost.save();
+    user.posts = [...user.posts, savedPost._id];
+    await user.save();
 
-  newPost
-    .save()
-    .then((savedPost) => {
-      res.json(savedPost);
-    })
-    .catch((error) => next(error));
+    res.json(savedPost);
+  } catch (error) {
+    next(error);
+  }
 });
 
-postsRouter.put("/:id", (req, res, next) => {
+postsRouter.put("/:id", async (req, res, next) => {
   const body = req.body;
-
   const post = { ...body };
 
-  Post.findByIdAndUpdate(req.params.id, post, {
-    new: true,
-    runValidators: true, // Validation is not run by default
-    context: "query",
-  })
-    .then((updatedPost) => res.json(updatedPost))
-    .catch((error) => next(error));
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, post, {
+      new: true,
+      runValidators: true,
+      context: "query",
+    });
+    res.json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
 });
 
-postsRouter.delete("/:id", (req, res, next) => {
-  Post.findByIdAndRemove(req.params.id)
-    .then((result) => res.status(204).end())
-    .catch((error) => next(error));
+postsRouter.delete("/:id", async (req, res, next) => {
+  try {
+    await Post.findByIdAndDelete(req.params.id);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
-module.exports = postsRouter
+module.exports = postsRouter;
