@@ -32,7 +32,7 @@ export default function Post({ post, setPosts }) {
   return (
     <PostContext.Provider value={post}>
       <div className="flex justify-between flex-col gap-4 shadow p-6 rounded-xl bg-white">
-        <div className="flex gap-4 sm:flex-row flex-col">
+        <div className="flex gap-4 flex-col">
           <div className="flex flex-col items-start gap-2 w-full">
             <h2>{post.title}</h2>
             <p className="flex gap-4">
@@ -55,15 +55,15 @@ export default function Post({ post, setPosts }) {
             </p>
             <p className="text-sky-900/75 w-full py-2 rounded ">{post.content}</p>
           </div>
-          <div className="flex sm:flex-col-reverse sm:gap-4 justify-between items-end">
-            <div className="flex sm:flex-col gap-2 text-xl">
+          <div className="flex justify-between items-end">
+            <div className="flex gap-2 text-xl">
               <LikeButton onClick={likePost} likeCount={10} />
               <CommentButton
                 onClick={() => setCommentsVisible((prev) => !prev)}
                 commentCount={5}
               />
             </div>
-            <div className="flex sm:flex-col text-xl gap-2 justify-center">
+            <div className="flex text-xl gap-2 justify-center">
               <EditButton onClick={() => setEditModalVisible(true)} />
               <DeleteButton onClick={() => setDeleteModalVisible(true)} />
             </div>
