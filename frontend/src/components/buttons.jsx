@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function ConfirmButton({children}) {
   return (
-    <button className="shadow text-white p-2 rounded-xl bg-teal-400 hover:bg-teal-500 w-max">
+    <button className="shadow text-white p-2 rounded-xl bg-teal-400 hover:bg-teal-500 w-20">
       {children}
     </button>
   );

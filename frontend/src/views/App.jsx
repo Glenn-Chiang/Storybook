@@ -1,14 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback, useRef } from "react";
-import CreatePostBox from "./components/CreatePostBox";
-import postService from "./services/postService";
-import Header from "./components/Header";
-import PostsList from "./components/PostsList";
-import Dropdown from "./components/Dropdown";
-import Paginator from "./components/Paginator";
+import CreatePostBox from "../components/CreatePostBox";
+import postService from "../services/postService";
+import Header from "../components/Header";
+import PostsList from "../components/PostsList";
+import Dropdown from "../components/Dropdown";
+import Paginator from "../components/Paginator";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import LoginLink from "../components/LoginLink";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
@@ -84,6 +85,7 @@ export default function App() {
   return (
     <div className="flex flex-col items-center">
       <Header />
+      <LoginLink/>
       <CreatePostBox setPosts={getPosts} scrollToTop={scrollToTop}/>
       <h1 className="p-8 text-center" ref={topRef}>
         My Posts
