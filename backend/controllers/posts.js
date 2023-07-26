@@ -33,13 +33,16 @@ postsRouter.post("/", async (req, res, next) => {
   const body = req.body;
 
   try {
-    const user = await User.findById(body.userId);
-    const newPost = new Post({ ...body, userId: user.id });
+    const user = await User.findById(body.authorId); 
+    const newPost = new Post({ ...body, author: user.id });
+
+    // Update Posts collection
     const savedPost = await newPost.save();
-    user.posts = [...user.posts, savedPost._id];
-    await user.save();
+    // Update 'posts' field in User document
+    await User.findByIdAndUpdate(body.authorId, {$push: {posts: savedPost._id }})
 
     res.json(savedPost);
+
   } catch (error) {
     next(error);
   }
@@ -47,10 +50,10 @@ postsRouter.post("/", async (req, res, next) => {
 
 postsRouter.put("/:id", async (req, res, next) => {
   const body = req.body;
-  const post = { ...body };
+  const updatedData = { ...body };
 
   try {
-    const updatedPost = await Post.findByIdAndUpdate(req.params.id, post, {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, updatedData, {
       new: true,
       runValidators: true,
       context: "query",
@@ -63,8 +66,13 @@ postsRouter.put("/:id", async (req, res, next) => {
 
 postsRouter.delete("/:id", async (req, res, next) => {
   try {
+    // Delete post from Posts collection
     await Post.findByIdAndDelete(req.params.id);
+    // Delete post from 'posts' field in User document
+    await User.findByIdAndUpdate(req.body.authorId, {$pull: {posts: req.params.id}})
+
     res.status(204).end();
+
   } catch (error) {
     next(error);
   }

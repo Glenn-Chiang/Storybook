@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
   passwordHash: {type: String, required: true},
   posts: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Post'
+      type: mongoose.Schema.Types.ObjectId, // Array will contain objectIds of documents in the Post collection
+      ref: 'Post' // Reference to Post collection
     }
   ]
 })

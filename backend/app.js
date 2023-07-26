@@ -13,15 +13,8 @@ mongoose.set("strictQuery", false);
 
 logger.info("Connecting to MongoDB at", config.MONGODB_URI);
 
-try {
-  await mongoose.connect(url);
-  console.log("Connected to MongoDB");
-} catch (error) {
-  console.log("Error connecting to MongoDB:", error.message);
-}
-
 mongoose
-  .connect(url)
+  .connect(config.MONGODB_URI)
   .then((res) => logger.info("Connected to MongoDB"))
   .catch((err) => logger.error("Error connecting to MongoDB"));
 
