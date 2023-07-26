@@ -3,19 +3,17 @@ import ErrorAlert from "../components/ErrorAlert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLock,
-  faSignIn,
+  faPenSquare,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmButton } from "../components/buttons";
-import loginService from "../services/loginService";
-import postService from '../services/postService'
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import LinkButton from "../components/LinkButton";
+import userService from "../services/userService";
 
-export default function Login() {
-  
-  const navigate = useNavigate()
-  
+export default function Register() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -23,23 +21,21 @@ export default function Login() {
   } = useForm();
 
   const onSubmit = async (formData) => {
-    const { username, password } = formData;
-    try {
-      const user = await loginService.login(username, password)
-      localStorage.setItem('currentUser', JSON.stringify(user))
-      postService.setToken(user.token)
-      navigate('/')
+    const { username, name, password } = formData;
 
+    try {
+      await userService.create(username, name, password)
+      navigate("/login");
     } catch (error) {
-      console.log('Error logging in: ', error)
+      console.log("Error logging in: ", error);
     }
   };
 
   return (
     <section className="bg-white rounded-xl flex flex-col items-center p-4 inset-x-0 m-auto">
       <h1 className="p-4 flex gap-2 items-center">
-        <FontAwesomeIcon icon={faSignIn} />
-        Login
+        <FontAwesomeIcon icon={faPenSquare} />
+        Register
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -71,10 +67,10 @@ export default function Login() {
           />
         </div>
         {errors.password && <ErrorAlert>{errors.password.message}</ErrorAlert>}
-        <ConfirmButton>Login</ConfirmButton>
+        <ConfirmButton>Register</ConfirmButton>
       </form>
       <p className="text-slate-500 p-4">
-        New to Storybook? <LinkButton to={'/register'}>Register</LinkButton>
+        Already have an account? <LinkButton to={"/login"}>Login</LinkButton>
       </p>
     </section>
   );
