@@ -24,21 +24,30 @@ const tokenExtractor = (req, res, next) => {
 };
 
 const userExtractor = async (req, res, next) => {
-  const token = jwt.verify(req.token, config.SECRET);
-  if (!token.id) {
-    return res.status(401).json({ error: "invalid token" });
+  try {
+    const token = jwt.verify(req.token, config.SECRET);
+    if (!token.id) {
+      return res.status(401).json({ error: "invalid token" });
+    }
+    const user = await User.findById(token.id)
+    req.userId = user._id
+    next()
+
+  } catch (error) {
+    next(error)
   }
-  const user = await User.findById(token.id)
-  req.userId = user._id
-  next()
 }
 
 // Posts can only be updated by their author. Compare id of user making the request with id of author
 const userAuthenticator = async (req, res, next) => {
-  if (req.userId.toString() !== req.body.author.toString()) {
-    return res.status(401).json({ error: "Unauthorized access" });
+  try {
+    if (req.userId.toString() !== req.body.author.toString()) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+    next()
+  } catch (error) {
+    next(error)
   }
-  next()
 }
 
 const errorHandler = (error, req, res, next) => {
