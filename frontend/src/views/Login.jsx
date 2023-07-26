@@ -7,16 +7,30 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmButton } from "../components/buttons";
+import loginService from "../services/loginService";
+import postService from '../services/postService'
+import { useNavigate} from 'react-router-dom'
 
 export default function Login() {
+  
+  const navigate = useNavigate()
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (formData) => {
+  const onSubmit = async (formData) => {
     const { username, password } = formData;
+    try {
+      const user = await loginService.login(username, password)
+      postService.setToken(user.token)
+      navigate('/')
+
+    } catch (error) {
+      console.log('Error logging in: ', error)
+    }
   };
 
   return (
@@ -35,7 +49,7 @@ export default function Login() {
             Username
           </label>
           <input
-            className="p-2 rounded-lg w-80 bg-slate-100"
+            className="p-2 rounded-lg w-80 bg-slate-100 text-slate-500"
             type="username"
             id="username"
             {...register("username", { required: "Username cannot be empty" })}
@@ -48,7 +62,7 @@ export default function Login() {
             Password
           </label>
           <input
-            className="p-2 rounded-lg w-80 bg-slate-100"
+            className="p-2 rounded-lg w-80 bg-slate-100 text-slate-500"
             type="password"
             id="password"
             {...register("password", { required: "Password cannot be empty" })}
