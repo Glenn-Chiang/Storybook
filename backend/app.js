@@ -2,10 +2,19 @@ const express = require("express");
 const cors = require("cors");
 const config = require("./utils/config");
 const logger = require("./utils/logger");
-const middleware = require("./utils/middleware");
+const {
+  requestLogger,
+  tokenExtractor,
+  userExtractor,
+  userAuthenticator,
+  errorHandler,
+  unknownEndpoint,
+} = require("./utils/middleware");
+const mongoose = require("mongoose");
+
 const postsRouter = require("./controllers/posts");
 const usersRouter = require("./controllers/users");
-const mongoose = require("mongoose");
+const loginRouter = require("./controllers/login");
 
 const app = express();
 
@@ -21,12 +30,14 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(express.static("build"));
-app.use(middleware.requestLogger);
+app.use(requestLogger);
+app.use(tokenExtractor);
 
-app.use("/posts", postsRouter);
+app.use("/posts", userExtractor, postsRouter);
 app.use("/users", usersRouter);
+app.use("/login", loginRouter);
 
-app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
+app.use(errorHandler);
+app.use(unknownEndpoint);
 
 module.exports = app;
