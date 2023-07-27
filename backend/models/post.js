@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema({
   dateAdded: { type: Date, required: true },
   lastUpdated: { type: Date, required: true },
   author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  likes: Number
 });
 
 postSchema.set("toJSON", {

@@ -50,32 +50,39 @@ postsRouter.post("/", async (req, res, next) => {
   }
 });
 
-postsRouter.put("/:id", userAuthenticator, async (req, res, next) => {
-  const body = req.body
-  const authorId = body.author.id
-  const updatedData = { ...body, author: authorId};
+postsRouter.put("/:id", async (req, res, next) => {
+  const body = req.body;
+  const post = await Post.findById(req.params.id);
 
+  if (body.title || body.content) {
+    // Only allow post author to update its title and content
+    if (req.userId.toString() !== post.author.toString()) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+
+    post.title = body.title
+    post.content = body.content
+    post.lastUpdated = body.lastUpdated
+  }
+    
+  // Increaes likes by 1
+  else if (body.likes) {
+    post.likes = post.likes ? post.likes + 1 : 1
+  }
+  
   try {
-    const updatedPost = await Post.findByIdAndUpdate(
-      req.params.id,
-      updatedData,
-      {
-        new: true,
-        runValidators: true,
-        context: "query",
-      }
-    );
-    res.json(updatedPost);
+    const savedPost = await post.save()
+    res.json(savedPost);
   } catch (error) {
     next(error);
   }
 });
 
 postsRouter.delete("/:id", userAuthenticator, async (req, res, next) => {
-  const postId = req.params.id
+  const postId = req.params.id;
   try {
-    const post = await Post.findById(postId)
-    const authorId = post.author
+    const post = await Post.findById(postId);
+    const authorId = post.author;
     // Delete post from Posts collection
     await Post.findByIdAndDelete(postId);
     // Delete post from 'posts' field in User document

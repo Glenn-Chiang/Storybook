@@ -12,15 +12,9 @@ export default function EditModal({ closeModal, setPosts }) {
 
   const handleSubmit = async (formData) => {
     const lastUpdated = new Date();
-    const updatedPost = {
-      ...postToUpdate,
-      title: formData.title,
-      content: formData.content,
-      lastUpdated,
-    };
 
     try {
-      await postService.update(postToUpdate.id, updatedPost);
+      await postService.update(postToUpdate.id, {title: formData.title, content: formData.content, lastUpdated});
       setPosts();
     } catch (error) {
       console.log("Error editing post: ", error.response.data.error);

@@ -4,6 +4,7 @@ import {
   faCalendarCheck,
   faCalendarPlus,
   faComment,
+  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditButton, DeleteButton } from "../buttons";
@@ -20,9 +21,8 @@ export default function Post({ post, setPosts, readOnly }) {
   const [commentsVisible, setCommentsVisible] = useState(false);
 
   const likePost = async () => {
-    const updatedPost = { ...post, likes: post.likes + 1 };
     try {
-      await postService.update(post.id, updatedPost);
+      await postService.update(post.id, {likes: 1});
       setPosts();
     } catch (error) {
       console.log("Error liking post: ", error);
@@ -35,6 +35,10 @@ export default function Post({ post, setPosts, readOnly }) {
         <div className="flex gap-4 flex-col">
           <div className="flex flex-col items-start gap-2 w-full">
             <h2>{post.title}</h2>
+            <p className="flex gap-2 items-center text-sky-500">
+              <FontAwesomeIcon icon={faUserCircle} />
+              {post.author ? post.author.displayName : 'Anonymous'}
+            </p>
             <p className="flex gap-4">
               <span className="flex gap-2 items-center text-slate-400">
                 <FontAwesomeIcon icon={faCalendarPlus} />
@@ -59,7 +63,7 @@ export default function Post({ post, setPosts, readOnly }) {
           </div>
           <div className="flex justify-between items-end">
             <div className="flex gap-2 text-xl">
-              <LikeButton onClick={likePost} likeCount={10} />
+              <LikeButton onClick={likePost} likeCount={post.likes} />
               <CommentButton
                 onClick={() => setCommentsVisible((prev) => !prev)}
                 commentCount={5}
