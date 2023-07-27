@@ -3,18 +3,18 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
 usersRouter.post('/', async (req, res, next) => {
-  const { username, name, password } = req.body
+  const { username, displayName, password } = req.body
 
   const saltRounds = 10
-  const passwordHash = bcrypt.hash(password, saltRounds)
-
-  const user = new User({
-    username, 
-    name,
-    passwordHash
-  })
 
   try {
+    const passwordHash = await bcrypt.hash(password, saltRounds)
+  
+    const user = new User({
+      username, 
+      displayName,
+      passwordHash
+    })
     const savedUser = await user.save()
     res.json(savedUser)
   } catch (error) {

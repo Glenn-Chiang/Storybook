@@ -10,7 +10,7 @@ postsRouter.get("/", async (req, res, next) => {
   try {
     const posts = await Post.find({})
       .sort({ [sortBy]: sortOrder })
-      .populate("author", { username: 1, name: 1 });
+      .populate("author", { username: 1, displayName: 1 });
     res.json(posts);
   } catch (error) {
     next(error);

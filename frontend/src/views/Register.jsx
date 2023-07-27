@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLock,
   faPenSquare,
+  faUserAlt,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmButton } from "../components/buttons";
@@ -21,10 +22,10 @@ export default function Register() {
   } = useForm();
 
   const onSubmit = async (formData) => {
-    const { username, name, password } = formData;
+    const { username, displayName, password } = formData;
 
     try {
-      await userService.create(username, name, password)
+      await userService.create(username, displayName, password)
       navigate("/login");
     } catch (error) {
       console.log("Error logging in: ", error);
@@ -41,6 +42,18 @@ export default function Register() {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col justify-center items-center gap-4 p-4"
       >
+        <div className="flex flex-col gap-2">
+          <label htmlFor="displayName" className="flex gap-2 items-center">
+            <FontAwesomeIcon icon={faUserAlt} />
+            Display Name
+          </label>
+          <input
+            className="p-2 rounded-lg w-80 bg-slate-100 text-slate-500"
+            type="displayName"
+            id="displayName"
+            {...register("displayName", { required: "Display name cannot be empty" })}
+          />
+        </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="username" className="flex gap-2 items-center">
             <FontAwesomeIcon icon={faUserCircle} />

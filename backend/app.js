@@ -22,22 +22,28 @@ mongoose.set("strictQuery", false);
 
 logger.info("Connecting to MongoDB at", config.MONGODB_URI);
 
-mongoose
-  .connect(config.MONGODB_URI)
-  .then((res) => logger.info("Connected to MongoDB"))
-  .catch((err) => logger.error("Error connecting to MongoDB"));
+async function buildApp() {
+  try {
+    await mongoose.connect(config.MONGODB_URI);
+    logger.info("Connected to MongoDB");
+  } catch (error) {
+    logger.error("Error connecting to MongoDB");
+  }
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static("build"));
-app.use(requestLogger);
-app.use(tokenExtractor);
+  app.use(cors());
+  app.use(express.json());
+  app.use(express.static("build"));
+  app.use(requestLogger);
+  app.use(tokenExtractor);
 
-app.use("/posts", userExtractor, postsRouter);
-app.use("/users", usersRouter);
-app.use("/login", loginRouter);
+  app.use("/posts", userExtractor, postsRouter);
+  app.use("/users", usersRouter);
+  app.use("/login", loginRouter);
 
-app.use(errorHandler);
-app.use(unknownEndpoint);
+  app.use(errorHandler);
+  app.use(unknownEndpoint);
+}
+
+buildApp();
 
 module.exports = app;
