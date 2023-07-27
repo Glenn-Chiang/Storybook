@@ -12,9 +12,9 @@ import DeleteModal from "../DeleteModal";
 import { useState } from "react";
 import postService from "../../services/postService";
 import CommentSection from "./CommentSection";
-import {PostContext} from './PostContext'
+import { PostContext } from "./PostContext";
 
-export default function Post({ post, setPosts }) {
+export default function Post({ post, setPosts, readOnly }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
@@ -22,10 +22,10 @@ export default function Post({ post, setPosts }) {
   const likePost = async () => {
     const updatedPost = { ...post, likes: post.likes + 1 };
     try {
-      await postService.update(post.id, updatedPost)
-      setPosts()
+      await postService.update(post.id, updatedPost);
+      setPosts();
     } catch (error) {
-      console.log('Error liking post: ', error)
+      console.log("Error liking post: ", error);
     }
   };
 
@@ -53,7 +53,9 @@ export default function Post({ post, setPosts }) {
                 {new Date(post.lastUpdated).toLocaleString()}
               </span>
             </p>
-            <p className="text-sky-900/75 w-full py-2 rounded ">{post.content}</p>
+            <p className="text-sky-900/75 w-full py-2 rounded ">
+              {post.content}
+            </p>
           </div>
           <div className="flex justify-between items-end">
             <div className="flex gap-2 text-xl">
@@ -64,12 +66,16 @@ export default function Post({ post, setPosts }) {
               />
             </div>
             <div className="flex text-xl gap-2 justify-center">
-              <EditButton onClick={() => setEditModalVisible(true)} />
-              <DeleteButton onClick={() => setDeleteModalVisible(true)} />
+              {!readOnly && (
+                <>
+                  <EditButton onClick={() => setEditModalVisible(true)} />
+                  <DeleteButton onClick={() => setDeleteModalVisible(true)} />
+                </>
+              )}
             </div>
           </div>
         </div>
-        {commentsVisible && <CommentSection/>}
+        {commentsVisible && <CommentSection />}
         {editModalVisible && (
           <EditModal
             closeModal={() => setEditModalVisible(false)}
@@ -86,7 +92,6 @@ export default function Post({ post, setPosts }) {
     </PostContext.Provider>
   );
 }
-
 
 function LikeButton({ onClick, likeCount }) {
   return (

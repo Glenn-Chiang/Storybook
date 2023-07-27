@@ -112,12 +112,12 @@ export default function Browse() {
 
       {posts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">
-          You have not created any posts
+          No posts created
         </p>
       ) : displayedPosts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">No posts found</p>
       ) : (
-        <PostsList posts={displayedPosts} setPosts={getPosts} />
+        <PostsList posts={displayedPosts} setPosts={getPosts} readOnly={true}/>
       )}
 
       <Paginator

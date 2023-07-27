@@ -125,7 +125,7 @@ export default function Home() {
       ) : displayedPosts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">No posts found</p>
       ) : (
-        <PostsList posts={displayedPosts} setPosts={getPosts} />
+        <PostsList posts={displayedPosts} setPosts={getPosts} readOnly={false}/>
       )}
 
       <Paginator
