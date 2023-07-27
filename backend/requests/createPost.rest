@@ -1,8 +1,10 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5c2VybmFtZSI6Im1sdXVra2FpIiwiaW
 
 {
     "title": "Test title",
-    "content": "Test"
-    
+    "content": "Test",
+    "dateAdded": "2023-07-27T00:00:00.000Z",
+    "lastUpdated": "2023-07-27T00:00:00.000Z"
 }

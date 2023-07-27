@@ -1,7 +1,8 @@
 const logger = require("./logger");
 const jwt = require("jsonwebtoken");
 const config = require("./config");
-const User = require('../models/user')
+const User = require('../models/user');
+const Post = require("../models/post");
 
 const requestLogger = (req, res, next) => {
   logger.info("Method: ", req.method);
@@ -13,7 +14,8 @@ const requestLogger = (req, res, next) => {
 
 
 const tokenExtractor = (req, res, next) => {
-  const authorization = req.get("authorization");
+  const authorization = req.get("Authorization");
+  
   if (authorization && authorization.startsWith("Bearer ")) {
     const token = authorization.replace("Bearer ", "");
     req.token = token
@@ -24,6 +26,8 @@ const tokenExtractor = (req, res, next) => {
 };
 
 const userExtractor = async (req, res, next) => {
+  // console.log(`Token: '${req.token}'`)
+  // console.log('Secret:', config.SECRET)
   try {
     const token = jwt.verify(req.token, config.SECRET);
     if (!token.id) {
@@ -41,7 +45,10 @@ const userExtractor = async (req, res, next) => {
 // Posts can only be updated by their author. Compare id of user making the request with id of author
 const userAuthenticator = async (req, res, next) => {
   try {
-    if (req.userId.toString() !== req.body.author.toString()) {
+    // console.log(req.userId.toString());
+    const post = await Post.findById(req.params.id)
+    const authorId = post.author
+    if (req.userId.toString() !== authorId.toString()) {
       return res.status(401).json({ error: "Unauthorized access" });
     }
     next()

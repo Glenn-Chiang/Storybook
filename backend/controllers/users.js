@@ -33,7 +33,7 @@ usersRouter.get('/', async(req, res, next) => {
 
 usersRouter.get('/:userId', async(req, res, next) => {
   try {
-    const user = await User.findById(req.params.id)
+    const user = await User.findById(req.params.userId)
     res.json(user)
   } catch (error) {
     next(error)

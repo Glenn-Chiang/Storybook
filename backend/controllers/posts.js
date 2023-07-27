@@ -4,11 +4,12 @@ const Post = require("../models/post");
 const User = require("../models/user");
 
 postsRouter.get("/", async (req, res, next) => {
+  const authorId = req.userId;
   const sortBy = req.query.sortBy; // dateAdded or lastUpdated
   const sortOrder = req.query.sortOrder; // newest or oldest
 
   try {
-    const posts = await Post.find({})
+    const posts = await Post.find({ author: authorId })
       .sort({ [sortBy]: sortOrder })
       .populate("author", { username: 1, displayName: 1 });
     res.json(posts);
@@ -51,7 +52,9 @@ postsRouter.post("/", async (req, res, next) => {
 });
 
 postsRouter.put("/:id", userAuthenticator, async (req, res, next) => {
-  const updatedData = { ...req.body };
+  const body = req.body
+  const authorId = body.author.id
+  const updatedData = { ...body, author: authorId};
 
   try {
     const updatedPost = await Post.findByIdAndUpdate(
@@ -64,22 +67,23 @@ postsRouter.put("/:id", userAuthenticator, async (req, res, next) => {
       }
     );
     res.json(updatedPost);
-    
   } catch (error) {
     next(error);
   }
 });
 
 postsRouter.delete("/:id", userAuthenticator, async (req, res, next) => {
+  const postId = req.params.id
   try {
+    const post = await Post.findById(postId)
+    const authorId = post.author
     // Delete post from Posts collection
-    await Post.findByIdAndDelete(req.params.id);
+    await Post.findByIdAndDelete(postId);
     // Delete post from 'posts' field in User document
-    await User.findByIdAndUpdate(req.body.authorId, {
-      $pull: { posts: req.params.id },
+    await User.findByIdAndUpdate(authorId, {
+      $pull: { posts: postId },
     });
     res.status(204).end();
-    
   } catch (error) {
     next(error);
   }

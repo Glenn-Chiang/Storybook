@@ -34,9 +34,8 @@ async function buildApp() {
   app.use(express.json());
   app.use(express.static("build"));
   app.use(requestLogger);
-  app.use(tokenExtractor);
 
-  app.use("/posts", userExtractor, postsRouter);
+  app.use("/posts", tokenExtractor, userExtractor, postsRouter);
   app.use("/users", usersRouter);
   app.use("/login", loginRouter);
 

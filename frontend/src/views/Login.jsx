@@ -27,7 +27,7 @@ export default function Login() {
     try {
       const user = await loginService.login(username, password)
       localStorage.setItem('currentUser', JSON.stringify(user))
-      postService.setToken(user.token)
+      // postService.setToken(user.token)
       navigate('/')
 
     } catch (error) {
