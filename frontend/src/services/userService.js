@@ -6,4 +6,9 @@ const create = async (username, displayName, password) => {
   return response.data;
 };
 
-export default { create };
+const getPosts = async (userId, sortBy, sortOrder) => {
+  const response = await axios.get(`${baseUrl}/${userId}/posts?sortBy=${sortBy}&sortOrder=${sortOrder}`)
+  return response.data
+}
+
+export default { create, getPosts };

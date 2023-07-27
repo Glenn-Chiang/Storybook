@@ -45,7 +45,6 @@ const userExtractor = async (req, res, next) => {
 // Posts can only be updated by their author. Compare id of user making the request with id of author
 const userAuthenticator = async (req, res, next) => {
   try {
-    // console.log(req.userId.toString());
     const post = await Post.findById(req.params.id)
     const authorId = post.author
     if (req.userId.toString() !== authorId.toString()) {

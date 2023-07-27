@@ -2,16 +2,15 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback, useRef } from "react";
 import CreatePostBox from "../components/CreatePostBox";
-import postService from "../services/postService";
 import Header from "../components/Header";
 import PostsList from "../components/PostsList";
 import Dropdown from "../components/Dropdown";
 import Paginator from "../components/Paginator";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import LoginLink from "../components/LoginLink";
+import TeleportButton from '../components/TeleportButton'
+import userService from "../services/userService";
 
-export default function App() {
+export default function Home() {
   const [posts, setPosts] = useState([]);
 
   const sortFields = [
@@ -26,8 +25,9 @@ export default function App() {
   const [sortOrder, setSortOrder] = useState(sortOrders[0].value);
 
   const getPosts = useCallback(async () => {
+    const userId = JSON.parse(localStorage.getItem('currentUser')).userId
     try {
-      const posts = await postService.getAll(sortBy, sortOrder);
+      const posts = await userService.getPosts(userId, sortBy, sortOrder);
       setPosts(posts);
     } catch (error) {
       console.log("Error getting posts: ", error);
@@ -140,26 +140,8 @@ export default function App() {
   );
 }
 
-function TeleportButton({ forwardedRef }) {
-  const handleClick = () => {
-    forwardedRef.current.scrollIntoView();
-  };
-
-  return (
-    <button
-      onClick={handleClick}
-      className="fixed bottom-2 right-2 p-2 rounded-2xl w-8 h-8 bg-sky-500 hover:bg-sky-600 text-white flex justify-center items-center group"
-    >
-      <FontAwesomeIcon icon={faArrowUp} />
-      <p className="absolute -left-32 min-w-max p-2 rounded-xl hidden group-hover:block bg-sky-800">
-        Go to Top Post
-      </p>
-    </button>
-  );
-}
 
 function Filterbar({handleChange }) {
-
   return (
     <div className="">
       <input

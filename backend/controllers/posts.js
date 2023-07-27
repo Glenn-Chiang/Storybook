@@ -4,12 +4,11 @@ const Post = require("../models/post");
 const User = require("../models/user");
 
 postsRouter.get("/", async (req, res, next) => {
-  const authorId = req.userId;
   const sortBy = req.query.sortBy; // dateAdded or lastUpdated
-  const sortOrder = req.query.sortOrder; // newest or oldest
+  const sortOrder = req.query.sortOrder; // desc or asc
 
   try {
-    const posts = await Post.find({ author: authorId })
+    const posts = await Post.find({})
       .sort({ [sortBy]: sortOrder })
       .populate("author", { username: 1, displayName: 1 });
     res.json(posts);
