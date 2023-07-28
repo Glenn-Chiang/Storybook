@@ -12,9 +12,11 @@ postsRouter.get("/", async (req, res, next) => {
     const posts = await Post.find({})
       .sort({ [sortBy]: sortOrder })
       .populate("author", { username: 1, displayName: 1 })
-      .populate("comments")
       .populate({
         path: "comments",
+        options: {
+          sort: { [sortBy]: sortOrder },
+        },
         populate: { path: "author", select: "username displayName" },
       });
     console.log(posts[0]);
@@ -36,14 +38,19 @@ postsRouter.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
- 
+
 // Create a post
 postsRouter.post("/", async (req, res, next) => {
   const body = req.body;
   const authorId = req.userId;
 
   try {
-    const newPost = new Post({ ...body, author: authorId, likes: 0, comments: [] });
+    const newPost = new Post({
+      ...body,
+      author: authorId,
+      likes: 0,
+      comments: [],
+    });
 
     // Update Posts collection
     const savedPost = await newPost.save();

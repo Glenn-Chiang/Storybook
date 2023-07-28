@@ -52,9 +52,11 @@ usersRouter.get("/:userId/posts", async (req, res, next) => {
     const posts = await Post.find({ author: req.params.userId })
       .sort({ [sortBy]: sortOrder })
       .populate("author")
-      .populate("comments")
       .populate({
         path: "comments",
+        options: {
+          sort: { datePosted: -1 }
+        },
         populate: {
           path: "author",
           select: "username displayName",
