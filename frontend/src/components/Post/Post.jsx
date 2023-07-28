@@ -45,7 +45,7 @@ export default function Post({ post, setPosts, readOnly }) {
                 Date posted
               </span>
               <span className="text-slate-400">
-                {new Date(post.dateAdded).toLocaleString()}
+                {new Date(post.datePosted).toLocaleString()}
               </span>
             </p>
             <p className="flex gap-4">
@@ -66,7 +66,7 @@ export default function Post({ post, setPosts, readOnly }) {
               <LikeButton onClick={likePost} likeCount={post.likes} />
               <CommentButton
                 onClick={() => setCommentsVisible((prev) => !prev)}
-                commentCount={5}
+                commentCount={post.comments.length}
               />
             </div>
             <div className="flex text-xl gap-2 justify-center">
@@ -79,7 +79,7 @@ export default function Post({ post, setPosts, readOnly }) {
             </div>
           </div>
         </div>
-        {commentsVisible && <CommentSection />}
+        {commentsVisible && <CommentSection comments={post.comments} setPosts={setPosts}/>}
         {editModalVisible && (
           <EditModal
             closeModal={() => setEditModalVisible(false)}

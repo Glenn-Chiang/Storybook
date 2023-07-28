@@ -6,36 +6,26 @@ import { useForm } from "react-hook-form";
 import ErrorAlert from "../errorAlert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import commentService from '../../services/commentService'
+import commentService from "../../services/commentService";
 import { PostContext } from "./PostContext";
 
-export default function CommentSection() {
-  const comments = [
-    {
-      author: "Homelander",
-      content: "Who put the blanket there?!",
-      datePosted: new Date(),
-    },
-    {
-      author: "The Deep",
-      content: "I'm going to renew my light.",
-      datePosted: new Date(),
-    },
-  ];
-
+export default function CommentSection({ comments, setPosts }) {
   const [commentFormVisible, setCommentFormVisible] = useState(false);
 
   return (
     <div>
       <h2 className="py-4">Comments ({comments.length})</h2>
       {commentFormVisible ? (
-        <CommentForm closeForm={() => setCommentFormVisible(false)}/>
+        <CommentForm
+          closeForm={() => setCommentFormVisible(false)}
+          setPosts={setPosts}
+        />
       ) : (
         <button
           className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
           onClick={() => setCommentFormVisible(true)}
         >
-          <FontAwesomeIcon icon={faPlusCircle}/>
+          <FontAwesomeIcon icon={faPlusCircle} />
           Post a comment
         </button>
       )}
@@ -48,14 +38,14 @@ export default function CommentSection() {
           ))}
         </ul>
       ) : (
-        <p>No comments</p>
+        <p className="py-4 text-slate-500">No comments</p>
       )}
     </div>
   );
 }
 
-function CommentForm({closeForm}) {
-  const post = useContext(PostContext)
+function CommentForm({ closeForm, setPosts }) {
+  const post = useContext(PostContext);
 
   const handleCancel = () => {
     closeForm();
@@ -68,14 +58,16 @@ function CommentForm({closeForm}) {
   } = useForm();
 
   const onSubmit = async (formData) => {
-    const comment = {
-      content: formData.content
-    }
+    const commentData = {
+      content: formData.content,
+      datePosted: new Date(),
+    };
     try {
-      await commentService.create(post.id, comment)
-      closeForm()
+      await commentService.create(post.id, commentData);
+      closeForm();
+      setPosts();
     } catch (error) {
-      console.log('Error posting comment: ', error)
+      console.log("Error posting comment: ", error);
     }
   };
 
@@ -107,8 +99,8 @@ function CommentForm({closeForm}) {
 function Comment({ comment }) {
   return (
     <div>
-      <p>{comment.author}</p>
-      <p className="text-slate-400">{comment.datePosted.toLocaleString()}</p>
+      <p>{comment.author.displayName}</p>
+      <p className="text-slate-400">{(new Date(comment.datePosted)).toLocaleString()}</p>
       <p className="text-slate-500">{comment.content}</p>
     </div>
   );

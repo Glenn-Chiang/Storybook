@@ -1,12 +1,6 @@
 import axios from "axios";
 const baseUrl = "http://localhost:3000/posts";
 
-// let token = null;
-
-// const setToken = (newToken) => {
-//   token = `Bearer ${newToken}`;
-// };
-
 const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 const token = currentUser ? `Bearer ${currentUser.token}` : null;
 

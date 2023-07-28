@@ -59,4 +59,15 @@ usersRouter.get("/:userId/posts", async (req, res, next) => {
   }
 });
 
+// Get all comments by user
+usersRouter.get("/:userId/comments", async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId).populate("comments").populate("comments.author");
+    const comments = user.comments;
+    res.json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = usersRouter;

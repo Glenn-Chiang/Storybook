@@ -1,0 +1,8 @@
+POST http://localhost:3000/posts/64c20a5f0b88994b37afe1dd/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjAyNEdIT1NUIiwiaWQiOiI2NGMxYmQ0ODI1Njc4YzgxNWExNGZlNzIiLCJpYXQiOjE2OTA0Mzc0ODZ9.oweocW7GtTYJyS7A2EPobefnD_GCGGRCRDe8ldG2IFc
+
+{
+    "content": "Test comment",
+    "datePosted": "2023-07-27T00:00:00.000Z",
+}
