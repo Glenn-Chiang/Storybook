@@ -1,5 +1,6 @@
 const usersRouter = require("express").Router();
 const User = require("../models/user");
+const Post = require("../models/post");
 const bcrypt = require("bcrypt");
 
 // Create new user
@@ -46,13 +47,20 @@ usersRouter.get("/:userId", async (req, res, next) => {
 // Get posts by specific user
 usersRouter.get("/:userId/posts", async (req, res, next) => {
   const { sortBy, sortOrder } = req.query;
-  const sortOptions = { [sortBy]: sortOrder };
+  console.log("Sort:", sortBy, sortOrder);
   try {
-    const user = await User.findById(req.params.userId).populate({
-      path: "posts",
-      options: { sort: sortOptions },
-    });
-    const posts = user.posts;
+    const posts = await Post.find({ author: req.params.userId })
+      .sort({ [sortBy]: sortOrder })
+      .populate("author")
+      .populate("comments")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          select: "username displayName",
+        },
+      });
+
     res.json(posts);
   } catch (error) {
     next(error);
@@ -62,7 +70,9 @@ usersRouter.get("/:userId/posts", async (req, res, next) => {
 // Get all comments by user
 usersRouter.get("/:userId/comments", async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId).populate("comments").populate("comments.author");
+    const user = await User.findById(req.params.userId)
+      .populate("comments")
+      .populate("comments.author");
     const comments = user.comments;
     res.json(comments);
   } catch (error) {

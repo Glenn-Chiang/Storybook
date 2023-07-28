@@ -12,10 +12,10 @@ export default function CreatePostBox({ setPosts, scrollToTop }) {
     setShowForm(true);
   };
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (formData) => {
     const datePosted = new Date();
     const lastUpdated = datePosted;
-    const newPost = { ...data, datePosted, lastUpdated, likes: 0, comments: [] };
+    const newPost = { ...formData, datePosted, lastUpdated};
     try {
       await postService.create(newPost);
       setPosts(); // Sync application state with database after each crud operation

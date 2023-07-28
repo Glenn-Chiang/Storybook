@@ -37,7 +37,7 @@ export default function Home() {
   useEffect(() => {
     getPosts();
   }, [getPosts]);
-
+  console.log(posts[0])
   const filterFields = [
     { label: "Title", value: "title" },
     { label: "Content", value: "content" },

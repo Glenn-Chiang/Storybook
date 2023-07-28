@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CancelButton, ConfirmButton } from "../buttons";
 import { useForm } from "react-hook-form";
 import ErrorAlert from "../errorAlert";
@@ -13,7 +13,7 @@ export default function CommentSection({ comments, setPosts }) {
   const [commentFormVisible, setCommentFormVisible] = useState(false);
 
   return (
-    <div>
+    <div className="p-4 rounded-xl">
       <h2 className="py-4">Comments ({comments.length})</h2>
       {commentFormVisible ? (
         <CommentForm
@@ -55,7 +55,12 @@ function CommentForm({ closeForm, setPosts }) {
     register,
     handleSubmit,
     formState: { errors },
+    setFocus
   } = useForm();
+  
+  useEffect(() => {
+    setFocus("content")
+  }, [setFocus]);
 
   const onSubmit = async (formData) => {
     const commentData = {
@@ -97,10 +102,13 @@ function CommentForm({ closeForm, setPosts }) {
 }
 
 function Comment({ comment }) {
+  console.log(comment.author)
   return (
     <div>
       <p>{comment.author.displayName}</p>
-      <p className="text-slate-400">{(new Date(comment.datePosted)).toLocaleString()}</p>
+      <p className="text-slate-400">
+        {new Date(comment.datePosted).toLocaleString()}
+      </p>
       <p className="text-slate-500">{comment.content}</p>
     </div>
   );

@@ -13,7 +13,11 @@ postsRouter.get("/", async (req, res, next) => {
       .sort({ [sortBy]: sortOrder })
       .populate("author", { username: 1, displayName: 1 })
       .populate("comments")
-      .populate("comments.author", { username: 1, displayName: 1 });
+      .populate({
+        path: "comments",
+        populate: { path: "author", select: "username displayName" },
+      });
+    console.log(posts[0]);
     res.json(posts);
   } catch (error) {
     next(error);
@@ -32,14 +36,14 @@ postsRouter.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
-
+ 
 // Create a post
 postsRouter.post("/", async (req, res, next) => {
   const body = req.body;
   const authorId = req.userId;
 
   try {
-    const newPost = new Post({ ...body, author: authorId });
+    const newPost = new Post({ ...body, author: authorId, likes: 0, comments: [] });
 
     // Update Posts collection
     const savedPost = await newPost.save();
@@ -101,8 +105,8 @@ postsRouter.delete("/:id", userAuthenticator, async (req, res, next) => {
 
 // Create a comment under a post
 postsRouter.post("/:postId/comments", async (req, res, next) => {
-  const post = await Post.findById(req.params.postId)
-  const author = await User.findById(req.userId)// Author of comment, not post
+  const post = await Post.findById(req.params.postId);
+  const author = await User.findById(req.userId); // Author of comment, not post
   const body = req.body;
 
   try {
@@ -115,11 +119,11 @@ postsRouter.post("/:postId/comments", async (req, res, next) => {
     // Add comment to comments collection
     const savedComment = await comment.save();
     // Add comment to comments field of post
-    post.comments.push(savedComment._id)
-    await post.save()
+    post.comments.push(savedComment._id);
+    await post.save();
     // Add comment to comments field of user
-    author.comments.push(savedComment._id)
-    await author.save()
+    author.comments.push(savedComment._id);
+    await author.save();
 
     res.json(savedComment);
   } catch (error) {
