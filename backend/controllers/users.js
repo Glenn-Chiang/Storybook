@@ -47,7 +47,7 @@ usersRouter.get("/:userId", async (req, res, next) => {
 // Get posts by specific user
 usersRouter.get("/:userId/posts", async (req, res, next) => {
   const { sortBy, sortOrder } = req.query;
-  console.log("Sort:", sortBy, sortOrder);
+
   try {
     const posts = await Post.find({ author: req.params.userId })
       .sort({ [sortBy]: sortOrder })

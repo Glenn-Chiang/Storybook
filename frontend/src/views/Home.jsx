@@ -14,7 +14,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
 
   const sortFields = [
-    { value: "dateAdded", label: "Date posted" },
+    { value: "datePosted", label: "Date posted" },
     { value: "lastUpdated", label: "Last updated" },
   ];
   const sortOrders = [
