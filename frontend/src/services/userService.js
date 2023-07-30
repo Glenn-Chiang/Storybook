@@ -16,6 +16,11 @@ const getUser = async (userId) => {
   return response.data
 }
 
+const updateUser = async (userId, updateData) => {
+  const response = await axios.put(`${baseUrl}/${userId}`, updateData)
+  return response.data
+}
+
 const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"))
 
-export default { create, getPosts, getUser, getCurrentUser };
+export default { create, getPosts, getUser, getCurrentUser, updateUser };
