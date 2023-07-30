@@ -10,7 +10,7 @@ import LoginLink from "../components/LoginLink";
 import TeleportButton from '../components/TeleportButton'
 import userService from "../services/userService";
 
-export default function Home() {
+export default function MyPosts() {
   const [posts, setPosts] = useState([]);
 
   const sortFields = [
@@ -37,7 +37,7 @@ export default function Home() {
   useEffect(() => {
     getPosts();
   }, [getPosts]);
-  console.log(posts[0])
+
   const filterFields = [
     { label: "Title", value: "title" },
     { label: "Content", value: "content" },
@@ -87,7 +87,7 @@ export default function Home() {
       <Header />
       <LoginLink/>
       <CreatePostBox setPosts={getPosts} scrollToTop={scrollToTop}/>
-      <h1 className="p-8 text-center" ref={topRef}>
+      <h1 className="p-8 text-center">
         My Posts
       </h1>
       <div className="flex gap-4 p-4 flex-col sm:flex-row">
@@ -102,7 +102,7 @@ export default function Home() {
           setOption={(option) => setSortOrder(option)}
         />
       </div>
-      <div className="flex flex-col items-center sm:flex-row gap-4 p-4">
+      <div className="flex flex-col items-center sm:flex-row gap-4 p-4" ref={topRef}>
         <Dropdown
           label={"Filter by"}
           options={filterFields}

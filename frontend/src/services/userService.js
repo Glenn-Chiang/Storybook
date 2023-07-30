@@ -11,4 +11,11 @@ const getPosts = async (userId, sortBy, sortOrder) => {
   return response.data
 }
 
-export default { create, getPosts };
+const getUser = async (userId) => {
+  const response = await axios.get(`${baseUrl}/${userId}`)
+  return response.data
+}
+
+const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"))
+
+export default { create, getPosts, getUser, getCurrentUser };

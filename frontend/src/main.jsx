@@ -4,26 +4,33 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./views/Login.jsx";
 import Register from "./views/Register.jsx";
-import Home from "./views/Home.jsx";
 import Browse from "./views/Browse";
+import MyPosts from "./views/MyPosts";
+import Profile from "./views/Profile/Profile";
+import { loader as profileLoader } from "./views/Profile/loader";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <MyPosts />,
+  },
+  {
+    path: "/profile/:userId",
+    element: <Profile />,
+    loader: profileLoader
   },
   {
     path: "/browse",
-    element: <Browse/>
+    element: <Browse />,
   },
   {
     path: "/login",
     element: <Login />,
   },
   {
-    path: '/register',
-    element: <Register/>
-  }
+    path: "/register",
+    element: <Register />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
