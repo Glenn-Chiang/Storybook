@@ -22,7 +22,7 @@ export default function Post({ post, setPosts, readOnly }) {
 
   const likePost = async () => {
     try {
-      await postService.update(post.id, {likes: 1});
+      await postService.like(post.id);
       setPosts();
     } catch (error) {
       console.log("Error liking post: ", error);

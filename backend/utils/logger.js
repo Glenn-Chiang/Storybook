@@ -3,7 +3,7 @@ const info = (...params) => {
 };
 
 const error = (...params) => {
-  console.log(...params);
+  console.log('Error:', ...params);
 };
 
 module.exports = {

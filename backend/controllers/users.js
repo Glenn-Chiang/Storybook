@@ -55,7 +55,7 @@ usersRouter.get("/:userId/posts", async (req, res, next) => {
       .populate({
         path: "comments",
         options: {
-          sort: { datePosted: -1 }
+          sort: { datePosted: -1 },
         },
         populate: {
           path: "author",
@@ -77,6 +77,30 @@ usersRouter.get("/:userId/comments", async (req, res, next) => {
       .populate("comments.author");
     const comments = user.comments;
     res.json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
+
+const userAuthenticator = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (req.userId.toString() !== user._id.toString()) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update user profile
+usersRouter.put("/:userId", userAuthenticator, async (req, res, next) => {
+  const updatedData = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.userId, updatedData);
+    res.json(updatedUser);
   } catch (error) {
     next(error);
   }

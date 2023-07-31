@@ -15,12 +15,13 @@ const requestLogger = (req, res, next) => {
 
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get("Authorization");
-  
+  // logger.info(authorization)
   if (authorization && authorization.startsWith("Bearer ")) {
     const token = authorization.replace("Bearer ", "");
     req.token = token
   } else {
-    req.token = null
+    logger.error("missing token")
+    return res.status(401).json({ error: "missing token"})
   }
   next();
 };
@@ -42,19 +43,6 @@ const userExtractor = async (req, res, next) => {
   }
 }
 
-// Posts can only be updated by their author. Compare id of user making the request with id of author
-const userAuthenticator = async (req, res, next) => {
-  try {
-    const post = await Post.findById(req.params.id)
-    const authorId = post.author
-    if (req.userId.toString() !== authorId.toString()) {
-      return res.status(401).json({ error: "Unauthorized access" });
-    }
-    next()
-  } catch (error) {
-    next(error)
-  }
-}
 
 const errorHandler = (error, req, res, next) => {
   logger.error(error.message);
@@ -79,7 +67,6 @@ module.exports = {
   requestLogger,
   tokenExtractor,
   userExtractor,
-  userAuthenticator,
   unknownEndpoint,
   errorHandler,
 };

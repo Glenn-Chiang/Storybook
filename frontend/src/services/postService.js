@@ -1,10 +1,6 @@
 import axios from "axios";
+import config from './config'
 const baseUrl = "http://localhost:3000/posts";
-
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-const token = currentUser ? `Bearer ${currentUser.token}` : null;
-
-const config = { headers: { Authorization: token } };
 
 const getAll = async (sortBy, sortOrder) => {
   const response = await axios.get(
@@ -14,20 +10,28 @@ const getAll = async (sortBy, sortOrder) => {
   return response.data;
 };
 
-
 const create = async (newObject) => {
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
 };
 
-const update = async (id, newObject) => {
-  const response = await axios.put(`${baseUrl}/${id}`, newObject, config);
+const edit = async (postId, updateData) => {
+  const response = await axios.put(`${baseUrl}/${postId}/edit`, updateData, config);
   return response.data;
 };
 
-const deletePost = async (id) => {
-  const response = await axios.delete(`${baseUrl}/${id}`, config);
+const like = async (postId) => {
+  const response = await axios.put(
+    `${baseUrl}/${postId}/likes`,
+    { likes: 1 },
+    config
+  );
+  return response.data;
+};
+
+const deletePost = async (postId) => {
+  const response = await axios.delete(`${baseUrl}/${postId}`, config);
   return response;
 };
 
-export default { getAll, create, update, deletePost };
+export default { getAll, create, edit, like, deletePost };

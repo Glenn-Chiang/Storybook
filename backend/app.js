@@ -14,6 +14,7 @@ const mongoose = require("mongoose");
 
 const postsRouter = require("./controllers/posts");
 const usersRouter = require("./controllers/users");
+const commentsRouter = require("./controllers/comments");
 const loginRouter = require("./controllers/login");
 
 const app = express();
@@ -35,9 +36,12 @@ async function buildApp() {
   app.use(express.static("build"));
   app.use(requestLogger);
 
-  app.use("/posts", tokenExtractor, userExtractor, postsRouter);
-  app.use("/users", usersRouter);
   app.use("/login", loginRouter);
+  app.use(tokenExtractor)
+  app.use(userExtractor)
+  app.use("/posts", postsRouter);
+  app.use("/users", usersRouter);
+  // app.use("/comments", commentsRouter);
 
   app.use(errorHandler);
   app.use(unknownEndpoint);

@@ -1,5 +1,4 @@
 const postsRouter = require("express").Router();
-const { userAuthenticator } = require("../utils/middleware");
 const Post = require("../models/post");
 const User = require("../models/user");
 const Comment = require("../models/comment");
@@ -65,43 +64,68 @@ postsRouter.post("/", async (req, res, next) => {
   }
 });
 
-postsRouter.put("/:id", async (req, res, next) => {
-  const body = req.body;
-  const post = await Post.findById(req.params.id);
-
-  if (body.title || body.content) {
-    // Only allow post author to update its title and content
-    if (req.userId.toString() !== post.author.toString()) {
+// Posts can only be updated by their author. Compare id of user making the request with id of author
+const authorAuthenticator = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    const authorId = post.author;
+    if (req.userId.toString() !== authorId.toString()) {
       return res.status(401).json({ error: "Unauthorized access" });
     }
-
-    post.title = body.title;
-    post.content = body.content;
-    post.lastUpdated = body.lastUpdated;
+    next();
+  } catch (error) {
+    next(error);
   }
+};
 
-  // Increaes likes by 1
-  else if (body.likes) {
-    post.likes = post.likes ? post.likes + 1 : 1;
-  }
-
+// Update likes; user does not have to be author of post
+postsRouter.put("/:postId/likes", async (req, res, next) => {
+  console.log('Hello from postsRouter')
   try {
-    const savedPost = await post.save();
-    res.json(savedPost);
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $inc: { likes: 1 },
+      },
+      { new: true }
+    );
+    res.json(updatedPost);
   } catch (error) {
     next(error);
   }
 });
 
-postsRouter.delete("/:id", userAuthenticator, async (req, res, next) => {
-  const postId = req.params.id;
+// Update title or content; requires user to be author of post
+postsRouter.put(
+  "/:postId/edit",
+  authorAuthenticator,
+  async (req, res, next) => {
+    const { title, content, lastUpdated } = req.body;
+
+    try {
+      const updatedPost = await Post.findByIdAndUpdate(
+        req.params.postId,
+        {
+          title,
+          content,
+          lastUpdated,
+        },
+        { new: true, runValidators: true }
+      );
+      res.json(updatedPost);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+postsRouter.delete("/:postId", authorAuthenticator, async (req, res, next) => {
+  const postId = req.params.postId;
   try {
-    const post = await Post.findById(postId);
-    const authorId = post.author;
     // Delete post from Posts collection
     await Post.findByIdAndDelete(postId);
     // Delete post from 'posts' field in User document
-    await User.findByIdAndUpdate(authorId, {
+    await User.findByIdAndUpdate(req.userId, {
       $pull: { posts: postId },
     });
     res.status(204).end();

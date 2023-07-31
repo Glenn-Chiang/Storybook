@@ -23,7 +23,7 @@ export default function Profile() {
   const handleSubmitName = async (formData) => {
     const displayName = formData.content;
     try {
-      await userService.updateUser(userId, { displayName })
+      await userService.updateUser(userId, { ...user, displayName })
     } catch (error) {
       console.log('Error updating display name', error)
     }
@@ -32,7 +32,7 @@ export default function Profile() {
   const handleSubmitAbout = async (formData) => {
     const about = formData.content;
     try {
-      await userService.updateUser(userId, { about })
+      await userService.updateUser(userId, { ...user, about })
     } catch (error) {
       console.log('Error updating about', error)
     }

@@ -10,9 +10,11 @@ import { ConfirmButton } from "../components/buttons";
 import loginService from "../services/loginService";
 import { useNavigate} from 'react-router-dom'
 import LinkButton from "../components/LinkButton";
+import { useState } from "react";
 
 export default function Login() {
-  
+  const [error, setError] = useState(null)
+
   const navigate = useNavigate()
   
   const {
@@ -30,7 +32,9 @@ export default function Login() {
       navigate('/')
 
     } catch (error) {
-      console.log('Error logging in: ', error)
+      const errorMessage = error.response.data.error
+      console.log('Error logging in: ', errorMessage)
+      setError(errorMessage)
     }
   };
 
@@ -70,6 +74,7 @@ export default function Login() {
           />
         </div>
         {errors.password && <ErrorAlert>{errors.password.message}</ErrorAlert>}
+        {error && <ErrorAlert>{error}</ErrorAlert>}
         <ConfirmButton>Login</ConfirmButton>
       </form>
       <p className="text-slate-500 p-4">
