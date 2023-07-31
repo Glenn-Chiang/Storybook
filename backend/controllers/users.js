@@ -2,15 +2,15 @@ const usersRouter = require("express").Router();
 const User = require("../models/user");
 const Post = require("../models/post");
 const bcrypt = require("bcrypt");
-const { tokenExtractor, userExtractor } = require('../utils/middleware')
+const { tokenExtractor, userExtractor } = require("../utils/middleware");
 
 // Create new user
 usersRouter.post("/", async (req, res, next) => {
   const { username, displayName, password } = req.body;
 
-  const existingUser = await User.findOne({ username })
+  const existingUser = await User.findOne({ username });
   if (existingUser) {
-    return res.status(409).json({ error: 'Username unavailable'})
+    return res.status(409).json({ error: "Username unavailable" });
   }
 
   try {
@@ -20,6 +20,7 @@ usersRouter.post("/", async (req, res, next) => {
       username,
       displayName,
       passwordHash,
+      about: "",
     });
     const savedUser = await user.save();
     res.json(savedUser);
@@ -89,7 +90,7 @@ usersRouter.get("/:userId/comments", async (req, res, next) => {
 // Users can only edit their own profiles
 const userAuthenticator = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.userId);
     if (req.userId.toString() !== user._id.toString()) {
       return res.status(401).json({ error: "Unauthorized access" });
     }
@@ -100,15 +101,24 @@ const userAuthenticator = async (req, res, next) => {
 };
 
 // Update user profile
-usersRouter.put("/:userId", tokenExtractor, userExtractor, userAuthenticator, async (req, res, next) => {
-  const updatedData = req.body;
-
-  try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.userId, updatedData);
-    res.json(updatedUser);
-  } catch (error) {
-    next(error);
+usersRouter.put(
+  "/:userId",
+  tokenExtractor,
+  userExtractor,
+  userAuthenticator,
+  async (req, res, next) => {
+    const updatedData = req.body;
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.userId,
+        updatedData,
+        { new: true, runValidators: true }
+      );
+      res.json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = usersRouter;

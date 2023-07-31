@@ -2,10 +2,7 @@ const postsRouter = require("express").Router();
 const Post = require("../models/post");
 const User = require("../models/user");
 const Comment = require("../models/comment");
-const {
-  tokenExtractor,
-  userExtractor,
-} = require("../utils/middleware");
+const { tokenExtractor, userExtractor } = require("../utils/middleware");
 
 postsRouter.get("/", async (req, res, next) => {
   const sortBy = req.query.sortBy; // dateAdded or lastUpdated
@@ -42,7 +39,7 @@ postsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-postsRouter.use(tokenExtractor, userExtractor)
+postsRouter.use(tokenExtractor, userExtractor); // Will be applied to all routes below
 
 // Create a post
 postsRouter.post("/", async (req, res, next) => {

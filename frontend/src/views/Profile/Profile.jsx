@@ -17,24 +17,31 @@ export default function Profile() {
   const user = useLoaderData(); // User whose profile is shown
   const { id: userId, username, displayName, about, posts, comments } = user;
 
+  const [nameState, setNameState] = useState(displayName);
+  const [aboutState, setAboutState] = useState(about);
+
   const [nameIsEditable, setNameIsEditable] = useState(false);
   const [aboutIsEditable, setAboutIsEditable] = useState(false);
 
   const handleSubmitName = async (formData) => {
     const displayName = formData.content;
     try {
-      await userService.updateUser(userId, { ...user, displayName })
+      await userService.updateUser(userId, { ...user, displayName });
+      setNameIsEditable(false);
+      setNameState(displayName);
     } catch (error) {
-      console.log('Error updating display name', error)
+      console.log("Error updating display name", error);
     }
   };
 
   const handleSubmitAbout = async (formData) => {
     const about = formData.content;
     try {
-      await userService.updateUser(userId, { ...user, about })
+      await userService.updateUser(userId, { ...user, about });
+      setAboutIsEditable(false);
+      setAboutState(about);
     } catch (error) {
-      console.log('Error updating about', error)
+      console.log("Error updating about", error);
     }
   };
 
@@ -59,13 +66,13 @@ export default function Profile() {
           </p>
           {nameIsEditable ? (
             <EditForm
-              defaultValue={displayName}
+              defaultValue={nameState}
               onCancel={() => setNameIsEditable(false)}
               onSubmit={handleSubmitName}
               maxLength={50}
             />
           ) : (
-            <p className="text-slate-500">{displayName}</p>
+            <p className="text-slate-500">{nameState}</p>
           )}
         </div>
         <div>
@@ -77,13 +84,13 @@ export default function Profile() {
           </p>
           {aboutIsEditable ? (
             <EditForm
-              defaultValue={about}
+              defaultValue={aboutState}
               onCancel={() => setAboutIsEditable(false)}
               onSubmit={handleSubmitAbout}
               maxLength={500}
             />
           ) : (
-            <p className="text-slate-500">{about || "-"}</p>
+            <p className="text-slate-500">{aboutState || "-"}</p>
           )}
         </div>
         <div>
