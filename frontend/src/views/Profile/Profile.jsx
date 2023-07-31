@@ -103,7 +103,7 @@ export default function Profile() {
         </div>
       </section>
       <div className="p-8">
-        <LinkButton to={"/"}>
+        <LinkButton to={`/users/${userId}/posts`}>
           View {currentUser.userId === userId ? "my" : `${username}'s`} posts
         </LinkButton>
       </div>

@@ -4,13 +4,12 @@ import Header from "../components/Header";
 import PostsList from "../components/PostsList";
 import Dropdown from "../components/Dropdown";
 import Paginator from "../components/Paginator";
-import LoginLink from "../components/LoginLink";
 import TeleportButton from "../components/TeleportButton";
 // import { useLoaderData } from "react-router-dom";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-export default function Browse() {
+export default function Home() {
   const [posts, setPosts] = useState([]);
 
   const sortFields = [
@@ -84,7 +83,6 @@ export default function Browse() {
   return (
     <div className="flex flex-col items-center">
       <Header />
-      <LoginLink />
       <div className="flex gap-4 p-4 flex-col sm:flex-row">
         <Dropdown
           label={"Sort by"}

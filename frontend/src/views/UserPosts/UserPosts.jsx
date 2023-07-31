@@ -1,9 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import Header from "../../components/Header";
 import PostsList from "../../components/PostsList";
 import Dropdown from "../../components/Dropdown";
 import Paginator from "../../components/Paginator";
-import LoginLink from "../../components/LoginLink";
 import TeleportButton from "../../components/TeleportButton";
 import userService from "../../services/userService";
 import { useParams } from "react-router-dom";
@@ -93,15 +91,12 @@ export default function UserPosts() {
 
   return (
     <div className="flex flex-col items-center">
-      <Header />
-      <LoginLink />
-
+      <h1 className="pb-10 text-center">
+        {readOnly ? "Username's Posts" : "My Posts"}
+      </h1>
       {!readOnly && (
         <CreatePostBox setPosts={getPosts} scrollToTop={scrollToTop} />
       )}
-      <h1 className="p-8 text-center">
-        {readOnly ? "Username's Posts" : "My Posts"}
-      </h1>
 
       <div className="flex gap-4 p-4 flex-col sm:flex-row">
         <Dropdown

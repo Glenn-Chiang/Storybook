@@ -12,33 +12,40 @@ import Profile from "./views/Profile/Profile";
 import { loader as profileLoader } from "./views/Profile/loader";
 // import { userPostsLoader, allPostsLoader } from "./views/UserPosts/loaders";
 import UserPosts from "./views/UserPosts/UserPosts";
-import Browse from "./views/Browse";
+import Home from "./views/Home";
+import Root from "./views/Root";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to={"/posts"} />,
-  },
-  {
-    path: "/posts",
-    element: <Browse />,
-  },
-  {
-    path: "/users/:userId/posts",
-    element: <UserPosts />,
-  },
-  {
-    path: "/users/:userId/profile",
-    element: <Profile />,
-    loader: profileLoader,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
+    element: <Root />,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to={"/posts"} />,
+      },
+      {
+        path: "/posts",
+        element: <Home />,
+      },
+      {
+        path: "/users/:userId/posts",
+        element: <UserPosts />,
+      },
+      {
+        path: "/users/:userId/profile",
+        element: <Profile />,
+        loader: profileLoader,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
+      },
+    ],
   },
 ]);
 

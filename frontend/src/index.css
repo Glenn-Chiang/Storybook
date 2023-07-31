@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    @apply text-sky-500 bg-sky-100 p-8;
+    @apply text-sky-500 bg-sky-100;
   }
   h1 {
     @apply text-2xl text-center;
