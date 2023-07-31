@@ -1,16 +1,18 @@
 import { useEffect, useState, useCallback, useRef } from "react";
-import postService from "../services/postService";
-import Header from "../components/Header";
-import PostsList from "../components/PostsList";
-import Dropdown from "../components/Dropdown";
-import Paginator from "../components/Paginator";
-import LoginLink from "../components/LoginLink";
-import TeleportButton from "../components/TeleportButton";
+import Header from "../../components/Header";
+import PostsList from "../../components/PostsList";
+import Dropdown from "../../components/Dropdown";
+import Paginator from "../../components/Paginator";
+import LoginLink from "../../components/LoginLink";
+import TeleportButton from "../../components/TeleportButton";
+import userService from "../../services/userService";
+import { useParams } from "react-router-dom";
+import CreatePostBox from "../../components/CreatePostBox";
 // import { useLoaderData } from "react-router-dom";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-export default function Browse() {
+export default function UserPosts() {
   const [posts, setPosts] = useState([]);
 
   const sortFields = [
@@ -24,14 +26,18 @@ export default function Browse() {
   const [sortBy, setSortBy] = useState(sortFields[0].value);
   const [sortOrder, setSortOrder] = useState(sortOrders[0].value);
 
+  const userId = useParams().userId;
+  const currentUser = userService.getCurrentUser();
+  const readOnly = currentUser.userId !== userId;
+  
   const getPosts = useCallback(async () => {
     try {
-      const posts = await postService.getAll(sortBy, sortOrder);
+      const posts = await userService.getPosts(userId, sortBy, sortOrder);
       setPosts(posts);
     } catch (error) {
       console.log("Error getting posts: ", error);
     }
-  }, [sortBy, sortOrder]);
+  }, [userId, sortBy, sortOrder]);
 
   useEffect(() => {
     getPosts();
@@ -81,10 +87,22 @@ export default function Browse() {
 
   const topRef = useRef(null);
 
+  const scrollToTop = () => {
+    topRef.current.scrollIntoView();
+  };
+
   return (
     <div className="flex flex-col items-center">
       <Header />
       <LoginLink />
+
+      {!readOnly && (
+        <CreatePostBox setPosts={getPosts} scrollToTop={scrollToTop} />
+      )}
+      <h1 className="p-8 text-center">
+        {readOnly ? "Username's Posts" : "My Posts"}
+      </h1>
+
       <div className="flex gap-4 p-4 flex-col sm:flex-row">
         <Dropdown
           label={"Sort by"}
@@ -118,7 +136,7 @@ export default function Browse() {
       ) : displayedPosts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">No posts found</p>
       ) : (
-        <PostsList posts={displayedPosts} setPosts={getPosts} readOnly={true} />
+        <PostsList posts={displayedPosts} setPosts={getPosts} readOnly={readOnly} />
       )}
 
       <Paginator

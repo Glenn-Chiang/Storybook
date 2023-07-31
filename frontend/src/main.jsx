@@ -1,31 +1,36 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import Login from "./views/Login.jsx";
 import Register from "./views/Register.jsx";
-import Browse from "./views/Browse";
-import MyPosts from "./views/MyPosts";
 import Profile from "./views/Profile/Profile";
 import { loader as profileLoader } from "./views/Profile/loader";
+// import { userPostsLoader, allPostsLoader } from "./views/UserPosts/loaders";
+import UserPosts from "./views/UserPosts/UserPosts";
+import Browse from "./views/Browse";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to={'/myPosts'}/>,
+    element: <Navigate to={"/posts"} />,
   },
   {
-    path: "/myPosts",
-    element: <MyPosts/>
-  },
-  {
-    path: "/profile/:userId",
-    element: <Profile />,
-    loader: profileLoader
-  },
-  {
-    path: "/browse",
+    path: "/posts",
     element: <Browse />,
+  },
+  {
+    path: "/users/:userId/posts",
+    element: <UserPosts />,
+  },
+  {
+    path: "/users/:userId/profile",
+    element: <Profile />,
+    loader: profileLoader,
   },
   {
     path: "/login",

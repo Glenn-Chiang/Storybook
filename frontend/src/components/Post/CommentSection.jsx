@@ -102,7 +102,6 @@ function CommentForm({ closeForm, setPosts }) {
 }
 
 function Comment({ comment }) {
-  console.log(comment.author)
   return (
     <div>
       <p>{comment.author.displayName}</p>

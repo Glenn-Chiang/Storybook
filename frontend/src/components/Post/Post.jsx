@@ -112,7 +112,9 @@ function LikeButton({ liked, onClick, likeCount }) {
       <button
         onClick={onClick}
         className={`text-white ${
-          liked ? "bg-teal-400 hover:bg-teal-500 " : "bg-sky-500 hover:bg-sky-600"
+          liked
+            ? "bg-teal-400 hover:bg-teal-500 "
+            : "bg-sky-500 hover:bg-sky-600"
         } w-8 h-8 rounded-xl`}
       >
         <FontAwesomeIcon icon={faArrowUp} />

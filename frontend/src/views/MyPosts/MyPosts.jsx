@@ -1,14 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback, useRef } from "react";
-import CreatePostBox from "../components/CreatePostBox";
-import Header from "../components/Header";
-import PostsList from "../components/PostsList";
-import Dropdown from "../components/Dropdown";
-import Paginator from "../components/Paginator";
-import LoginLink from "../components/LoginLink";
-import TeleportButton from '../components/TeleportButton'
-import userService from "../services/userService";
+import CreatePostBox from "../../components/CreatePostBox";
+import Header from "../../components/Header";
+import PostsList from "../../components/PostsList";
+import Dropdown from "../../components/Dropdown";
+import Paginator from "../../components/Paginator";
+import LoginLink from "../../components/LoginLink";
+import TeleportButton from '../../components/TeleportButton'
+import userService from "../../services/userService";
 
 export default function MyPosts() {
   const [posts, setPosts] = useState([]);
@@ -25,7 +25,7 @@ export default function MyPosts() {
   const [sortOrder, setSortOrder] = useState(sortOrders[0].value);
 
   const getPosts = useCallback(async () => {
-    const userId = JSON.parse(localStorage.getItem('currentUser')).userId
+    const userId = userService.getCurrentUser()
     try {
       const posts = await userService.getPosts(userId, sortBy, sortOrder);
       setPosts(posts);
