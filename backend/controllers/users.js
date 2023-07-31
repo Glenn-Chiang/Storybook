@@ -2,15 +2,19 @@ const usersRouter = require("express").Router();
 const User = require("../models/user");
 const Post = require("../models/post");
 const bcrypt = require("bcrypt");
+const { tokenExtractor, userExtractor } = require('../utils/middleware')
 
 // Create new user
 usersRouter.post("/", async (req, res, next) => {
   const { username, displayName, password } = req.body;
 
-  const saltRounds = 10;
+  const existingUser = await User.findOne({ username })
+  if (existingUser) {
+    return res.status(409).json({ error: 'Username unavailable'})
+  }
 
   try {
-    const passwordHash = await bcrypt.hash(password, saltRounds);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const user = new User({
       username,
@@ -82,6 +86,7 @@ usersRouter.get("/:userId/comments", async (req, res, next) => {
   }
 });
 
+// Users can only edit their own profiles
 const userAuthenticator = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
@@ -95,7 +100,7 @@ const userAuthenticator = async (req, res, next) => {
 };
 
 // Update user profile
-usersRouter.put("/:userId", userAuthenticator, async (req, res, next) => {
+usersRouter.put("/:userId", tokenExtractor, userExtractor, userAuthenticator, async (req, res, next) => {
   const updatedData = req.body;
 
   try {

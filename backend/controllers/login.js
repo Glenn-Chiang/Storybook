@@ -11,12 +11,12 @@ loginRouter.post("/", async (req, res, next) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.status(401).json({ error: "username not recognized" });
+      return res.status(401).json({ error: "Username not recognized" });
     }
 
     const passwordCorrect = await bcrypt.compare(password, user.passwordHash);
     if (!passwordCorrect) {
-      return res.status(401).json({ error: "incorrect password" });
+      return res.status(401).json({ error: "Incorrect password" });
     }
 
     const token = jwt.sign({ username, id: user._id }, config.SECRET);

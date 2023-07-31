@@ -2,6 +2,10 @@ const postsRouter = require("express").Router();
 const Post = require("../models/post");
 const User = require("../models/user");
 const Comment = require("../models/comment");
+const {
+  tokenExtractor,
+  userExtractor,
+} = require("../utils/middleware");
 
 postsRouter.get("/", async (req, res, next) => {
   const sortBy = req.query.sortBy; // dateAdded or lastUpdated
@@ -37,6 +41,8 @@ postsRouter.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+postsRouter.use(tokenExtractor, userExtractor)
 
 // Create a post
 postsRouter.post("/", async (req, res, next) => {
@@ -80,7 +86,7 @@ const authorAuthenticator = async (req, res, next) => {
 
 // Update likes; user does not have to be author of post
 postsRouter.put("/:postId/likes", async (req, res, next) => {
-  console.log('Hello from postsRouter')
+  console.log("Hello from postsRouter");
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
@@ -119,6 +125,7 @@ postsRouter.put(
   }
 );
 
+// Users can only delete their own posts
 postsRouter.delete("/:postId", authorAuthenticator, async (req, res, next) => {
   const postId = req.params.postId;
   try {

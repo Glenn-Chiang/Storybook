@@ -11,8 +11,11 @@ import { ConfirmButton } from "../components/buttons";
 import { useNavigate } from "react-router-dom";
 import LinkButton from "../components/LinkButton";
 import userService from "../services/userService";
+import { useState } from "react";
 
 export default function Register() {
+  const [error, setError] = useState(null)
+
   const navigate = useNavigate();
 
   const {
@@ -28,7 +31,9 @@ export default function Register() {
       await userService.create(username, displayName, password)
       navigate("/login");
     } catch (error) {
-      console.log("Error logging in: ", error);
+      const errorMessage = error.response.data.error
+      console.log("Error registering: ", errorMessage);
+      setError(errorMessage)
     }
   };
 
@@ -54,6 +59,7 @@ export default function Register() {
             {...register("displayName", { required: "Display name cannot be empty" })}
           />
         </div>
+        {errors.displayName && <ErrorAlert>{errors.displayName.message}</ErrorAlert>}
         <div className="flex flex-col gap-2">
           <label htmlFor="username" className="flex gap-2 items-center">
             <FontAwesomeIcon icon={faUserCircle} />
@@ -80,6 +86,7 @@ export default function Register() {
           />
         </div>
         {errors.password && <ErrorAlert>{errors.password.message}</ErrorAlert>}
+        {error && <ErrorAlert>{error}</ErrorAlert>}
         <ConfirmButton>Register</ConfirmButton>
       </form>
       <p className="text-slate-500 p-4">

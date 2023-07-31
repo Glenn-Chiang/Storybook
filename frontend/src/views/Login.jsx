@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import ErrorAlert from "../components/errorAlert";
+import ErrorAlert from "../components/ErrorAlert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLock,

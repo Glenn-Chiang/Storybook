@@ -4,9 +4,6 @@ const config = require("./utils/config");
 const logger = require("./utils/logger");
 const {
   requestLogger,
-  tokenExtractor,
-  userExtractor,
-  userAuthenticator,
   errorHandler,
   unknownEndpoint,
 } = require("./utils/middleware");
@@ -37,10 +34,8 @@ async function buildApp() {
   app.use(requestLogger);
 
   app.use("/login", loginRouter);
-  app.use(tokenExtractor)
-  app.use(userExtractor)
-  app.use("/posts", postsRouter);
   app.use("/users", usersRouter);
+  app.use("/posts", postsRouter);
   // app.use("/comments", commentsRouter);
 
   app.use(errorHandler);
