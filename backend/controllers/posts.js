@@ -82,16 +82,34 @@ const authorAuthenticator = async (req, res, next) => {
 };
 
 // Update likes; user does not have to be author of post
+// If user likes a post that they have already liked, the post will be unliked by the user
 postsRouter.put("/:postId/likes", async (req, res, next) => {
-  console.log("Hello from postsRouter");
+  const postId = req.params.postId;
+  const currentUser = await User.findById(req.userId);
+  const alreadyLiked = currentUser.likedPosts.includes(postId);
+  const incrementValue = alreadyLiked ? -1 : 1;
+
   try {
     const updatedPost = await Post.findByIdAndUpdate(
-      req.params.postId,
+      postId,
       {
-        $inc: { likes: 1 },
+        $inc: { likes: incrementValue },
       },
       { new: true }
     );
+
+    if (alreadyLiked) {
+      // Remove post from user's list of liked posts
+      await User.findByIdAndUpdate(req.userId, {
+        $pull: { likedPosts: updatedPost._id },
+      });
+    } else {
+      // Add post to user's list of liked posts
+      await User.findByIdAndUpdate(req.userId, {
+        $push: { likedPosts: updatedPost._id },
+      });
+    }
+
     res.json(updatedPost);
   } catch (error) {
     next(error);

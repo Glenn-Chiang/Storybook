@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import Login from "./views/Login.jsx";
 import Register from "./views/Register.jsx";
 import Browse from "./views/Browse";
@@ -12,7 +12,11 @@ import { loader as profileLoader } from "./views/Profile/loader";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MyPosts />,
+    element: <Navigate to={'/myPosts'}/>,
+  },
+  {
+    path: "/myPosts",
+    element: <MyPosts/>
   },
   {
     path: "/profile/:userId",
