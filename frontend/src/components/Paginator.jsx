@@ -5,9 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Paginator({ currentPage, numPages, handlePrev, handleNext }) {
   return (
     <div className="flex flex-col gap-4  p-4">
-      <p>
-        Page {currentPage} of {numPages}
-      </p>
       <div className="flex gap-2">
         <PageButton onClick={handlePrev}>
           <FontAwesomeIcon icon={faChevronLeft} />
@@ -16,6 +13,9 @@ export default function Paginator({ currentPage, numPages, handlePrev, handleNex
           <FontAwesomeIcon icon={faChevronRight} />
         </PageButton>
       </div>
+      <p>
+        Page {currentPage} of {numPages}
+      </p>
     </div>
   );
 }

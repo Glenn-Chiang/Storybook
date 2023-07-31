@@ -89,10 +89,7 @@ export default function UserPosts() {
       {!readOnly && (
         <CreatePostBox setPosts={getPosts} scrollToTop={scrollToTop} />
       )}
-      
-      <button onClick={() => setConfigIsVisible(prev => !prev)}>
-        <FontAwesomeIcon icon={faSortAmountDesc}/>
-      </button>
+
       {configIsVisible && (
         <PostsConfig
           setSortBy={setSortBy}
@@ -102,12 +99,22 @@ export default function UserPosts() {
         />
       )}
 
-      <Paginator
-        currentPage={currentPage}
-        numPages={numPages}
-        handlePrev={handlePrev}
-        handleNext={handleNext}
-      />
+      <section className="flex items-center">
+        <button
+          onClick={() => setConfigIsVisible((prev) => !prev)}
+          className="relative left-0 p-4"
+        >
+          <FontAwesomeIcon icon={faSortAmountDesc} />
+        </button>
+        <div className="relative inset-x-0 m-auto">
+          <Paginator
+            currentPage={currentPage}
+            numPages={numPages}
+            handlePrev={handlePrev}
+            handleNext={handleNext}
+          />
+        </div>
+      </section>
 
       {posts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">No posts created</p>
