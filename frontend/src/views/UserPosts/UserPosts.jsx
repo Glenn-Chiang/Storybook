@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import PostsList from "../../components/PostsList";
-import Dropdown from "../../components/Dropdown";
 import Paginator from "../../components/Paginator";
 import TeleportButton from "../../components/TeleportButton";
 import userService from "../../services/userService";
 import { useParams } from "react-router-dom";
 import CreatePostBox from "../../components/CreatePostBox";
+import PostsConfig from "../../components/PostsConfig";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSortAmountDesc } from "@fortawesome/free-solid-svg-icons";
 // import { useLoaderData } from "react-router-dom";
 
 /* eslint-disable react/no-unescaped-entities */
@@ -13,21 +15,15 @@ import CreatePostBox from "../../components/CreatePostBox";
 export default function UserPosts() {
   const [posts, setPosts] = useState([]);
 
-  const sortFields = [
-    { value: "datePosted", label: "Date posted" },
-    { value: "lastUpdated", label: "Last updated" },
-  ];
-  const sortOrders = [
-    { value: "desc", label: "newest" },
-    { value: "asc", label: "oldest" },
-  ];
-  const [sortBy, setSortBy] = useState(sortFields[0].value);
-  const [sortOrder, setSortOrder] = useState(sortOrders[0].value);
+  const [configIsVisible, setConfigIsVisible] = useState(false);
+
+  const [sortBy, setSortBy] = useState("datePosted");
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const userId = useParams().userId;
   const currentUser = userService.getCurrentUser();
   const readOnly = currentUser.userId !== userId;
-  
+
   const getPosts = useCallback(async () => {
     try {
       const posts = await userService.getPosts(userId, sortBy, sortOrder);
@@ -41,11 +37,7 @@ export default function UserPosts() {
     getPosts();
   }, [getPosts]);
 
-  const filterFields = [
-    { label: "Title", value: "title" },
-    { label: "Content", value: "content" },
-  ];
-  const [filterField, setFilterField] = useState(filterFields[0].value);
+  const [filterBy, setFilterBy] = useState("title");
   const [filterTerms, setFilterTerms] = useState("");
 
   const handleFilterChange = (event) => {
@@ -54,7 +46,7 @@ export default function UserPosts() {
   };
 
   const filteredPosts = posts.filter((post) =>
-    post[filterField].toLowerCase().includes(filterTerms.toLowerCase())
+    post[filterBy].toLowerCase().includes(filterTerms.toLowerCase())
   );
 
   const postsPerPage = 10;
@@ -91,33 +83,24 @@ export default function UserPosts() {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="pb-10 text-center">
+      <h1 className="pb-10 text-4xl font-bold">
         {readOnly ? "Username's Posts" : "My Posts"}
       </h1>
       {!readOnly && (
         <CreatePostBox setPosts={getPosts} scrollToTop={scrollToTop} />
       )}
-
-      <div className="flex gap-4 p-4 flex-col sm:flex-row">
-        <Dropdown
-          label={"Sort by"}
-          options={sortFields}
-          setOption={(option) => setSortBy(option)}
+      
+      <button onClick={() => setConfigIsVisible(prev => !prev)}>
+        <FontAwesomeIcon icon={faSortAmountDesc}/>
+      </button>
+      {configIsVisible && (
+        <PostsConfig
+          setSortBy={setSortBy}
+          setSortOrder={setSortOrder}
+          setFilterBy={setFilterBy}
+          handleFilterChange={handleFilterChange}
         />
-        <Dropdown
-          label={"Sort order"}
-          options={sortOrders}
-          setOption={(option) => setSortOrder(option)}
-        />
-      </div>
-      <div className="flex flex-col items-center sm:flex-row gap-4 p-4">
-        <Dropdown
-          label={"Filter by"}
-          options={filterFields}
-          setOption={(option) => setFilterField(option)}
-        />
-        <Filterbar handleChange={handleFilterChange} />
-      </div>
+      )}
 
       <Paginator
         currentPage={currentPage}
@@ -131,7 +114,11 @@ export default function UserPosts() {
       ) : displayedPosts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">No posts found</p>
       ) : (
-        <PostsList posts={displayedPosts} setPosts={getPosts} readOnly={readOnly} />
+        <PostsList
+          posts={displayedPosts}
+          setPosts={getPosts}
+          readOnly={readOnly}
+        />
       )}
 
       <Paginator
@@ -142,17 +129,6 @@ export default function UserPosts() {
       />
 
       <TeleportButton forwardedRef={topRef} />
-    </div>
-  );
-}
-
-function Filterbar({ handleChange }) {
-  return (
-    <div className="">
-      <input
-        onChange={handleChange}
-        className="rounded-xl p-2 shadow w-80 sm:w-96 text-slate-500"
-      />
     </div>
   );
 }
