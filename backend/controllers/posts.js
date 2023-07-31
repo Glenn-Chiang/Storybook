@@ -86,17 +86,27 @@ const authorAuthenticator = async (req, res, next) => {
 postsRouter.put("/:postId/likes", async (req, res, next) => {
   const postId = req.params.postId;
   const currentUser = await User.findById(req.userId);
+
   const alreadyLiked = currentUser.likedPosts.includes(postId);
-  const incrementValue = alreadyLiked ? -1 : 1;
 
   try {
-    const updatedPost = await Post.findByIdAndUpdate(
-      postId,
-      {
-        $inc: { likes: incrementValue },
-      },
-      { new: true }
-    );
+    const updatedPost = alreadyLiked
+      ? // Remove user from list of users who liked post
+        await Post.findByIdAndUpdate(
+          postId,
+          {
+            $pull: { likedBy: currentUser._id },
+          },
+          { new: true }
+        )
+      : // Add user to list of users who liked post
+        await Post.findByIdAndUpdate(
+          postId,
+          {
+            $push: { likedBy: currentUser._id },
+          },
+          { new: true }
+        );
 
     if (alreadyLiked) {
       // Remove post from user's list of liked posts

@@ -11,9 +11,10 @@ import { EditButton, DeleteButton } from "../buttons";
 import EditModal from "../EditModal";
 import DeleteModal from "../DeleteModal";
 import { useState } from "react";
-import postService from "../../services/postService";
 import CommentSection from "./CommentSection";
 import { PostContext } from "./PostContext";
+import postService from "../../services/postService";
+import userService from "../../services/userService";
 
 export default function Post({ post, setPosts, readOnly }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -29,6 +30,8 @@ export default function Post({ post, setPosts, readOnly }) {
     }
   };
 
+  const currentUser = userService.getCurrentUser();
+
   return (
     <PostContext.Provider value={post}>
       <div className="flex justify-between flex-col gap-4 shadow p-6 rounded-xl bg-white">
@@ -37,7 +40,7 @@ export default function Post({ post, setPosts, readOnly }) {
             <h2>{post.title}</h2>
             <p className="flex gap-2 items-center text-sky-500">
               <FontAwesomeIcon icon={faUserCircle} />
-              {post.author ? post.author.displayName : 'Anonymous'}
+              {post.author ? post.author.displayName : "Anonymous"}
             </p>
             <p className="flex gap-4">
               <span className="flex gap-2 items-center text-slate-400">
@@ -63,7 +66,11 @@ export default function Post({ post, setPosts, readOnly }) {
           </div>
           <div className="flex justify-between items-end">
             <div className="flex gap-2 text-xl">
-              <LikeButton onClick={likePost} likeCount={post.likes} />
+              <LikeButton
+                liked={post.likedBy.includes(currentUser.userId)}
+                onClick={likePost}
+                likeCount={post.likedBy.length}
+              />
               <CommentButton
                 onClick={() => setCommentsVisible((prev) => !prev)}
                 commentCount={post.comments.length}
@@ -79,7 +86,9 @@ export default function Post({ post, setPosts, readOnly }) {
             </div>
           </div>
         </div>
-        {commentsVisible && <CommentSection comments={post.comments} setPosts={setPosts}/>}
+        {commentsVisible && (
+          <CommentSection comments={post.comments} setPosts={setPosts} />
+        )}
         {editModalVisible && (
           <EditModal
             closeModal={() => setEditModalVisible(false)}
@@ -97,16 +106,18 @@ export default function Post({ post, setPosts, readOnly }) {
   );
 }
 
-function LikeButton({ onClick, likeCount }) {
+function LikeButton({ liked, onClick, likeCount }) {
   return (
     <div className="flex sm:flex-row-reverse gap-1">
       <button
         onClick={onClick}
-        className="text-white bg-sky-500 hover:bg-teal-400 w-8 h-8 rounded-xl"
+        className={`text-white ${
+          liked ? "bg-teal-400 hover:bg-teal-500 " : "bg-sky-500 hover:bg-sky-600"
+        } w-8 h-8 rounded-xl`}
       >
         <FontAwesomeIcon icon={faArrowUp} />
       </button>
-      <span>{likeCount}</span>
+      <span className={`${liked && "text-teal-400"}`}>{likeCount}</span>
     </div>
   );
 }

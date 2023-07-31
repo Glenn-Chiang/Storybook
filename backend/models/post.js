@@ -6,10 +6,10 @@ const postSchema = new mongoose.Schema({
   datePosted: Date,
   lastUpdated: Date,
   author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  likes: Number,
   comments: [
     { type: mongoose.Schema.Types.ObjectId, ref: "Comment", default: [] },
   ],
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", default: [] }],
 });
 
 postSchema.set("toJSON", {
