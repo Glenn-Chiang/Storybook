@@ -1,10 +1,9 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import postService from "../services/postService";
 import Header from "../components/Header";
-import PostsList from "../components/PostsList";
-import Dropdown from "../components/Dropdown";
-import Paginator from "../components/Paginator";
-import TeleportButton from "../components/TeleportButton";
+
+// import TeleportButton from "../components/TeleportButton";
+import PostsPage from "./PostsPage";
 // import { useLoaderData } from "react-router-dom";
 
 /* eslint-disable react/no-unescaped-entities */
@@ -36,108 +35,17 @@ export default function Home() {
     getPosts();
   }, [getPosts]);
 
-  const filterFields = [
-    { label: "Title", value: "title" },
-    { label: "Content", value: "content" },
-  ];
-  const [filterField, setFilterField] = useState(filterFields[0].value);
-  const [filterTerms, setFilterTerms] = useState("");
-
-  const handleFilterChange = (event) => {
-    setFilterTerms(event.target.value);
-    setStartIndex(0);
-  };
-
-  const filteredPosts = posts.filter((post) =>
-    post[filterField].toLowerCase().includes(filterTerms.toLowerCase())
-  );
-
-  const postsPerPage = 10;
-  const [startIndex, setStartIndex] = useState(0);
-  const currentPage = Math.floor(startIndex / postsPerPage) + 1;
-  const numPages =
-    filteredPosts.length > 0
-      ? Math.ceil(filteredPosts.length / postsPerPage)
-      : 1;
-
-  const handlePrev = () => {
-    if (startIndex === 0) {
-      return;
-    }
-    setStartIndex((prev) => prev - postsPerPage);
-  };
-
-  const handleNext = () => {
-    if (startIndex + postsPerPage >= filteredPosts.length) {
-      return;
-    }
-    setStartIndex((prev) => prev + postsPerPage);
-  };
-
-  const displayedPosts = filterTerms
-    ? filteredPosts.slice(startIndex, startIndex + postsPerPage)
-    : posts.slice(startIndex, startIndex + postsPerPage);
-
-  const topRef = useRef(null);
-
   return (
-    <div className="flex flex-col items-center">
-      <Header />
-      <div className="flex gap-4 p-4 flex-col sm:flex-row">
-        <Dropdown
-          label={"Sort by"}
-          options={sortFields}
-          setOption={(option) => setSortBy(option)}
-        />
-        <Dropdown
-          label={"Sort order"}
-          options={sortOrders}
-          setOption={(option) => setSortOrder(option)}
-        />
+    <PostsPage
+      posts={posts}
+      setSortBy={setSortBy}
+      setSortOrder={setSortOrder}
+      getPosts={getPosts}
+      readOnly={true}
+    >
+      <div className="flex flex-col items-center">
+        <Header />
       </div>
-      <div className="flex flex-col items-center sm:flex-row gap-4 p-4">
-        <Dropdown
-          label={"Filter by"}
-          options={filterFields}
-          setOption={(option) => setFilterField(option)}
-        />
-        <Filterbar handleChange={handleFilterChange} />
-      </div>
-
-      <Paginator
-        currentPage={currentPage}
-        numPages={numPages}
-        handlePrev={handlePrev}
-        handleNext={handleNext}
-      />
-
-      {posts.length === 0 ? (
-        <p className="text-slate-400 text-center p-4">No posts created</p>
-      ) : displayedPosts.length === 0 ? (
-        <p className="text-slate-400 text-center p-4">No posts found</p>
-      ) : (
-        <PostsList posts={displayedPosts} setPosts={getPosts} readOnly={true} />
-      )}
-
-      <Paginator
-        currentPage={currentPage}
-        numPages={numPages}
-        handlePrev={handlePrev}
-        handleNext={handleNext}
-      />
-
-      <TeleportButton forwardedRef={topRef} />
-    </div>
-  );
-}
-
-function Filterbar({ handleChange }) {
-  return (
-    <div className="">
-      <input
-        onChange={handleChange}
-        className="rounded-xl p-2 shadow w-80 sm:w-96 text-slate-500"
-      />
-    </div>
+    </PostsPage>
   );
 }
