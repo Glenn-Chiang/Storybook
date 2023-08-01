@@ -5,7 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import PostForm from "./PostForm";
 import postService from "../services/postService";
 
-export default function CreatePostBox({ setPosts, scrollToTop }) {
+export default function CreatePostBox({ setPosts }) {
   const [showForm, setShowForm] = useState(false);
 
   const handleClick = () => {
@@ -20,7 +20,6 @@ export default function CreatePostBox({ setPosts, scrollToTop }) {
       await postService.create(newPost);
       setPosts(); // Sync application state with database after each crud operation
       setShowForm(false);
-      scrollToTop();
     } catch (error) {
       console.log("Error creating post: ", error);
     }

@@ -3,7 +3,7 @@ import PostsPage from "./PostsPage";
 import { faBookBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import userService from "../services/userService";
+import postService from "../services/postService";
 
 export default function LikedPosts() {
   const [posts, setPosts] = useState([]);
@@ -15,7 +15,7 @@ export default function LikedPosts() {
 
   const getPosts = useCallback(async () => {
     try {
-      const posts = await userService.getLikedPosts(userId, sortBy, sortOrder);
+      const posts = await postService.getLikedByUser(userId, sortBy, sortOrder);
       setPosts(posts);
     } catch (error) {
       console.log("Error getting posts: ", error);

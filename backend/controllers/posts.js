@@ -77,7 +77,7 @@ postsRouter.get(
   userAuthenticator,
   async (req, res, next) => {
     try {
-      const posts = Post.find({ likedBy: { $in: [req.params.userId] } })
+      const posts = await Post.find({ likedBy: { $in: [req.params.userId] } })
         .populate("author")
         .populate("comments");
       res.json(posts);

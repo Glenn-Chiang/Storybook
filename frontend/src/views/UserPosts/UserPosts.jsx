@@ -3,6 +3,7 @@ import userService from "../../services/userService";
 import { Link, useParams } from "react-router-dom";
 import CreatePostBox from "../../components/CreatePostBox";
 import PostsPage from "../PostsPage";
+import postService from "../../services/postService";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
@@ -18,7 +19,7 @@ export default function UserPosts() {
 
   const getPosts = useCallback(async () => {
     try {
-      const posts = await userService.getPosts(userId, sortBy, sortOrder);
+      const posts = await postService.getByUser(userId, sortBy, sortOrder);
       setPosts(posts);
     } catch (error) {
       console.log("Error getting posts: ", error);
@@ -39,7 +40,7 @@ export default function UserPosts() {
       readOnly={readOnly}
     >
       <div className="flex flex-col items-center">
-        <h1 className="pb-10 text-4xl font-bold">
+        <h1>
           {readOnly ? "Username's Posts" : "My Posts"}
         </h1>
         <Link to={`/users/${userId}/profile`} className="p-2 rounded-xl mb-10">

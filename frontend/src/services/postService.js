@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from './config'
+import config from "./config";
 const baseUrl = "http://localhost:3000/posts";
 
 const getAll = async (sortBy, sortOrder) => {
@@ -19,7 +19,8 @@ const getByUser = async (userId, sortBy, sortOrder) => {
 
 const getLikedByUser = async (userId, sortBy, sortOrder) => {
   const response = await axios.get(
-    `${baseUrl}/users/${userId}/likedPosts?sortBy=${sortBy}&sortOrder=${sortOrder}`
+    `${baseUrl}/users/${userId}/likedPosts?sortBy=${sortBy}&sortOrder=${sortOrder}`,
+    config
   );
   return response.data;
 };
@@ -30,7 +31,11 @@ const create = async (newObject) => {
 };
 
 const edit = async (postId, updateData) => {
-  const response = await axios.put(`${baseUrl}/${postId}/edit`, updateData, config);
+  const response = await axios.put(
+    `${baseUrl}/${postId}/edit`,
+    updateData,
+    config
+  );
   return response.data;
 };
 
@@ -48,4 +53,12 @@ const deletePost = async (postId) => {
   return response;
 };
 
-export default { getAll, getByUser, getLikedByUser, create, edit, like, deletePost };
+export default {
+  getAll,
+  getByUser,
+  getLikedByUser,
+  create,
+  edit,
+  like,
+  deletePost,
+};
