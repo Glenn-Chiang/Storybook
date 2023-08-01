@@ -2,20 +2,32 @@
 import { useLoaderData } from "react-router-dom";
 import userService from "../../services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import LinkButton from "../../components/LinkButton";
 import {
-  CancelButton,
-  ConfirmButton,
+  faBook,
+  faBookBookmark,
+  faComment,
+  faUserCircle,
+  faUserFriends,
+} from "@fortawesome/free-solid-svg-icons";
+import {
   EditButton,
 } from "../../components/buttons";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { AboutForm, NameForm, ProfileLink } from "./components";
 
 export default function Profile() {
   const currentUser = userService.getCurrentUser();
   const user = useLoaderData(); // User whose profile is shown
-  const { id: userId, username, displayName, about, posts, comments } = user;
+  const {
+    id: userId,
+    username,
+    displayName,
+    about,
+    posts,
+    comments,
+    friends,
+  } = user;
+  const IsOwnProfile = currentUser.userId === userId;
 
   const [nameState, setNameState] = useState(displayName);
   const [aboutState, setAboutState] = useState(about);
@@ -24,22 +36,23 @@ export default function Profile() {
   const [aboutIsEditable, setAboutIsEditable] = useState(false);
 
   const handleSubmitName = async (formData) => {
-    const displayName = formData.content;
     try {
-      await userService.updateUser(userId, { ...user, displayName });
+      await userService.updateUser(userId, {
+        ...user,
+        displayName: formData.displayName,
+      });
       setNameIsEditable(false);
-      setNameState(displayName);
+      setNameState(formData.displayName);
     } catch (error) {
       console.log("Error updating display name", error);
     }
   };
 
   const handleSubmitAbout = async (formData) => {
-    const about = formData.content;
     try {
-      await userService.updateUser(userId, { ...user, about });
+      await userService.updateUser(userId, { ...user, about: formData.about });
       setAboutIsEditable(false);
-      setAboutState(about);
+      setAboutState(formData.about);
     } catch (error) {
       console.log("Error updating about", error);
     }
@@ -49,7 +62,7 @@ export default function Profile() {
     <div className="flex flex-col items-center">
       <h1 className="p-4">
         <FontAwesomeIcon icon={faUserCircle} />
-        {currentUser.userId === userId ? " My " : `${username}'s `}
+        {IsOwnProfile ? " My " : `${username}'s `}
         Profile
       </h1>
       <section className="flex flex-col gap-4 inset-x-0 m-auto bg-white rounded-xl p-4">
@@ -65,11 +78,10 @@ export default function Profile() {
             )}
           </p>
           {nameIsEditable ? (
-            <EditForm
+            <NameForm
               defaultValue={nameState}
               onCancel={() => setNameIsEditable(false)}
               onSubmit={handleSubmitName}
-              maxLength={50}
             />
           ) : (
             <p className="text-slate-500">{nameState}</p>
@@ -83,14 +95,13 @@ export default function Profile() {
             )}
           </p>
           {aboutIsEditable ? (
-            <EditForm
+            <AboutForm
               defaultValue={aboutState}
               onCancel={() => setAboutIsEditable(false)}
               onSubmit={handleSubmitAbout}
-              maxLength={500}
             />
           ) : (
-            <p className="text-slate-500">{aboutState || "-"}</p>
+            <p className="text-slate-500">{addLineBreaks(aboutState) || "-"}</p>
           )}
         </div>
         <div>
@@ -101,29 +112,41 @@ export default function Profile() {
           <p>Comments</p>
           <p className="text-slate-500">{comments.length}</p>
         </div>
+        <div>
+          <p>Friends</p>
+          <p className="text-slate-500">{friends.length}</p>
+        </div>
       </section>
-      <div className="p-8">
-        <LinkButton to={`/users/${userId}/posts`}>
-          View {currentUser.userId === userId ? "my" : `${username}'s`} posts
-        </LinkButton>
+      <div className="p-8 grid sm:grid-cols-4 gap-4 grid-cols-2">
+        <ProfileLink route={`/users/${userId}/posts`}>
+          <FontAwesomeIcon icon={faBook} />
+          Posts
+        </ProfileLink>
+        <ProfileLink route={`/users/${userId}/comments`}>
+          <FontAwesomeIcon icon={faComment} />
+          Comments
+        </ProfileLink>
+        {IsOwnProfile && (
+          <ProfileLink route={`/users/${userId}/likedPosts`}>
+            <FontAwesomeIcon icon={faBookBookmark} />
+            Liked Posts
+          </ProfileLink>
+        )}
+        <ProfileLink route={`/users/${userId}/friends`}>
+          <FontAwesomeIcon icon={faUserFriends} />
+          Friends
+        </ProfileLink>
       </div>
     </div>
   );
 }
 
-function EditForm({ defaultValue, onSubmit, onCancel, maxLength }) {
-  const { register, handleSubmit } = useForm();
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="py-4">
-      <input
-        defaultValue={defaultValue}
-        {...register("content", { required: true, maxLength: maxLength })}
-      />
-      <div className="py-4 flex gap-2">
-        <ConfirmButton>Confirm</ConfirmButton>
-        <CancelButton onClick={onCancel} />
-      </div>
-    </form>
-  );
-}
+const addLineBreaks = (text) => {
+  return text.split("\n").map((line) => (
+    <>
+      {line}
+      <br />
+    </>
+  ));
+};

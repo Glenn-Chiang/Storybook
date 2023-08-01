@@ -99,14 +99,14 @@ export default function UserPosts() {
         />
       )}
 
-      <section className="flex items-center">
+      <section className="flex items-center justify-center relative" ref={topRef}>
         <button
           onClick={() => setConfigIsVisible((prev) => !prev)}
-          className="relative left-0 p-4"
+          className="absolute left-0"
         >
           <FontAwesomeIcon icon={faSortAmountDesc} />
         </button>
-        <div className="relative inset-x-0 m-auto">
+        <div className="">
           <Paginator
             currentPage={currentPage}
             numPages={numPages}

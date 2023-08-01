@@ -11,7 +11,7 @@ export default function Navbar() {
   const currentUser = userService.getCurrentUser();
 
   return (
-    <nav className="text-lg flex justify-between fixed w-screen h-10 bg-sky-200 text-sky-500 p-4 pr-8">
+    <nav className="text-lg flex justify-between fixed w-screen h-10 bg-sky-200 text-sky-500 p-4 pr-8 z-10">
       <NavLink to={"/posts"} className={"flex gap-2 items-center"}>
         <FontAwesomeIcon icon={faBookReader} />
         StoryBook

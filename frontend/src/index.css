@@ -23,7 +23,10 @@
   section {
     @apply  w-11/12 sm:w-4/5;
   }
-  input {
+  input, textarea {
     @apply bg-slate-100 shadow rounded p-2 text-slate-500
+  }
+  a {
+    @apply transition
   }
 }

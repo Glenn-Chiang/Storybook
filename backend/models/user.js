@@ -25,6 +25,13 @@ const userSchema = new mongoose.Schema({
       ref: "Post",
       default: []
     }
+  ],
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: []
+    }
   ]
 });
 
