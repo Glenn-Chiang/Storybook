@@ -44,7 +44,7 @@ export default function UserPosts() {
           {readOnly ? "Username's Posts" : "My Posts"}
         </h1>
         <Link to={`/users/${userId}/profile`} className="p-2 rounded-xl mb-10">
-          View Profile
+          Profile
         </Link>
         {!readOnly && <CreatePostBox setPosts={getPosts} />}
       </div>

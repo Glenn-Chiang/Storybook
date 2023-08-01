@@ -16,6 +16,7 @@ import Home from "./views/Home";
 import Root from "./views/Root";
 import LikedPosts from "./views/LikedPosts";
 import CommentsPage from "./views/CommentsPage";
+import UserRoot from "./views/UserRoot";
 
 const router = createBrowserRouter([
   {
@@ -31,23 +32,6 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/users/:userId/posts",
-        element: <UserPosts />,
-      },
-      {
-        path: "/users/:userId/likedPosts",
-        element: <LikedPosts/>
-      },
-      {
-        path: "/users/:userId/comments",
-        element: <CommentsPage/>
-      },
-      {
-        path: "/users/:userId/profile",
-        element: <Profile />,
-        loader: profileLoader,
-      },
-      {
         path: "/login",
         element: <Login />,
       },
@@ -55,6 +39,29 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
       },
+      {
+        path: "/users/:userId",
+        element: <UserRoot/>,
+        children: [
+          {
+            path: "posts",
+            element: <UserPosts />,
+          },
+          {
+            path: "likedPosts",
+            element: <LikedPosts/>
+          },
+          {
+            path: "comments",
+            element: <CommentsPage/>
+          },
+          {
+            path: "profile",
+            element: <Profile />,
+            loader: profileLoader,
+          },
+        ]
+      }
     ],
   },
 ]);

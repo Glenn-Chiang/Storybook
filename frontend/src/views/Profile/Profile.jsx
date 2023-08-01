@@ -3,17 +3,12 @@ import { useLoaderData } from "react-router-dom";
 import userService from "../../services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBook,
-  faBookBookmark,
-  faComment,
   faUserCircle,
-  faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  EditButton,
-} from "../../components/buttons";
+import { EditButton } from "../../components/buttons";
 import { useState } from "react";
-import { AboutForm, NameForm, ProfileLink } from "./components";
+import { CancelButton, ConfirmButton } from "../../components/buttons";
+import { useForm } from "react-hook-form";
 
 export default function Profile() {
   const currentUser = userService.getCurrentUser();
@@ -65,6 +60,7 @@ export default function Profile() {
         {IsOwnProfile ? " My " : `${username}'s `}
         Profile
       </h1>
+
       <section className="flex flex-col gap-4 inset-x-0 m-auto bg-white rounded-xl p-4">
         <div>
           <p>Username</p>
@@ -117,30 +113,43 @@ export default function Profile() {
           <p className="text-slate-500">{friends.length}</p>
         </div>
       </section>
-      <div className="p-8 grid sm:grid-cols-4 gap-4 grid-cols-2">
-        <ProfileLink route={`/users/${userId}/posts`}>
-          <FontAwesomeIcon icon={faBook} />
-          Posts
-        </ProfileLink>
-        <ProfileLink route={`/users/${userId}/comments`}>
-          <FontAwesomeIcon icon={faComment} />
-          Comments
-        </ProfileLink>
-        {IsOwnProfile && (
-          <ProfileLink route={`/users/${userId}/likedPosts`}>
-            <FontAwesomeIcon icon={faBookBookmark} />
-            Liked Posts
-          </ProfileLink>
-        )}
-        <ProfileLink route={`/users/${userId}/friends`}>
-          <FontAwesomeIcon icon={faUserFriends} />
-          Friends
-        </ProfileLink>
-      </div>
     </div>
   );
 }
 
+function NameForm({ defaultValue, onSubmit, onCancel }) {
+  const { register, handleSubmit } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="py-4">
+      <input
+        defaultValue={defaultValue}
+        {...register("displayName", { required: true, maxLength: 50 })}
+      />
+      <div className="py-4 flex gap-2">
+        <ConfirmButton>Confirm</ConfirmButton>
+        <CancelButton onClick={onCancel} />
+      </div>
+    </form>
+  );
+}
+
+function AboutForm({ defaultValue, onSubmit, onCancel }) {
+  const { register, handleSubmit } = useForm();
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="py-4">
+      <textarea
+        defaultValue={defaultValue}
+        {...register("about", { required: true, maxLength: 500 })}
+      />
+      <div className="py-4 flex gap-2">
+        <ConfirmButton>Confirm</ConfirmButton>
+        <CancelButton onClick={onCancel} />
+      </div>
+    </form>
+  );
+}
 
 const addLineBreaks = (text) => {
   return text.split("\n").map((line) => (
