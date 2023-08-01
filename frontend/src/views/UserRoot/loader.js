@@ -6,7 +6,7 @@ export const loader = async ({ params }) => {
     const user = await userService.getUser(userId);
     return user;
   } catch (error) {
-    console.log('User not found')
-    return null
+    console.log("User not found");
+    return null;
   }
 };

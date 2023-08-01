@@ -16,8 +16,9 @@ import Home from "./views/Home";
 import Root from "./views/Root";
 import LikedPosts from "./views/LikedPosts";
 import CommentsPage from "./views/CommentsPage";
-import UserRoot from "./views/UserRoot";
+import UserRoot from "./views/UserRoot/UserRoot";
 import FriendsPage from "./views/Friendspage";
+import { loader as userLoader } from "./views/UserRoot/loader";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       {
         path: "/users/:userId",
         element: <UserRoot/>,
+        loader: userLoader,
         children: [
           {
             path: "posts",

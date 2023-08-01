@@ -9,10 +9,10 @@
 
 @layer base {
   body {
-    @apply text-sky-500 bg-sky-100 pb-4;
+    @apply text-sky-500 bg-sky-100 pb-8;
   }
   h1 {
-    @apply text-2xl text-center p-8 flex items-center gap-2;
+    @apply text-2xl p-8 flex items-center justify-center gap-2;
   }
   h2 {
     @apply text-xl;
@@ -27,6 +27,6 @@
     @apply bg-slate-100 shadow rounded p-2 text-slate-500
   }
   a {
-    @apply bg-sky-200 hover:bg-sky-300 text-sky-500 transition
+    @apply transition
   }
 }

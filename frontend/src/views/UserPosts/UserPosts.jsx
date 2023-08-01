@@ -5,7 +5,7 @@ import CreatePostBox from "../../components/CreatePostBox";
 import PostsPage from "../PostsPage";
 import postService from "../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookReader } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen} from "@fortawesome/free-solid-svg-icons";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
@@ -42,8 +42,8 @@ export default function UserPosts() {
       readOnly={readOnly}
     >
       <h1>
-        <FontAwesomeIcon icon={faBookReader}/>
-        {readOnly ? "Username's Posts" : "My Posts"}
+        <FontAwesomeIcon icon={faBookOpen}/>
+        Posts
       </h1>
       {!readOnly && <CreatePostBox setPosts={getPosts} />}
     </PostsPage>
