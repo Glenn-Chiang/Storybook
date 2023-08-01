@@ -1,8 +1,20 @@
 /* eslint-disable react/prop-types */
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-export default function LinkButton({children, to}) {
+export function LinkButton({ route, children }) {
   return (
-    <Link className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl" to={to}>{children}</Link>
-  )
+    <NavLink
+      to={route}
+      className={({ isActive }) =>
+        `bg-sky-200 text-sky-500 w-28 h-28 flex flex-col justify-center items-center gap-2 p-4 rounded-xl ${
+          isActive
+            ? "bg-sky-400 text-sky-50"
+            : "hover:bg-sky-300 hover:text-sky-600"
+        }`
+      }
+    >
+      {children}
+    </NavLink>
+  );
 }
+
