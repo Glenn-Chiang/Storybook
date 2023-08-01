@@ -46,7 +46,6 @@ export default function UserPosts() {
           View Profile
         </Link>
         {!readOnly && <CreatePostBox setPosts={getPosts} />}
-
       </div>
     </PostsPage>
   );
