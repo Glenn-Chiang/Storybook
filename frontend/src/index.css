@@ -9,10 +9,10 @@
 
 @layer base {
   body {
-    @apply text-sky-500 bg-sky-100;
+    @apply text-sky-500 bg-sky-100 pb-4;
   }
   h1 {
-    @apply text-2xl text-center p-4 flex items-center gap-2;
+    @apply text-2xl text-center p-8 flex items-center gap-2;
   }
   h2 {
     @apply text-xl;

@@ -17,6 +17,7 @@ import Root from "./views/Root";
 import LikedPosts from "./views/LikedPosts";
 import CommentsPage from "./views/CommentsPage";
 import UserRoot from "./views/UserRoot";
+import FriendsPage from "./views/Friendspage";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
           {
             path: "comments",
             element: <CommentsPage/>
+          },
+          {
+            path: "friends",
+            element: <FriendsPage/>
           },
           {
             path: "profile",

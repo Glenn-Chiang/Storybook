@@ -2,8 +2,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import {
-  faBook,
   faBookBookmark,
+  faBookReader,
   faComment,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +12,7 @@ export function ProfileLink({ route, children }) {
   return (
     <Link
       to={route}
-      className="bg-sky-200 hover:bg-sky-300 text-sky-500 w-28 h-28 flex flex-col justify-center items-center gap-2 p-4 rounded-xl"
+      className="bg-sky-200 hover:bg-sky-300 text-sky-500 hover:text-sky-600 w-28 h-28 flex flex-col justify-center items-center gap-2 p-4 rounded-xl"
     >
       {children}
     </Link>
@@ -21,9 +21,9 @@ export function ProfileLink({ route, children }) {
 
 export function ProfileLinks({IsOwnProfile}) {
   return (
-    <div className="p-4 grid sm:grid-cols-4 grid-cols-2 gap-4">
+    <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
       <ProfileLink route={'posts'}>
-        <FontAwesomeIcon icon={faBook} />
+        <FontAwesomeIcon icon={faBookReader} />
         Posts
       </ProfileLink>
       <ProfileLink route={'comments'}>

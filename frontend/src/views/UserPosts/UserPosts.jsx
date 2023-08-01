@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import userService from "../../services/userService";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CreatePostBox from "../../components/CreatePostBox";
 import PostsPage from "../PostsPage";
 import postService from "../../services/postService";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookReader } from "@fortawesome/free-solid-svg-icons";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
@@ -39,15 +41,11 @@ export default function UserPosts() {
       getPosts={getPosts}
       readOnly={readOnly}
     >
-      <div className="flex flex-col items-center">
-        <h1>
-          {readOnly ? "Username's Posts" : "My Posts"}
-        </h1>
-        <Link to={`/users/${userId}/profile`} className="p-2 rounded-xl mb-10">
-          Profile
-        </Link>
-        {!readOnly && <CreatePostBox setPosts={getPosts} />}
-      </div>
+      <h1>
+        <FontAwesomeIcon icon={faBookReader}/>
+        {readOnly ? "Username's Posts" : "My Posts"}
+      </h1>
+      {!readOnly && <CreatePostBox setPosts={getPosts} />}
     </PostsPage>
   );
 }

@@ -55,7 +55,7 @@ export default function Profile() {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="p-4">
+      <h1>
         <FontAwesomeIcon icon={faUserCircle} />
         {IsOwnProfile ? " My " : `${username}'s `}
         Profile
@@ -97,7 +97,7 @@ export default function Profile() {
               onSubmit={handleSubmitAbout}
             />
           ) : (
-            <p className="text-slate-500">{addLineBreaks(aboutState) || "-"}</p>
+            <p className="text-slate-500 py-2">{addLineBreaks(aboutState) || "-"}</p>
           )}
         </div>
         <div>
