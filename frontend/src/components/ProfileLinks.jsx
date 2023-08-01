@@ -1,28 +1,39 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   faBookBookmark,
   faBookOpen,
   faComment,
+  faUserCircle,
   faUserFriends,
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 export function ProfileLink({ route, children }) {
   return (
-    <Link
+    <NavLink
       to={route}
-      className="bg-sky-200 hover:bg-sky-300 text-sky-500 hover:text-sky-600 w-28 h-28 flex flex-col justify-center items-center gap-2 p-4 rounded-xl"
+      className={({ isActive }) =>
+        `bg-sky-200 text-sky-500 w-28 h-28 flex flex-col justify-center items-center gap-2 p-4 rounded-xl ${
+          isActive
+            ? "bg-sky-400 text-sky-100"
+            : "hover:bg-sky-300 hover:text-sky-600"
+        }`
+      }
     >
       {children}
-    </Link>
+    </NavLink>
   );
 }
 
 export function ProfileLinks({ IsOwnProfile }) {
   return (
-    <div className="grid sm:grid-cols-4 grid-cols-2 gap-4">
+    <div className="grid sm:grid-cols-5 grid-cols-2 gap-4">
+      <ProfileLink route={"profile"}>
+        <FontAwesomeIcon icon={faUserCircle} />
+        Profile
+      </ProfileLink>
       <ProfileLink route={"posts"}>
         <FontAwesomeIcon icon={faBookOpen} />
         Posts

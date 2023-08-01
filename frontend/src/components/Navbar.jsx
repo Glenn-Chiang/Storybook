@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   faBookReader,
   faSignIn,
@@ -11,25 +12,33 @@ export default function Navbar() {
   const currentUser = userService.getCurrentUser();
 
   return (
-    <nav className="text-xl flex justify-between fixed w-screen h-10 bg-sky-200 text-sky-500 p-4 pr-8 z-10">
-      <NavLink to={"/posts"} className={"flex gap-2 items-center"}>
+    <nav className="text-xl flex justify-between fixed w-full h-10 bg-sky-200 text-sky-500 z-10">
+      <NavItem to={"/posts"}>
         <FontAwesomeIcon icon={faBookReader} />
         StoryBook
-      </NavLink>
+      </NavItem>
       {currentUser ? (
-        <NavLink
-          to={`users/${currentUser.userId}/profile`}
-          className={"flex gap-2 items-center"}
-        >
+        <NavItem to={`users/${currentUser.userId}/profile`}>
           <FontAwesomeIcon icon={faUserCircle} />
           My Profile
-        </NavLink>
+        </NavItem>
       ) : (
-        <NavLink to={"/login"} className={"flex gap-2 items-center"}>
+        <NavItem to={"/login"}>
           <FontAwesomeIcon icon={faSignIn} />
           Login
-        </NavLink>
+        </NavItem>
       )}
     </nav>
+  );
+}
+
+function NavItem({ to, children }) {
+  return (
+    <NavLink
+      to={to}
+      className={"p-2 flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600"}
+    >
+      {children}
+    </NavLink>
   );
 }

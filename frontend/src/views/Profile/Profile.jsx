@@ -57,7 +57,6 @@ export default function Profile() {
     <div className="flex flex-col items-center">
       <h1>
         <FontAwesomeIcon icon={faUserCircle} />
-        {IsOwnProfile ? " My " : `${username}'s `}
         Profile
       </h1>
 
@@ -69,7 +68,7 @@ export default function Profile() {
         <div>
           <p className="flex gap-2">
             Display name
-            {currentUser.userId === userId && (
+            {IsOwnProfile && (
               <EditButton onClick={() => setNameIsEditable(true)} />
             )}
           </p>
@@ -86,7 +85,7 @@ export default function Profile() {
         <div>
           <p className="flex gap-2">
             About
-            {currentUser.userId === userId && (
+            {IsOwnProfile && (
               <EditButton onClick={() => setAboutIsEditable(true)} />
             )}
           </p>
