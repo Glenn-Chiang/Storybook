@@ -1,4 +1,4 @@
-import userService from "../../services/userService";
+import userService from "../../../services/userService";
 
 export const loader = async ({ params }) => {
   const userId = params.userId;

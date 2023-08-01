@@ -36,7 +36,7 @@ function NavItem({ to, children }) {
   return (
     <NavLink
       to={to}
-      className={"p-2 flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600"}
+      className={"p-4 flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600"}
     >
       {children}
     </NavLink>

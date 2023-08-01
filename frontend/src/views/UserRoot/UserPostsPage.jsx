@@ -9,7 +9,7 @@ import { faBookOpen} from "@fortawesome/free-solid-svg-icons";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-export default function UserPosts() {
+export default function UserPostsPage() {
   const [posts, setPosts] = useState([]);
 
   const [sortBy, setSortBy] = useState("datePosted");

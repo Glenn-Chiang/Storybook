@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
 import { useLoaderData } from "react-router-dom";
-import userService from "../../services/userService";
+import userService from "../../../services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { EditButton } from "../../components/buttons";
+import { EditButton } from "../../../components/buttons";
 import { useState } from "react";
-import { CancelButton, ConfirmButton } from "../../components/buttons";
 import { useForm } from "react-hook-form";
+import { CancelButton, ConfirmButton } from "../../../components/buttons";
 
 export default function Profile() {
   const currentUser = userService.getCurrentUser();

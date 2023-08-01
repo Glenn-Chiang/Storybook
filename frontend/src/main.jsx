@@ -8,16 +8,16 @@ import {
 } from "react-router-dom";
 import Login from "./views/Login.jsx";
 import Register from "./views/Register.jsx";
-import Profile from "./views/Profile/Profile";
-import { loader as profileLoader } from "./views/Profile/loader";
-// import { userPostsLoader, allPostsLoader } from "./views/UserPosts/loaders";
-import UserPosts from "./views/UserPosts/UserPosts";
 import Home from "./views/Home";
 import Root from "./views/Root";
-import LikedPosts from "./views/LikedPosts";
-import CommentsPage from "./views/CommentsPage";
 import UserRoot from "./views/UserRoot/UserRoot";
-import FriendsPage from "./views/Friendspage";
+import Profile from "./views/UserRoot/Profile/Profile";
+import UserPostsPage from "./views/UserRoot/userPostsPage";
+import CommentsPage from "./views/UserRoot/CommentsPage";
+import FriendsPage from "./views/UserRoot/FriendsPage";
+import LikedPostsPage from "./views/UserRoot/LikedPostsPage"
+
+import { loader as profileLoader } from "./views/UserRoot/Profile/loader";
 import { loader as userLoader } from "./views/UserRoot/loader";
 
 const router = createBrowserRouter([
@@ -48,11 +48,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "posts",
-            element: <UserPosts />,
+            element: <UserPostsPage />,
           },
           {
             path: "likedPosts",
-            element: <LikedPosts/>
+            element: <LikedPostsPage/>
           },
           {
             path: "comments",

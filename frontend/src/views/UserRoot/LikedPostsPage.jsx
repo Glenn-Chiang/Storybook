@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PostsPage from "./PostsPage";
+import PostsPage from "../PostsPage";
 import { faBookBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import postService from "../services/postService";
+import postService from "../../services/postService";
 
-export default function LikedPosts() {
+export default function LikedPostsPage() {
   const [posts, setPosts] = useState([]);
 
   const [sortBy, setSortBy] = useState("datePosted");
