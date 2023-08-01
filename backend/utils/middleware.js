@@ -44,6 +44,34 @@ const userExtractor = async (req, res, next) => {
   }
 };
 
+// Ensure that user's private resources can only be accessed/modified by themselves
+// e.g. likedPosts, displayName, about
+const userAuthenticator = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (req.userId.toString() !== user._id.toString()) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Only allow author of resource to access resource
+const authorAuthenticator = async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    const authorId = post.author;
+    if (req.userId.toString() !== authorId.toString()) {
+      return res.status(401).json({ error: "Unauthorized access" });
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
 const errorHandler = (error, req, res, next) => {
   logger.error(error.message);
 
@@ -67,6 +95,8 @@ module.exports = {
   requestLogger,
   tokenExtractor,
   userExtractor,
+  userAuthenticator,
+  authorAuthenticator,
   unknownEndpoint,
   errorHandler,
 };

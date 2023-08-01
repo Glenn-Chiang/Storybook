@@ -2,7 +2,12 @@ const postsRouter = require("express").Router();
 const Post = require("../models/post");
 const User = require("../models/user");
 const Comment = require("../models/comment");
-const { tokenExtractor, userExtractor } = require("../utils/middleware");
+const {
+  tokenExtractor,
+  userExtractor,
+  userAuthenticator,
+  authorAuthenticator,
+} = require("../utils/middleware");
 
 postsRouter.get("/", async (req, res, next) => {
   const sortBy = req.query.sortBy; // dateAdded or lastUpdated
@@ -26,7 +31,7 @@ postsRouter.get("/", async (req, res, next) => {
   }
 });
 
-postsRouter.get("/:id", async (req, res, next) => {
+postsRouter.get("/:postId", async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id);
     if (post) {
@@ -39,7 +44,48 @@ postsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-postsRouter.use(tokenExtractor, userExtractor); // Will be applied to all routes below
+// Get user's posts
+postsRouter.get("/users/:userId/posts", async (req, res, next) => {
+  const { sortBy, sortOrder } = req.query;
+
+  try {
+    const posts = await Post.find({ author: req.params.userId })
+      .sort({ [sortBy]: sortOrder })
+      .populate("author")
+      .populate({
+        path: "comments",
+        options: {
+          sort: { datePosted: -1 },
+        },
+        populate: {
+          path: "author",
+          select: "username displayName",
+        },
+      });
+
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+postsRouter.use(tokenExtractor, userExtractor); // All routes below require the user to be signed in
+
+// Get user's liked posts (private)
+postsRouter.get(
+  "/users/:userId/likedPosts",
+  userAuthenticator,
+  async (req, res, next) => {
+    try {
+      const posts = Post.find({ likedBy: { $in: [req.params.userId] } })
+        .populate("author")
+        .populate("comments");
+      res.json(posts);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // Create a post
 postsRouter.post("/", async (req, res, next) => {
@@ -66,20 +112,6 @@ postsRouter.post("/", async (req, res, next) => {
     next(error);
   }
 });
-
-// Posts can only be updated by their author. Compare id of user making the request with id of author
-const authorAuthenticator = async (req, res, next) => {
-  try {
-    const post = await Post.findById(req.params.postId);
-    const authorId = post.author;
-    if (req.userId.toString() !== authorId.toString()) {
-      return res.status(401).json({ error: "Unauthorized access" });
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
 
 // Update likes; user does not have to be author of post
 // If user likes a post that they have already liked, the post will be unliked by the user
@@ -161,34 +193,6 @@ postsRouter.delete("/:postId", authorAuthenticator, async (req, res, next) => {
       $pull: { posts: postId },
     });
     res.status(204).end();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Create a comment under a post
-postsRouter.post("/:postId/comments", async (req, res, next) => {
-  const post = await Post.findById(req.params.postId);
-  const author = await User.findById(req.userId); // Author of comment, not post
-  const body = req.body;
-
-  try {
-    const comment = new Comment({
-      post: post._id,
-      author: author._id,
-      content: body.content,
-      datePosted: body.datePosted,
-    });
-    // Add comment to comments collection
-    const savedComment = await comment.save();
-    // Add comment to comments field of post
-    post.comments.push(savedComment._id);
-    await post.save();
-    // Add comment to comments field of user
-    author.comments.push(savedComment._id);
-    await author.save();
-
-    res.json(savedComment);
   } catch (error) {
     next(error);
   }

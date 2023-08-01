@@ -1,8 +1,9 @@
 const usersRouter = require("express").Router();
 const User = require("../models/user");
 const Post = require("../models/post");
+const Comment = require("../models/comment");
 const bcrypt = require("bcrypt");
-const { tokenExtractor, userExtractor } = require("../utils/middleware");
+const { tokenExtractor, userExtractor, userAuthenticator } = require("../utils/middleware");
 
 // Create new user
 usersRouter.post("/", async (req, res, next) => {
@@ -22,7 +23,7 @@ usersRouter.post("/", async (req, res, next) => {
       passwordHash,
       about: "",
       posts: [],
-      comments: []
+      comments: [],
     });
     const savedUser = await user.save();
     res.json(savedUser);
@@ -41,7 +42,7 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-// Get specific user's profile
+// Get user's profile
 usersRouter.get("/:userId", async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -50,57 +51,6 @@ usersRouter.get("/:userId", async (req, res, next) => {
     next(error);
   }
 });
-
-// Get posts by specific user
-usersRouter.get("/:userId/posts", async (req, res, next) => {
-  const { sortBy, sortOrder } = req.query;
-
-  try {
-    const posts = await Post.find({ author: req.params.userId })
-      .sort({ [sortBy]: sortOrder })
-      .populate("author")
-      .populate({
-        path: "comments",
-        options: {
-          sort: { datePosted: -1 },
-        },
-        populate: {
-          path: "author",
-          select: "username displayName",
-        },
-      });
-
-    res.json(posts);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Get all comments by user
-usersRouter.get("/:userId/comments", async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.userId)
-      .populate("comments")
-      .populate("comments.author");
-    const comments = user.comments;
-    res.json(comments);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Users can only edit their own profiles
-const userAuthenticator = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.userId);
-    if (req.userId.toString() !== user._id.toString()) {
-      return res.status(401).json({ error: "Unauthorized access" });
-    }
-    next();
-  } catch (error) {
-    next(error);
-  }
-};
 
 // Update user profile
 usersRouter.put(

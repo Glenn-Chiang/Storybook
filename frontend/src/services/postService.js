@@ -10,6 +10,20 @@ const getAll = async (sortBy, sortOrder) => {
   return response.data;
 };
 
+const getByUser = async (userId, sortBy, sortOrder) => {
+  const response = await axios.get(
+    `${baseUrl}/users/${userId}/posts?sortBy=${sortBy}&sortOrder=${sortOrder}`
+  );
+  return response.data;
+};
+
+const getLikedByUser = async (userId, sortBy, sortOrder) => {
+  const response = await axios.get(
+    `${baseUrl}/users/${userId}/likedPosts?sortBy=${sortBy}&sortOrder=${sortOrder}`
+  );
+  return response.data;
+};
+
 const create = async (newObject) => {
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
@@ -34,4 +48,4 @@ const deletePost = async (postId) => {
   return response;
 };
 
-export default { getAll, create, edit, like, deletePost };
+export default { getAll, getByUser, getLikedByUser, create, edit, like, deletePost };

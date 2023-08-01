@@ -21,34 +21,10 @@ const updateUser = async (userId, updatedData) => {
   return response.data;
 };
 
-const getPosts = async (userId, sortBy, sortOrder) => {
-  const response = await axios.get(
-    `${baseUrl}/${userId}/posts?sortBy=${sortBy}&sortOrder=${sortOrder}`
-  );
-  return response.data;
-};
-
-const getLikedPosts = async (userId, sortBy, sortOrder) => {
-  const response = await axios.get(
-    `${baseUrl}/${userId}/likedPosts?sortBy=${sortBy}&sortOrder=${sortOrder}`
-  );
-  return response.data;
-};
-
-const getComments = async (userId) => {
-  const response = await axios.get(
-    `${baseUrl}/${userId}/comments?sortBy=datePosted&sortOrder=desc`
-  );
-  return response.data;
-};
-
 const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
 
 export default {
   create,
-  getPosts,
-  getLikedPosts,
-  getComments,
   getUser,
   getCurrentUser,
   updateUser,
