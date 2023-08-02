@@ -10,19 +10,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditButton, DeleteButton } from "../buttons";
 import EditModal from "../EditModal";
 import DeleteModal from "../DeleteModal";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import CommentSection from "./CommentSection";
 import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
-import { AuthContext } from "../../views/UserRoot/AuthContext";
 
 export default function Post({ post, setPosts}) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
-
-  const IsOwnPost = useContext(AuthContext)
 
   const likePost = async () => {
     try {
@@ -34,6 +31,7 @@ export default function Post({ post, setPosts}) {
   };
 
   const currentUser = userService.getCurrentUser();
+  const IsOwnPost = currentUser.userId === post.author.id
 
   const deletePost = async () => {
     try {
