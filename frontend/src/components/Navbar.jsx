@@ -3,9 +3,9 @@ import {
   faBookOpen,
   faBookReader,
   faSignIn,
-  faUser,
   faUserCircle,
   faUserGroup,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, NavLink } from "react-router-dom";
@@ -57,7 +57,7 @@ function NavDropdown() {
         Posts
       </DropdownLink>
       <DropdownLink to={"/users"}>
-        <FontAwesomeIcon icon={faUser} />
+        <FontAwesomeIcon icon={faUsers} />
         Users
       </DropdownLink>
       <DropdownLink to={"/groups"}>

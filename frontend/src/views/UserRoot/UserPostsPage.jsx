@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback, useContext } from "react";
 import { useParams } from "react-router-dom";
 import CreatePostBox from "../../components/CreatePostBox";
-import PostsPage from "../PostsPage";
+import PostsPageLayout from "../../components/PostsPageLayout";
 import postService from "../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen} from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "./AuthContext";
 
 /* eslint-disable react/no-unescaped-entities */
@@ -16,7 +16,7 @@ export default function UserPostsPage() {
   const [sortOrder, setSortOrder] = useState("desc");
 
   const userId = useParams().userId;
-  const IsOwnPosts = useContext(AuthContext)
+  const IsOwnPosts = useContext(AuthContext);
 
   const getPosts = useCallback(async () => {
     try {
@@ -31,19 +31,18 @@ export default function UserPostsPage() {
     getPosts();
   }, [getPosts]);
 
-
   return (
-    <PostsPage
+    <PostsPageLayout
       posts={posts}
       setSortBy={setSortBy}
       setSortOrder={setSortOrder}
       getPosts={getPosts}
     >
       <h1>
-        <FontAwesomeIcon icon={faBookOpen}/>
+        <FontAwesomeIcon icon={faBookOpen} />
         Posts
       </h1>
       {IsOwnPosts && <CreatePostBox setPosts={getPosts} />}
-    </PostsPage>
+    </PostsPageLayout>
   );
 }

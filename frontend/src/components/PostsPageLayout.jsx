@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
-import PostsList from "../components/PostsList";
-import TeleportButton from "../components/TeleportButton";
-import PostsConfig from "../components/PostsConfig";
+import PostsList from "./PostsList";
+import TeleportButton from "./TeleportButton";
+import PostsConfig from "./PostsConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortAmountDesc } from "@fortawesome/free-solid-svg-icons";
 
 /* eslint-disable react/prop-types */
-export default function PostsPage({
+export default function PostsPageLayout({
   children,
   posts,
   setSortBy,
@@ -52,10 +52,7 @@ export default function PostsPage({
       {displayedPosts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">No posts found</p>
       ) : (
-        <PostsList
-          posts={displayedPosts}
-          setPosts={getPosts}
-        />
+        <PostsList posts={displayedPosts} setPosts={getPosts} />
       )}
 
       <TeleportButton forwardedRef={topRef} />

@@ -27,6 +27,9 @@ import { loader as userLoader } from "./views/UserRoot/loader";
 import { loader as authLoader } from "./views/AuthPages/loader";
 import { loader as commentsLoader } from "./views/UserRoot/CommentsPage/loader";
 
+import UsersPage from "./views/UsersPage/UsersPage";
+import { loader as usersLoader } from "./views/UsersPage/loader"
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +52,11 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
         loader: authLoader
+      },
+      {
+        path: "/users",
+        element: <UsersPage/>,
+        loader: usersLoader
       },
       {
         path: "/users/:userId",

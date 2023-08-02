@@ -11,6 +11,11 @@ const create = async (username, displayName, password) => {
   return response.data;
 };
 
+const getAll = async () => {
+  const response = await axios.get(`${baseUrl}`)
+  return response.data
+}
+
 const getUser = async (userId) => {
   const response = await axios.get(`${baseUrl}/${userId}`, config);
   return response.data;
@@ -25,6 +30,7 @@ const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
 
 export default {
   create,
+  getAll,
   getUser,
   getCurrentUser,
   updateUser,

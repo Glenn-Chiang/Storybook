@@ -3,7 +3,7 @@ import postService from "../services/postService";
 import Header from "../components/Header";
 
 // import TeleportButton from "../components/TeleportButton";
-import PostsPage from "./PostsPage";
+import PostsPageLayout from "../components/PostsPageLayout";
 // import { useLoaderData } from "react-router-dom";
 
 /* eslint-disable react/no-unescaped-entities */
@@ -36,7 +36,7 @@ export default function Home() {
   }, [getPosts]);
 
   return (
-    <PostsPage
+    <PostsPageLayout
       posts={posts}
       setSortBy={setSortBy}
       setSortOrder={setSortOrder}
@@ -45,6 +45,6 @@ export default function Home() {
       <div className="flex flex-col items-center">
         <Header />
       </div>
-    </PostsPage>
+    </PostsPageLayout>
   );
 }

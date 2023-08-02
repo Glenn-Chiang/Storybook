@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PostsPage from "../PostsPage";
+import PostsPageLayout from "../../components/PostsPageLayout";
 import { faBookBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -27,11 +27,17 @@ export default function LikedPostsPage() {
   }, [getPosts]);
 
   return (
-    <PostsPage posts={posts} sortBy={setSortBy} setSortOrder={setSortOrder} getPosts={getPosts} readOnly={false}>
+    <PostsPageLayout
+      posts={posts}
+      sortBy={setSortBy}
+      setSortOrder={setSortOrder}
+      getPosts={getPosts}
+      readOnly={false}
+    >
       <h1>
         <FontAwesomeIcon icon={faBookBookmark} />
         Liked Posts
       </h1>
-    </PostsPage>
+    </PostsPageLayout>
   );
 }
