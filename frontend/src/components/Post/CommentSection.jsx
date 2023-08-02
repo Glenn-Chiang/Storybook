@@ -88,7 +88,7 @@ function Comment({ comment, loadComments }) {
   };
 
   return (
-    <div className="flex gap-8 justify-between">
+    <div className="flex gap-8 ">
       <div>
         <p>{comment.author.displayName}</p>
         <p className="text-slate-400">

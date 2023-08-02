@@ -2,7 +2,7 @@
 import Modal from "./Modal";
 import { ConfirmButton, CancelButton } from "./buttons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan} from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 
 /* eslint-disable react/prop-types */
@@ -16,7 +16,7 @@ export default function DeleteModal({ closeModal, onSubmit, resourceType }) {
   return (
     <Modal>
       <h1 className="p-4 flex items-center gap-2 capitalize">
-        <FontAwesomeIcon icon={faXmarkCircle} />
+        <FontAwesomeIcon icon={faTrashCan} />
         Delete {resourceType}
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>

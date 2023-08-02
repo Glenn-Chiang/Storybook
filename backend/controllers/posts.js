@@ -79,12 +79,14 @@ postsRouter.get(
     try {
       const posts = await Post.find({ likedBy: { $in: [req.params.userId] } })
         .populate("author")
-        .populate("comments")
         .populate({
           path: "comments",
+          options: {
+            sort: { datePosted: -1 },
+          },
           populate: {
             path: "author",
-          }
+          },
         });
       res.json(posts);
     } catch (error) {

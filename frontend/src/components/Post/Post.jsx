@@ -111,6 +111,7 @@ export default function Post({ post, setPosts }) {
           <DeleteModal
             closeModal={() => setDeleteModalVisible(false)}
             onSubmit={deletePost}
+            resourceType={"post"}
           />
         )}
       </div>

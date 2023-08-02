@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { faEdit, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function ConfirmButton({children}) {
@@ -38,7 +38,7 @@ export function DeleteButton({ onClick }) {
       onClick={onClick}
       className="bg-rose-400 text-white rounded-xl w-8 h-8 flex justify-center items-center hover:bg-rose-500"
     >
-      <FontAwesomeIcon icon={faXmark} />
+      <FontAwesomeIcon icon={faTrashCan} />
     </button>
   );
 }
