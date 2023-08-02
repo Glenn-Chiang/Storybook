@@ -23,12 +23,8 @@ export default function Comment({ comment, loadComments }) {
   };
 
   const editComment = async (formData) => {
-    const updatedComment = {
-      ...comment,
-      content: formData.content,
-    };
     try {
-      await commentService.update(comment.id, updatedComment);
+      await commentService.update(comment.id, formData.content);
       setCommentFormVisible(false)
       loadComments();
     } catch (error) {

@@ -58,7 +58,7 @@ const userAuthenticator = async (req, res, next) => {
   }
 };
 
-// Only allow author of resource to access resource
+// Restrict operations to author of post
 const authorAuthenticator = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.postId);
