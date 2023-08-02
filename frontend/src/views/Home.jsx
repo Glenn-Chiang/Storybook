@@ -41,7 +41,6 @@ export default function Home() {
       setSortBy={setSortBy}
       setSortOrder={setSortOrder}
       getPosts={getPosts}
-      readOnly={true}
     >
       <div className="flex flex-col items-center">
         <Header />

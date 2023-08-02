@@ -10,16 +10,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditButton, DeleteButton } from "../buttons";
 import EditModal from "../EditModal";
 import DeleteModal from "../DeleteModal";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CommentSection from "./CommentSection";
 import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
+import { AuthContext } from "../../views/UserRoot/AuthContext";
 
-export default function Post({ post, setPosts, readOnly }) {
+export default function Post({ post, setPosts}) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
+
+  const IsOwnPost = useContext(AuthContext)
 
   const likePost = async () => {
     try {
@@ -77,7 +80,7 @@ export default function Post({ post, setPosts, readOnly }) {
               />
             </div>
             <div className="flex text-xl gap-2 justify-center">
-              {!readOnly && (
+              {IsOwnPost && (
                 <>
                   <EditButton onClick={() => setEditModalVisible(true)} />
                   <DeleteButton onClick={() => setDeleteModalVisible(true)} />

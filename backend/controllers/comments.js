@@ -37,7 +37,7 @@ commentsRouter.get("/users/:userId/comments", async (req, res, next) => {
   try {
     const comments = await Comment.find({ author: req.params.userId }).sort({
       [sortBy]: sortOrder,
-    });
+    }).populate("author").populate("post");
     res.json(comments);
   } catch (error) {
     next(error);

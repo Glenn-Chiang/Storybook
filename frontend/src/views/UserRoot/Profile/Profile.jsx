@@ -6,12 +6,12 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { EditButton } from "../../../components/buttons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CancelButton, ConfirmButton } from "../../../components/buttons";
+import { AuthContext } from "../AuthContext";
 
 export default function Profile() {
-  const currentUser = userService.getCurrentUser();
   const user = useLoaderData(); // User whose profile is shown
   const {
     id: userId,
@@ -22,7 +22,7 @@ export default function Profile() {
     comments,
     friends,
   } = user;
-  const IsOwnProfile = currentUser.userId === userId;
+  const IsOwnProfile = useContext(AuthContext);
 
   const [nameState, setNameState] = useState(displayName);
   const [aboutState, setAboutState] = useState(about);
@@ -151,10 +151,10 @@ function AboutForm({ defaultValue, onSubmit, onCancel }) {
 }
 
 const addLineBreaks = (text) => {
-  return text.split("\n").map((line) => (
-    <>
+  return text.split("\n").map((line, index) => (
+    <span key={index}>
       {line}
       <br />
-    </>
+    </span>
   ));
 };

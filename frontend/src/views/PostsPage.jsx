@@ -12,7 +12,6 @@ export default function PostsPage({
   setSortBy,
   setSortOrder,
   getPosts,
-  readOnly,
 }) {
   const [configIsVisible, setConfigIsVisible] = useState(false);
 
@@ -56,7 +55,6 @@ export default function PostsPage({
         <PostsList
           posts={displayedPosts}
           setPosts={getPosts}
-          readOnly={readOnly}
         />
       )}
 
