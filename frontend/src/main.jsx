@@ -6,8 +6,8 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import Login from "./views/Login.jsx";
-import Register from "./views/Register.jsx";
+import Login from "./views/AuthPages/Login";
+import Register from "./views/AuthPages/Register"
 import Home from "./views/Home";
 import Root from "./views/Root";
 import UserRoot from "./views/UserRoot/UserRoot";
@@ -24,6 +24,7 @@ import MembersPage from "./views/GroupPages/MembersPage";
 
 import { loader as profileLoader } from "./views/UserRoot/Profile/loader";
 import { loader as userLoader } from "./views/UserRoot/loader";
+import { loader as authLoader } from "./views/AuthPages/loader";
 
 const router = createBrowserRouter([
   {
@@ -41,10 +42,12 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+        loader: authLoader
       },
       {
         path: "/register",
         element: <Register />,
+        loader: authLoader
       },
       {
         path: "/users/:userId",

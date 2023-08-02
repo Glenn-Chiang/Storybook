@@ -50,9 +50,7 @@ export default function PostsPage({
         <FontAwesomeIcon icon={faSortAmountDesc} />
       </button>
 
-      {posts.length === 0 ? (
-        <p className="text-slate-400 text-center p-4">No posts created</p>
-      ) : displayedPosts.length === 0 ? (
+      {displayedPosts.length === 0 ? (
         <p className="text-slate-400 text-center p-4">No posts found</p>
       ) : (
         <PostsList
