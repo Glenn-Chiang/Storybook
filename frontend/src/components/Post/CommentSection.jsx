@@ -8,6 +8,7 @@ import userService from "../../services/userService";
 import { PostContext } from "./PostContext";
 import { DeleteButton, EditButton } from "../buttons";
 import DeleteModal from "../DeleteModal";
+import NameLink from "../NameLink";
 
 export default function CommentSection({ comments, setPosts }) {
   const post = useContext(PostContext);
@@ -90,7 +91,11 @@ function Comment({ comment, loadComments }) {
   return (
     <article className="flex gap-8 justify-between">
       <div className="">
-        <p>{comment.author.displayName} <span className="text-slate-400">{IsOwnComment && "(You)"}</span></p>
+        <NameLink
+          to={`/users/${comment.author.id}/profile`}
+          name={comment.author.displayName}
+          isSelf={IsOwnComment}
+        />
         <p className="text-slate-400">
           {new Date(comment.datePosted).toLocaleString()}
         </p>
@@ -107,7 +112,9 @@ function Comment({ comment, loadComments }) {
       <div>
         {IsOwnComment && (
           <div className="flex flex-col gap-2 justify-start py-2">
-            <EditButton onClick={() => setCommentFormVisible(prev => !prev)} />
+            <EditButton
+              onClick={() => setCommentFormVisible((prev) => !prev)}
+            />
             <DeleteButton onClick={() => setDeleteModalVisible(true)} />
           </div>
         )}

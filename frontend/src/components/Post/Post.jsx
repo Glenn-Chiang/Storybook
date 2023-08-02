@@ -4,7 +4,6 @@ import {
   faCalendarCheck,
   faCalendarPlus,
   faComment,
-  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditButton, DeleteButton } from "../buttons";
@@ -15,7 +14,7 @@ import CommentSection from "./CommentSection";
 import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
-import { Link } from "react-router-dom";
+import NameLink from "../NameLink";
 
 export default function Post({ post, setPosts }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -51,11 +50,11 @@ export default function Post({ post, setPosts }) {
           <div className="flex flex-col items-start gap-2 w-full">
             <h2>{post.title}</h2>
             <p className="text-sky-500 flex gap-2">
-              <Link to={`/users/${post.author?.id}/profile`} className="flex gap-2 items-center hover:underline underline-offset-4">
-                <FontAwesomeIcon icon={faUserCircle} />
-                {post.author ? post.author.displayName : "Anonymous"}
-              </Link>
-              {IsOwnPost && <span className="text-slate-400">{"(You)"}</span>}
+              <NameLink
+                to={`/users/${post.author?.id}/profile`}
+                name={post.author ? post.author.displayName : "Guest user"}
+                isSelf={IsOwnPost}
+              />
             </p>
             <p className="flex gap-4">
               <span className="flex gap-2 items-center text-slate-400">
