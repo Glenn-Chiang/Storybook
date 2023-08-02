@@ -8,15 +8,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmButton } from "../components/buttons";
 import loginService from "../services/loginService";
-import { useNavigate} from 'react-router-dom'
-import LinkButton from "../components/LinkButton";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function Login() {
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
 
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -26,15 +25,14 @@ export default function Login() {
   const onSubmit = async (formData) => {
     const { username, password } = formData;
     try {
-      const user = await loginService.login(username, password)
-      localStorage.setItem('currentUser', JSON.stringify(user))
+      const user = await loginService.login(username, password);
+      localStorage.setItem("currentUser", JSON.stringify(user));
       // postService.setToken(user.token)
-      navigate('/')
-
+      navigate("/");
     } catch (error) {
-      const errorMessage = error.response.data.error
-      console.log('Error logging in: ', errorMessage)
-      setError(errorMessage)
+      const errorMessage = error.response.data.error;
+      console.log("Error logging in: ", errorMessage);
+      setError(errorMessage);
     }
   };
 
@@ -78,7 +76,7 @@ export default function Login() {
         <ConfirmButton>Login</ConfirmButton>
       </form>
       <p className="text-slate-500 p-4">
-        New to Storybook? <LinkButton to={'/register'}>Register</LinkButton>
+        New to Storybook? <Link to={"/register"} className="text-sky-500 hover:underline">Register</Link>
       </p>
     </section>
   );

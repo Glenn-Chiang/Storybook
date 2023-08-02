@@ -15,7 +15,12 @@ import Profile from "./views/UserRoot/Profile/Profile";
 import UserPostsPage from "./views/UserRoot/userPostsPage";
 import CommentsPage from "./views/UserRoot/CommentsPage";
 import FriendsPage from "./views/UserRoot/FriendsPage";
-import LikedPostsPage from "./views/UserRoot/LikedPostsPage"
+import LikedPostsPage from "./views/UserRoot/LikedPostsPage";
+
+import GroupRoot from "./views/GroupPages/GroupRoot";
+import InfoPage from "./views/GroupPages/InfoPage";
+import GroupPostsPage from "./views/GroupPages/GroupPostsPage";
+import MembersPage from "./views/GroupPages/MembersPage";
 
 import { loader as profileLoader } from "./views/UserRoot/Profile/loader";
 import { loader as userLoader } from "./views/UserRoot/loader";
@@ -43,7 +48,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/users/:userId",
-        element: <UserRoot/>,
+        element: <UserRoot />,
         loader: userLoader,
         children: [
           {
@@ -52,23 +57,41 @@ const router = createBrowserRouter([
           },
           {
             path: "likedPosts",
-            element: <LikedPostsPage/>
+            element: <LikedPostsPage />,
           },
           {
             path: "comments",
-            element: <CommentsPage/>
+            element: <CommentsPage />,
           },
           {
             path: "friends",
-            element: <FriendsPage/>
+            element: <FriendsPage />,
           },
           {
             path: "profile",
             element: <Profile />,
             loader: profileLoader,
           },
-        ]
-      }
+        ],
+      },
+      {
+        path: "/groups/:groupId",
+        element: <GroupRoot />,
+        children: [
+          {
+            path: "posts",
+            element: <GroupPostsPage />,
+          },
+          {
+            path: "info",
+            element: <InfoPage />,
+          },
+          {
+            path: "members",
+            element: <MembersPage />,
+          },
+        ],
+      },
     ],
   },
 ]);
