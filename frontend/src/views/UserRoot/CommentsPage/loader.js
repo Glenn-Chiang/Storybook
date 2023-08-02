@@ -6,7 +6,7 @@ export const loader = async ({params}) => {
     const comments = await commentService.getByUser(userId)
     return comments
   } catch (error) {
-    console.log("Error getting user comments: ", error)
+    console.log("Error loading comments: ", error)
     return []
   }
 }

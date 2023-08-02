@@ -35,6 +35,16 @@ export default function Post({ post, setPosts}) {
 
   const currentUser = userService.getCurrentUser();
 
+  const deletePost = async () => {
+    try {
+      await postService.deletePost(post.id);
+      setPosts();
+    } catch (error) {
+      console.log("Error deleting post: ", error);
+    }
+    setDeleteModalVisible(false);
+  }
+
   return (
     <PostContext.Provider value={post}>
       <div className="flex justify-between flex-col gap-4 shadow p-6 rounded-xl bg-white">
@@ -101,7 +111,7 @@ export default function Post({ post, setPosts}) {
         {deleteModalVisible && (
           <DeleteModal
             closeModal={() => setDeleteModalVisible(false)}
-            setPosts={setPosts}
+            onSubmit={deletePost}
           />
         )}
       </div>

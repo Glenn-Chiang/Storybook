@@ -1,11 +1,27 @@
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import Comment from "./Comment";
+import { useEffect, useState, useCallback } from "react";
+import commentService from "../../../services/commentService";
 
 export default function CommentsPage() {
-  const comments = useLoaderData();
-  console.log(comments[0])
+  const userId = useParams().userId;
+  const [comments, setComments] = useState(useLoaderData());
+  
+  const loadComments = useCallback(async () => {
+    try {
+      const comments = await commentService.getByUser(userId);
+      setComments(comments);
+    } catch (error) {
+      console.log("Error loading comments: ", error);
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    loadComments();
+  }, [loadComments]);
+
   return (
     <main className="flex flex-col items-center">
       <h1>
@@ -16,7 +32,7 @@ export default function CommentsPage() {
         <ul className="flex flex-col gap-8">
           {comments.map((comment) => (
             <li key={comment.id}>
-              <Comment comment={comment}/>
+              <Comment comment={comment} loadComments={loadComments}/>
             </li>
           ))}
         </ul>
