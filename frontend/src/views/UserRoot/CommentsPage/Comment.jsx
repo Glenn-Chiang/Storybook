@@ -16,8 +16,23 @@ export default function Comment({ comment, loadComments }) {
     try {
       await commentService.remove(comment.id);
       loadComments();
+      setDeleteModalVisible(false)
     } catch (error) {
       console.log("Error deleting comment:", error);
+    }
+  };
+
+  const editComment = async (formData) => {
+    const updatedComment = {
+      ...comment,
+      content: formData.content,
+    };
+    try {
+      await commentService.update(comment.id, updatedComment);
+      setCommentFormVisible(false)
+      loadComments();
+    } catch (error) {
+      console.log("Error editing comment:", error);
     }
   };
 
@@ -33,7 +48,7 @@ export default function Comment({ comment, loadComments }) {
       </p>
 
       {commentFormVisible ? (
-        <CommentForm closeForm={() => setCommentFormVisible(false)} reload={loadComments} defaultValue={comment.content}/>
+        <CommentForm onSubmit={editComment} closeForm={() => setCommentFormVisible(false)} defaultValue={comment.content}/>
       ) : (
         <p className="text-slate-500 text-md py-2">{comment.content}</p>
       )}

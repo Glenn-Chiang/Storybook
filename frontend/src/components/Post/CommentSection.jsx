@@ -2,18 +2,35 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import CommentForm from "../CommentForm";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import commentService from "../../services/commentService";
+import { PostContext } from "./PostContext";
 
 export default function CommentSection({ comments, setPosts }) {
+  const post = useContext(PostContext);
   const [commentFormVisible, setCommentFormVisible] = useState(false);
+
+  const handleSubmitComment = async (formData) => {
+    const commentObject = {
+      content: formData.content,
+      datePosted: new Date(),
+    };
+    try {
+      await commentService.create(post.id, commentObject);
+      setCommentFormVisible(false);
+      setPosts();
+    } catch (error) {
+      console.log("Error posting comment:", error);
+    }
+  };
 
   return (
     <div className="p-4 rounded-xl">
       <h2 className="py-4">Comments ({comments.length})</h2>
       {commentFormVisible ? (
         <CommentForm
+          onSubmit={handleSubmitComment}
           closeForm={() => setCommentFormVisible(false)}
-          reload={setPosts}
           defaultValue={""}
         />
       ) : (

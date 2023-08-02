@@ -1,13 +1,10 @@
-import { useContext, useEffect } from "react";
-import { PostContext } from "./Post/PostContext";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import commentService from "../services/commentService";
 import ErrorAlert from "./errorAlert";
 import { CancelButton, ConfirmButton } from "./buttons";
 
 /* eslint-disable react/prop-types */
-export default function CommentForm({ closeForm, reload, defaultValue}) {
-  const post = useContext(PostContext);
+export default function CommentForm({ onSubmit, closeForm, defaultValue}) {
 
   const handleCancel = () => {
     closeForm();
@@ -23,20 +20,6 @@ export default function CommentForm({ closeForm, reload, defaultValue}) {
   useEffect(() => {
     setFocus("content");
   }, [setFocus]);
-
-  const onSubmit = async (formData) => {
-    const commentData = {
-      content: formData.content,
-      datePosted: new Date(),
-    };
-    try {
-      await commentService.create(post.id, commentData);
-      closeForm();
-      reload();
-    } catch (error) {
-      console.log("Error posting comment: ", error);
-    }
-  };
 
   return (
     <form
