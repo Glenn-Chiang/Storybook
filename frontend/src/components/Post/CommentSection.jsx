@@ -4,7 +4,10 @@ import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import CommentForm from "../CommentForm";
 import { useContext, useState } from "react";
 import commentService from "../../services/commentService";
+import userService from "../../services/userService";
 import { PostContext } from "./PostContext";
+import { DeleteButton, EditButton } from "../buttons";
+import DeleteModal from "../DeleteModal";
 
 export default function CommentSection({ comments, setPosts }) {
   const post = useContext(PostContext);
@@ -46,7 +49,7 @@ export default function CommentSection({ comments, setPosts }) {
         <ul className="flex flex-col gap-4 py-4">
           {comments.map((comment, index) => (
             <li key={index}>
-              <Comment comment={comment} />
+              <Comment comment={comment} loadComments={setPosts} />
             </li>
           ))}
         </ul>
@@ -57,14 +60,66 @@ export default function CommentSection({ comments, setPosts }) {
   );
 }
 
-function Comment({ comment }) {
+function Comment({ comment, loadComments }) {
+  const IsOwnComment =
+    userService.getCurrentUser().userId === comment.author.id;
+
+  const [commentFormVisible, setCommentFormVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const deleteComment = async () => {
+    try {
+      await commentService.remove(comment.id);
+      loadComments();
+      setDeleteModalVisible(false);
+    } catch (error) {
+      console.log("Error deleting comment:", error);
+    }
+  };
+
+  const editComment = async (formData) => {
+    try {
+      await commentService.update(comment.id, formData.content);
+      setCommentFormVisible(false);
+      loadComments();
+    } catch (error) {
+      console.log("Error editing comment:", error);
+    }
+  };
+
   return (
-    <div>
-      <p>{comment.author.displayName}</p>
-      <p className="text-slate-400">
-        {new Date(comment.datePosted).toLocaleString()}
-      </p>
-      <p className="text-slate-500">{comment.content}</p>
+    <div className="flex gap-8 justify-between">
+      <div>
+        <p>{comment.author.displayName}</p>
+        <p className="text-slate-400">
+          {new Date(comment.datePosted).toLocaleString()}
+        </p>
+        {commentFormVisible ? (
+          <CommentForm
+            onSubmit={editComment}
+            closeForm={() => setCommentFormVisible(false)}
+            defaultValue={comment.content}
+          />
+        ) : (
+          <p className="text-slate-500 text-md py-2">{comment.content}</p>
+        )}
+      </div>
+      <div>
+        {IsOwnComment && (
+          <div className="flex flex-col gap-2 justify-start py-2">
+            <EditButton onClick={() => setCommentFormVisible(prev => !prev)} />
+            <DeleteButton onClick={() => setDeleteModalVisible(true)} />
+          </div>
+        )}
+      </div>
+
+      {deleteModalVisible && (
+        <DeleteModal
+          closeModal={() => setDeleteModalVisible(false)}
+          resourceType={"comment"}
+          onSubmit={deleteComment}
+        />
+      )}
     </div>
   );
 }

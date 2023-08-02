@@ -16,7 +16,7 @@ import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
 
-export default function Post({ post, setPosts}) {
+export default function Post({ post, setPosts }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
@@ -31,7 +31,7 @@ export default function Post({ post, setPosts}) {
   };
 
   const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser.userId === post.author.id
+  const IsOwnPost = currentUser.userId === post.author.id;
 
   const deletePost = async () => {
     try {
@@ -41,7 +41,7 @@ export default function Post({ post, setPosts}) {
       console.log("Error deleting post: ", error);
     }
     setDeleteModalVisible(false);
-  }
+  };
 
   return (
     <PostContext.Provider value={post}>
@@ -51,7 +51,8 @@ export default function Post({ post, setPosts}) {
             <h2>{post.title}</h2>
             <p className="flex gap-2 items-center text-sky-500">
               <FontAwesomeIcon icon={faUserCircle} />
-              {post.author ? post.author.displayName : "Anonymous"}
+              {post.author ? post.author.displayName : "Anonymous"}{" "}
+              {IsOwnPost && <span className="text-slate-400">{"(You)"}</span>}
             </p>
             <p className="flex gap-4">
               <span className="flex gap-2 items-center text-slate-400">
