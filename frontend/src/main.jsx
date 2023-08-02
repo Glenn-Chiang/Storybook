@@ -13,7 +13,7 @@ import Root from "./views/Root";
 import UserRoot from "./views/UserRoot/UserRoot";
 import Profile from "./views/UserRoot/Profile/Profile";
 import UserPostsPage from "./views/UserRoot/userPostsPage";
-import CommentsPage from "./views/UserRoot/CommentsPage";
+import CommentsPage from "./views/UserRoot/CommentsPage/CommentsPage";
 import FriendsPage from "./views/UserRoot/FriendsPage";
 import LikedPostsPage from "./views/UserRoot/LikedPostsPage";
 
@@ -25,6 +25,7 @@ import MembersPage from "./views/GroupPages/MembersPage";
 import { loader as profileLoader } from "./views/UserRoot/Profile/loader";
 import { loader as userLoader } from "./views/UserRoot/loader";
 import { loader as authLoader } from "./views/AuthPages/loader";
+import { loader as commentsLoader } from "./views/UserRoot/CommentsPage/loader";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,7 @@ const router = createBrowserRouter([
           {
             path: "comments",
             element: <CommentsPage />,
+            loader: commentsLoader
           },
           {
             path: "friends",

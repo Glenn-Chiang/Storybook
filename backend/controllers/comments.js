@@ -1,9 +1,10 @@
 const commentsRouter = require('express').Router()
 const Post = require("../models/post");
 const User = require("../models/user");
+const Comment = require("../models/comment")
 
 // Create a comment under a post
-commentsRouter.post("posts/:postId/comments", async (req, res, next) => {
+commentsRouter.post("/posts/:postId/comments", async (req, res, next) => {
   const post = await Post.findById(req.params.postId);
   const author = await User.findById(req.userId); // Author of comment, not post
   const body = req.body;
@@ -31,7 +32,7 @@ commentsRouter.post("posts/:postId/comments", async (req, res, next) => {
 });
 
 // Get all comments by user
-commentsRouter.get("users/:userId/comments", async (req, res, next) => {
+commentsRouter.get("/users/:userId/comments", async (req, res, next) => {
   const { sortBy, sortOrder } = req.query;
   try {
     const comments = await Comment.find({ author: req.params.userId }).sort({
