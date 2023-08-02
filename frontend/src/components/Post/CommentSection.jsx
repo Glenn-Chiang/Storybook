@@ -1,13 +1,8 @@
 /* eslint-disable react/prop-types */
-
-import { useContext, useEffect, useState } from "react";
-import { CancelButton, ConfirmButton } from "../buttons";
-import { useForm } from "react-hook-form";
-import ErrorAlert from "../errorAlert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import commentService from "../../services/commentService";
-import { PostContext } from "./PostContext";
+import CommentForm from "../CommentForm";
+import { useState } from "react";
 
 export default function CommentSection({ comments, setPosts }) {
   const [commentFormVisible, setCommentFormVisible] = useState(false);
@@ -18,7 +13,8 @@ export default function CommentSection({ comments, setPosts }) {
       {commentFormVisible ? (
         <CommentForm
           closeForm={() => setCommentFormVisible(false)}
-          setPosts={setPosts}
+          reload={setPosts}
+          defaultValue={""}
         />
       ) : (
         <button
@@ -41,63 +37,6 @@ export default function CommentSection({ comments, setPosts }) {
         <p className="py-4 text-slate-500">No comments</p>
       )}
     </div>
-  );
-}
-
-function CommentForm({ closeForm, setPosts }) {
-  const post = useContext(PostContext);
-
-  const handleCancel = () => {
-    closeForm();
-  };
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setFocus
-  } = useForm();
-  
-  useEffect(() => {
-    setFocus("content")
-  }, [setFocus]);
-
-  const onSubmit = async (formData) => {
-    const commentData = {
-      content: formData.content,
-      datePosted: new Date(),
-    };
-    try {
-      await commentService.create(post.id, commentData);
-      closeForm();
-      setPosts();
-    } catch (error) {
-      console.log("Error posting comment: ", error);
-    }
-  };
-
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex-col flex gap-4 py-4"
-    >
-      <textarea
-        className="shadow bg-slate-100 rounded p-2 text-slate-500"
-        {...register("content", {
-          required: "Comment cannot be empty",
-
-          minLength: {
-            value: 5,
-            message: "Comment must contain at least 5 characters",
-          },
-        })}
-      />
-      {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
-      <div className="flex gap-2">
-        <ConfirmButton>Post comment</ConfirmButton>
-        <CancelButton onClick={handleCancel} />
-      </div>
-    </form>
   );
 }
 

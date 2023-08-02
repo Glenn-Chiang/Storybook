@@ -3,12 +3,13 @@ import { AuthContext } from "../AuthContext";
 import { EditButton, DeleteButton } from "../../../components/buttons";
 import DeleteModal from "../../../components/DeleteModal";
 import commentService from "../../../services/commentService";
+import CommentForm from "../../../components/CommentForm";
 
 /* eslint-disable react/prop-types */
 export default function Comment({ comment, loadComments }) {
   const IsOwnComment = useContext(AuthContext);
 
-  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [commentFormVisible, setCommentFormVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const deleteComment = async () => {
@@ -30,13 +31,20 @@ export default function Comment({ comment, loadComments }) {
       <p className="text-slate-400">
         {new Date(comment.datePosted).toLocaleString()}
       </p>
-      <p className="text-slate-500 text-md py-2">{comment.content}</p>
+
+      {commentFormVisible ? (
+        <CommentForm closeForm={() => setCommentFormVisible(false)} reload={loadComments} defaultValue={comment.content}/>
+      ) : (
+        <p className="text-slate-500 text-md py-2">{comment.content}</p>
+      )}
+
       {IsOwnComment && (
         <div className="flex gap-2 justify-start py-2">
-          <EditButton />
+          <EditButton onClick={() => setCommentFormVisible(true)} />
           <DeleteButton onClick={() => setDeleteModalVisible(true)} />
         </div>
       )}
+
       {deleteModalVisible && (
         <DeleteModal
           closeModal={() => setDeleteModalVisible(false)}
