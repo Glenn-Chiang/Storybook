@@ -88,9 +88,9 @@ function Comment({ comment, loadComments }) {
   };
 
   return (
-    <div className="flex gap-8 ">
-      <div>
-        <p>{comment.author.displayName}</p>
+    <article className="flex gap-8 justify-between">
+      <div className="">
+        <p>{comment.author.displayName} <span className="text-slate-400">{IsOwnComment && "(You)"}</span></p>
         <p className="text-slate-400">
           {new Date(comment.datePosted).toLocaleString()}
         </p>
@@ -120,6 +120,6 @@ function Comment({ comment, loadComments }) {
           onSubmit={deleteComment}
         />
       )}
-    </div>
+    </article>
   );
 }

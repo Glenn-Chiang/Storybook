@@ -15,11 +15,15 @@ import CommentSection from "./CommentSection";
 import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
+import { Link } from "react-router-dom";
 
 export default function Post({ post, setPosts }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
+
+  const currentUser = userService.getCurrentUser();
+  const IsOwnPost = currentUser.userId === post.author?.id;
 
   const likePost = async () => {
     try {
@@ -29,9 +33,6 @@ export default function Post({ post, setPosts }) {
       console.log("Error liking post: ", error);
     }
   };
-
-  const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser.userId === post.author.id;
 
   const deletePost = async () => {
     try {
@@ -49,9 +50,11 @@ export default function Post({ post, setPosts }) {
         <div className="flex gap-4 flex-col">
           <div className="flex flex-col items-start gap-2 w-full">
             <h2>{post.title}</h2>
-            <p className="flex gap-2 items-center text-sky-500">
-              <FontAwesomeIcon icon={faUserCircle} />
-              {post.author ? post.author.displayName : "Anonymous"}{" "}
+            <p className="text-sky-500 flex gap-2">
+              <Link to={`/users/${post.author?.id}/profile`} className="flex gap-2 items-center hover:underline underline-offset-4">
+                <FontAwesomeIcon icon={faUserCircle} />
+                {post.author ? post.author.displayName : "Anonymous"}
+              </Link>
               {IsOwnPost && <span className="text-slate-400">{"(You)"}</span>}
             </p>
             <p className="flex gap-4">

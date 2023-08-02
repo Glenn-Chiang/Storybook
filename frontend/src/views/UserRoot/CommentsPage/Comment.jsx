@@ -51,7 +51,7 @@ export default function Comment({ comment, loadComments }) {
 
       {IsOwnComment && (
         <div className="flex gap-2 justify-start py-2">
-          <EditButton onClick={() => setCommentFormVisible(true)} />
+          <EditButton onClick={() => setCommentFormVisible(prev => !prev)} />
           <DeleteButton onClick={() => setDeleteModalVisible(true)} />
         </div>
       )}
