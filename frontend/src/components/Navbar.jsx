@@ -3,6 +3,7 @@ import {
   faBookOpen,
   faBookReader,
   faSignIn,
+  faSignOut,
   faUserCircle,
   faUserGroup,
   faUsers,
@@ -19,12 +20,35 @@ export default function Navbar() {
       <NavItem to={"/posts"}>
         <FontAwesomeIcon icon={faBookReader} />
         StoryBook
-        <NavDropdown />
+        <NavDropdown position={"left-0"}>
+          <DropdownLink to={"/posts"}>
+            <FontAwesomeIcon icon={faBookOpen} />
+            Posts
+          </DropdownLink>
+          <DropdownLink to={"/users"}>
+            <FontAwesomeIcon icon={faUsers} />
+            Users
+          </DropdownLink>
+          <DropdownLink to={"/groups"}>
+            <FontAwesomeIcon icon={faUserGroup} />
+            Groups
+          </DropdownLink>
+        </NavDropdown>
       </NavItem>
+
       {currentUser ? (
         <NavItem to={`users/${currentUser.userId}/profile`}>
           <FontAwesomeIcon icon={faUserCircle} />
-          My Profile
+          <NavDropdown position={"right-0"}>
+            <DropdownLink to={`users/${currentUser.userId}/profile`}>
+              <FontAwesomeIcon icon={faUserCircle}/>
+              My Profile
+            </DropdownLink>
+            <DropdownLink to={"/logout"}>
+              <FontAwesomeIcon icon={faSignOut}/>
+              Logout
+            </DropdownLink>
+          </NavDropdown>
         </NavItem>
       ) : (
         <NavItem to={"/login"}>
@@ -49,21 +73,10 @@ function NavItem({ to, children }) {
   );
 }
 
-function NavDropdown() {
+function NavDropdown({children, position}) {
   return (
-    <nav className="absolute top-10 left-0 flex-col hidden group-hover:flex text-lg bg-sky-200 rounded">
-      <DropdownLink to={"/posts"}>
-        <FontAwesomeIcon icon={faBookOpen} />
-        Posts
-      </DropdownLink>
-      <DropdownLink to={"/users"}>
-        <FontAwesomeIcon icon={faUsers} />
-        Users
-      </DropdownLink>
-      <DropdownLink to={"/groups"}>
-        <FontAwesomeIcon icon={faUserGroup} />
-        Groups
-      </DropdownLink>
+    <nav className={`absolute top-10 ${position} flex-col hidden group-hover:flex text-lg bg-sky-200`}>
+      {children}
     </nav>
   );
 }
