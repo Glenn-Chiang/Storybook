@@ -34,13 +34,21 @@ usersRouter.post("/", async (req, res, next) => {
 
 // Get all users
 usersRouter.get("/", async (req, res, next) => {
+  const query = req.query.q
+  let filter = {}
+
+  if (query?.trim()) {
+    filter = {username: {$regex: new RegExp(query, 'i')}}
+  }
+
   try {
-    const users = await User.find({});
+    const users = await User.find(filter);
     res.json(users);
   } catch (error) {
     next(error);
   }
 });
+
 
 // Get user's profile
 usersRouter.get("/:userId", async (req, res, next) => {

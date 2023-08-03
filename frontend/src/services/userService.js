@@ -12,9 +12,14 @@ const create = async (username, displayName, password) => {
 };
 
 const getAll = async () => {
-  const response = await axios.get(`${baseUrl}`)
-  return response.data
-}
+  const response = await axios.get(`${baseUrl}`);
+  return response.data;
+};
+
+const getMatches = async (searchTerms) => {
+  const response = await axios.get(`${baseUrl}?q=${searchTerms}`);
+  return response.data;
+};
 
 const getUser = async (userId) => {
   const response = await axios.get(`${baseUrl}/${userId}`, config);
@@ -28,13 +33,14 @@ const updateUser = async (userId, updatedData) => {
 
 const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
 
-const logout = () => localStorage.removeItem("currentUser")
+const logout = () => localStorage.removeItem("currentUser");
 
 export default {
   create,
   getAll,
   getUser,
+  getMatches,
   updateUser,
   getCurrentUser,
-  logout
+  logout,
 };
