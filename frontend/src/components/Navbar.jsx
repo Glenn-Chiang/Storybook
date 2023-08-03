@@ -9,7 +9,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import userService from "../services/userService";
 
 export default function Navbar() {
@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <nav className="flex justify-between fixed w-full h-10 bg-sky-200 text-sky-500 z-10">
-      <NavItem to={"/posts"}>
+      <NavItem>
         <FontAwesomeIcon icon={faBookReader} />
         StoryBook
         <NavDropdown position={"left-0"}>
@@ -41,11 +41,11 @@ export default function Navbar() {
           <FontAwesomeIcon icon={faUserCircle} />
           <NavDropdown position={"right-0"}>
             <DropdownLink to={`users/${currentUser.userId}/profile`}>
-              <FontAwesomeIcon icon={faUserCircle}/>
+              <FontAwesomeIcon icon={faUserCircle} />
               My Profile
             </DropdownLink>
             <DropdownLink to={"/logout"}>
-              <FontAwesomeIcon icon={faSignOut}/>
+              <FontAwesomeIcon icon={faSignOut} />
               Logout
             </DropdownLink>
           </NavDropdown>
@@ -60,22 +60,23 @@ export default function Navbar() {
   );
 }
 
-function NavItem({ to, children }) {
+function NavItem({ children }) {
   return (
-    <NavLink
-      to={to}
+    <div
       className={
         "p-4 text-xl flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600 group"
       }
     >
       {children}
-    </NavLink>
+    </div>
   );
 }
 
-function NavDropdown({children, position}) {
+function NavDropdown({ children, position }) {
   return (
-    <nav className={`absolute top-10 ${position} flex-col hidden group-hover:flex text-lg bg-sky-200`}>
+    <nav
+      className={`absolute top-10 ${position} flex-col hidden group-hover:flex text-lg bg-sky-200`}
+    >
       {children}
     </nav>
   );

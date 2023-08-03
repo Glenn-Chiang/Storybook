@@ -76,8 +76,10 @@ postsRouter.get(
   "/users/:userId/likedPosts",
   userAuthenticator,
   async (req, res, next) => {
+    const {sortBy, sortOrder} = req.query
     try {
       const posts = await Post.find({ likedBy: { $in: [req.params.userId] } })
+        .sort({[sortBy]: sortOrder})
         .populate("author")
         .populate({
           path: "comments",
