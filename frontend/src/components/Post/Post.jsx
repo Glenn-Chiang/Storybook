@@ -22,7 +22,7 @@ export default function Post({ post, setPosts }) {
   const [commentsVisible, setCommentsVisible] = useState(false);
 
   const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser.userId === post.author?.id;
+  const IsOwnPost = currentUser ? currentUser.userId === post.author?.id : false;
 
   const likePost = async () => {
     try {
@@ -32,6 +32,8 @@ export default function Post({ post, setPosts }) {
       console.log("Error liking post: ", error);
     }
   };
+
+  const alreadyLiked = currentUser ? post.likedBy.includes(currentUser.userId) : false;
 
   const deletePost = async () => {
     try {
@@ -81,7 +83,7 @@ export default function Post({ post, setPosts }) {
           <div className="flex justify-between items-end">
             <div className="flex gap-2 text-xl">
               <LikeButton
-                liked={post.likedBy.includes(currentUser.userId)}
+                liked={alreadyLiked}
                 onClick={likePost}
                 likeCount={post.likedBy.length}
               />

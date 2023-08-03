@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PostsPageLayout from "../../components/PostsPageLayout";
+import PostsPageLayout from "../../../components/PostsPageLayout";
 import { faBookBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import postService from "../../services/postService";
+import postService from "../../../services/postService";
 
 export default function LikedPostsPage() {
   const [posts, setPosts] = useState([]);

@@ -2,9 +2,9 @@
 import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function ConfirmButton({children}) {
+export function ConfirmButton({children, onClick}) {
   return (
-    <button className="shadow text-white p-2 rounded-xl bg-teal-400 hover:bg-teal-500 ">
+    <button onClick={onClick} className="shadow text-white p-2 rounded-xl bg-teal-400 hover:bg-teal-500 ">
       {children}
     </button>
   );

@@ -6,16 +6,21 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import Login from "./views/AuthPages/Login";
-import Register from "./views/AuthPages/Register"
-import Home from "./views/Home";
+
 import Root from "./views/Root";
+import Home from "./views/Home";
+
+import Login from "./views/AuthPages/Login";
+import Register from "./views/AuthPages/Register";
+import Logout from "./views/AuthPages/Logout";
+import { loader as loginLoader, logoutLoader } from "./views/AuthPages/loaders";
+
 import UserRoot from "./views/UserRoot/UserRoot";
 import Profile from "./views/UserRoot/Profile/Profile";
 import UserPostsPage from "./views/UserRoot/userPostsPage";
 import CommentsPage from "./views/UserRoot/CommentsPage/CommentsPage";
-import FriendsPage from "./views/UserRoot/FriendsPage";
-import LikedPostsPage from "./views/UserRoot/LikedPostsPage";
+import FriendsPage from "./views/UserRoot/FriendsPage/FriendsPage";
+import LikedPostsPage from "./views/UserRoot/LikedPostsPage/LikedPostsPage";
 
 import GroupRoot from "./views/GroupPages/GroupRoot";
 import InfoPage from "./views/GroupPages/InfoPage";
@@ -24,11 +29,10 @@ import MembersPage from "./views/GroupPages/MembersPage";
 
 import { loader as profileLoader } from "./views/UserRoot/Profile/loader";
 import { loader as userLoader } from "./views/UserRoot/loader";
-import { loader as authLoader } from "./views/AuthPages/loader";
 import { loader as commentsLoader } from "./views/UserRoot/CommentsPage/loader";
 
 import UsersPage from "./views/UsersPage/UsersPage";
-import { loader as usersLoader } from "./views/UsersPage/loader"
+import { loader as usersLoader } from "./views/UsersPage/loader";
 
 const router = createBrowserRouter([
   {
@@ -46,17 +50,22 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
-        loader: authLoader
+        loader: loginLoader,
       },
       {
         path: "/register",
         element: <Register />,
-        loader: authLoader
+        loader: loginLoader,
+      },
+      {
+        path: "/logout",
+        element: <Logout />,
+        loader: logoutLoader,
       },
       {
         path: "/users",
-        element: <UsersPage/>,
-        loader: usersLoader
+        element: <UsersPage />,
+        loader: usersLoader,
       },
       {
         path: "/users/:userId",
@@ -74,7 +83,7 @@ const router = createBrowserRouter([
           {
             path: "comments",
             element: <CommentsPage />,
-            loader: commentsLoader
+            loader: commentsLoader,
           },
           {
             path: "friends",

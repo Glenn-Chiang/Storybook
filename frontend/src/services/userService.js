@@ -28,10 +28,13 @@ const updateUser = async (userId, updatedData) => {
 
 const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
 
+const logout = () => localStorage.removeItem("currentUser")
+
 export default {
   create,
   getAll,
   getUser,
-  getCurrentUser,
   updateUser,
+  getCurrentUser,
+  logout
 };
