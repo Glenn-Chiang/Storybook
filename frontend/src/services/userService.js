@@ -16,8 +16,8 @@ const getAll = async () => {
   return response.data;
 };
 
-const getMatches = async (searchTerms) => {
-  const response = await axios.get(`${baseUrl}?q=${searchTerms}`);
+const getMatches = async (searchTerms, searchBy) => {
+  const response = await axios.get(`${baseUrl}?searchTerms=${searchTerms}&searchBy=${searchBy}`);
   return response.data;
 };
 

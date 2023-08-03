@@ -3,9 +3,7 @@ import {
   faBookOpen,
   faComment,
   faSearch,
-  faUserAlt,
   faUserFriends,
-  faUserSecret,
   faUserTag,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,15 +12,18 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import NameLink from "../../components/NameLink";
 import userService from "../../services/userService";
+import Dropdown from "../../components/Dropdown"
 
 export default function UsersPage() {
   const [users, setUsers] = useState(useLoaderData());
   const [searchTerms, setSearchTerms] = useState("");
+  const [searchBy, setSearchBy] = useState("username")
+  const searchFields = [{label: 'Username', value: "username"}, {label: 'Display name', value: "displayName"}]
 
   const getUserMatches = useCallback(async () => {
-    const userMatches = await userService.getMatches(searchTerms);
+    const userMatches = await userService.getMatches(searchTerms, searchBy);
     setUsers(userMatches);
-  }, [searchTerms]);
+  }, [searchTerms, searchBy]);
 
   useEffect(() => {
     getUserMatches();
@@ -38,7 +39,9 @@ export default function UsersPage() {
         <FontAwesomeIcon icon={faUsers} />
         Users
       </h1>
-      <h2 className="p-4">Search users by username</h2>
+      <div className="flex justify-center p-4">
+        <Dropdown label={"Search users by"} options={searchFields} setOption={setSearchBy}/>
+      </div>
       <SearchBar onChange={handleInputChange} />
       <section className="flex flex-col m-auto p-4">
         <p>Showing results for: <span className="text-slate-400">{`"${searchTerms}"` || "All users"}</span></p>

@@ -34,11 +34,11 @@ usersRouter.post("/", async (req, res, next) => {
 
 // Get all users
 usersRouter.get("/", async (req, res, next) => {
-  const query = req.query.q
+  const {searchTerms, searchBy} = req.query
   let filter = {}
 
-  if (query?.trim()) {
-    filter = {username: {$regex: new RegExp(query, 'i')}}
+  if (searchTerms?.trim()) {
+    filter = {[searchBy]: {$regex: new RegExp(searchTerms, 'i')}}
   }
 
   try {
