@@ -1,11 +1,11 @@
-import { useEffect, useState, useCallback, useContext } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import CreatePostBox from "../../components/CreatePostBox";
 import PostsPageLayout from "../../components/PostsPageLayout";
 import postService from "../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
-import { AuthContext } from "./AuthContext";
+import userService from "../../services/userService";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
@@ -16,7 +16,8 @@ export default function UserPostsPage() {
   const [sortOrder, setSortOrder] = useState("desc");
 
   const userId = useParams().userId;
-  const IsOwnPosts = useContext(AuthContext);
+  const currentUser = userService.getCurrentUser();
+  const IsOwnPosts = currentUser ? currentUser.userId === userId : false;
 
   const getPosts = useCallback(async () => {
     try {

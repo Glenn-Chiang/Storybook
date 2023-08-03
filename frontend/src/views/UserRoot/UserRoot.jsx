@@ -11,15 +11,14 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { LinkButton } from "../../components/LinkButton";
-import {AuthContext} from './AuthContext'
 
 export default function UserRoot() {
   const userId = useParams().userId;
   const user = useLoaderData();
   const currentUser = userService.getCurrentUser();
-  const IsOwnProfile = currentUser.userId === userId;
+  const IsOwnProfile = currentUser ? currentUser.userId === userId : false;
   return (
-    <AuthContext.Provider value={IsOwnProfile}>
+    <main>
       <h1 className="text-3xl">
         <FontAwesomeIcon icon={faUserCircle} />
         {user.displayName}
@@ -30,7 +29,7 @@ export default function UserRoot() {
       <div>
         <Outlet />
       </div>
-    </AuthContext.Provider>
+    </main>
   );
 }
 

@@ -6,10 +6,9 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { EditButton } from "../../../components/buttons";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CancelButton, ConfirmButton } from "../../../components/buttons";
-import { AuthContext } from "../AuthContext";
 
 export default function Profile() {
   const user = useLoaderData(); // User whose profile is shown
@@ -22,7 +21,9 @@ export default function Profile() {
     comments,
     friends,
   } = user;
-  const IsOwnProfile = useContext(AuthContext);
+
+  const currentUser = userService.getCurrentUser()
+  const IsOwnProfile = currentUser ? userId === currentUser.userId : false;
 
   const [nameState, setNameState] = useState(displayName);
   const [aboutState, setAboutState] = useState(about);

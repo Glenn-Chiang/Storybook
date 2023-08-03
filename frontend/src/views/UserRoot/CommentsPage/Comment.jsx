@@ -1,13 +1,16 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../AuthContext";
+import { useState } from "react";
 import { EditButton, DeleteButton } from "../../../components/buttons";
 import DeleteModal from "../../../components/DeleteModal";
 import commentService from "../../../services/commentService";
 import CommentForm from "../../../components/CommentForm";
+import { useParams } from "react-router-dom";
+import userService from "../../../services/userService";
 
 /* eslint-disable react/prop-types */
 export default function Comment({ comment, loadComments }) {
-  const IsOwnComment = useContext(AuthContext);
+  const currentUser = userService.getCurrentUser()
+  const userId = useParams().userId
+  const IsOwnComment = currentUser ? userId === currentUser.userId : false
 
   const [commentFormVisible, setCommentFormVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
