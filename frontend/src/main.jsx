@@ -33,6 +33,7 @@ import { loader as commentsLoader } from "./views/UserRoot/CommentsPage/loader";
 
 import UsersPage from "./views/UsersPage/UsersPage";
 import { loader as usersLoader } from "./views/UsersPage/loader";
+import { loader as likedPostsLoader } from "./views/UserRoot/LikedPostsPage/loader";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,7 @@ const router = createBrowserRouter([
           {
             path: "likedPosts",
             element: <LikedPostsPage />,
+            loader: likedPostsLoader
           },
           {
             path: "comments",
