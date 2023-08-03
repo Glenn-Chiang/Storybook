@@ -11,6 +11,7 @@ import DeleteModal from "../DeleteModal";
 import NameLink from "../NameLink";
 
 export default function CommentSection({ comments, setPosts }) {
+  const currentUser = userService.getCurrentUser();
   const post = useContext(PostContext);
   const [commentFormVisible, setCommentFormVisible] = useState(false);
 
@@ -31,21 +32,22 @@ export default function CommentSection({ comments, setPosts }) {
   return (
     <div className="p-4 rounded-xl">
       <h2 className="py-4">Comments ({comments.length})</h2>
-      {commentFormVisible ? (
-        <CommentForm
-          onSubmit={handleSubmitComment}
-          closeForm={() => setCommentFormVisible(false)}
-          defaultValue={""}
-        />
-      ) : (
-        <button
-          className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
-          onClick={() => setCommentFormVisible(true)}
-        >
-          <FontAwesomeIcon icon={faPlusCircle} />
-          Post a comment
-        </button>
-      )}
+      {currentUser &&
+        (commentFormVisible ? (
+          <CommentForm
+            onSubmit={handleSubmitComment}
+            closeForm={() => setCommentFormVisible(false)}
+            defaultValue={""}
+          />
+        ) : (
+          <button
+            className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
+            onClick={() => setCommentFormVisible(true)}
+          >
+            <FontAwesomeIcon icon={faPlusCircle} />
+            Post a comment
+          </button>
+        ))}
       {comments?.length > 0 ? (
         <ul className="flex flex-col gap-4 py-4">
           {comments.map((comment, index) => (
@@ -62,8 +64,11 @@ export default function CommentSection({ comments, setPosts }) {
 }
 
 function Comment({ comment, loadComments }) {
-  const IsOwnComment =
-    userService.getCurrentUser().userId === comment.author.id;
+  const currentUser = userService.getCurrentUser();
+
+  const IsOwnComment = currentUser
+    ? currentUser.userId === comment.author.id
+    : false;
 
   const [commentFormVisible, setCommentFormVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
