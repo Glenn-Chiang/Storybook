@@ -8,7 +8,7 @@ import PostsPageLayout from "../components/PostsPageLayout";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-export default function Home() {
+export default function AllPostsPage() {
   const [posts, setPosts] = useState([]);
 
   const sortFields = [

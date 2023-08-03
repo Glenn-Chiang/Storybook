@@ -2,15 +2,13 @@
 import { useLoaderData } from "react-router-dom";
 import userService from "../../../services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUserCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { EditButton } from "../../../components/buttons";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { CancelButton, ConfirmButton } from "../../../components/buttons";
 
-export default function Profile() {
+export default function ProfilePage() {
   const user = useLoaderData(); // User whose profile is shown
   const {
     id: userId,
@@ -22,7 +20,7 @@ export default function Profile() {
     friends,
   } = user;
 
-  const currentUser = userService.getCurrentUser()
+  const currentUser = userService.getCurrentUser();
   const IsOwnProfile = currentUser && userId === currentUser.userId;
 
   const [nameState, setNameState] = useState(displayName);
@@ -97,7 +95,9 @@ export default function Profile() {
               onSubmit={handleSubmitAbout}
             />
           ) : (
-            <p className="text-slate-500 py-2">{addLineBreaks(aboutState) || "-"}</p>
+            <p className="text-slate-500 py-2">
+              {addLineBreaks(aboutState) || "-"}
+            </p>
           )}
         </div>
         <div>

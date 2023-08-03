@@ -8,15 +8,17 @@ import {
 } from "react-router-dom";
 
 import Root from "./views/Root";
-import Home from "./views/Home";
 
 import Login from "./views/AuthPages/Login";
 import Register from "./views/AuthPages/Register";
 import Logout from "./views/AuthPages/Logout";
 import { loader as loginLoader, logoutLoader } from "./views/AuthPages/loaders";
+import AllPostsPage from "./views/AllPostsPage";
+import UsersPage from "./views/UsersPage/UsersPage";
+import { loader as usersLoader } from "./views/UsersPage/loader";
 
 import UserRoot from "./views/UserRoot/UserRoot";
-import Profile from "./views/UserRoot/Profile/Profile";
+import ProfilePage from "./views/UserRoot/ProfilePage/ProfilePage";
 import UserPostsPage from "./views/UserRoot/userPostsPage";
 import CommentsPage from "./views/UserRoot/CommentsPage/CommentsPage";
 import FriendsPage from "./views/UserRoot/FriendsPage/FriendsPage";
@@ -27,12 +29,9 @@ import InfoPage from "./views/GroupPages/InfoPage";
 import GroupPostsPage from "./views/GroupPages/GroupPostsPage";
 import MembersPage from "./views/GroupPages/MembersPage";
 
-import { loader as profileLoader } from "./views/UserRoot/Profile/loader";
+import { loader as profileLoader } from "./views/UserRoot/ProfilePage/loader";
 import { loader as userLoader } from "./views/UserRoot/loader";
 import { loader as commentsLoader } from "./views/UserRoot/CommentsPage/loader";
-
-import UsersPage from "./views/UsersPage/UsersPage";
-import { loader as usersLoader } from "./views/UsersPage/loader";
 import { loader as likedPostsLoader } from "./views/UserRoot/LikedPostsPage/loader";
 
 const router = createBrowserRouter([
@@ -46,7 +45,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/posts",
-        element: <Home />,
+        element: <AllPostsPage />,
       },
       {
         path: "/login",
@@ -80,7 +79,7 @@ const router = createBrowserRouter([
           {
             path: "likedPosts",
             element: <LikedPostsPage />,
-            loader: likedPostsLoader
+            loader: likedPostsLoader,
           },
           {
             path: "comments",
@@ -93,7 +92,7 @@ const router = createBrowserRouter([
           },
           {
             path: "profile",
-            element: <Profile />,
+            element: <ProfilePage />,
             loader: profileLoader,
           },
         ],
