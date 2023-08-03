@@ -22,7 +22,9 @@ export default function Post({ post, setPosts }) {
   const [commentsVisible, setCommentsVisible] = useState(false);
 
   const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser ? currentUser.userId === post.author?.id : false;
+  const IsOwnPost = currentUser
+    ? currentUser.userId === post.author?.id
+    : false;
 
   const likePost = async () => {
     try {
@@ -33,7 +35,9 @@ export default function Post({ post, setPosts }) {
     }
   };
 
-  const alreadyLiked = currentUser ? post.likedBy.includes(currentUser.userId) : false;
+  const alreadyLiked = currentUser
+    ? post.likedBy.includes(currentUser.userId)
+    : false;
 
   const deletePost = async () => {
     try {
@@ -124,11 +128,13 @@ export default function Post({ post, setPosts }) {
 }
 
 function LikeButton({ liked, onClick, likeCount }) {
+  const currentUser = userService.getCurrentUser();
   return (
     <div className="flex sm:flex-row-reverse gap-1">
       <button
+        disabled={!currentUser}
         onClick={onClick}
-        className={`text-white ${
+        className={`text-white disabled:bg-sky-500/50 ${
           liked
             ? "bg-teal-400 hover:bg-teal-500 "
             : "bg-sky-500 hover:bg-sky-600"
