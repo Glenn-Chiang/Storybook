@@ -32,7 +32,6 @@ export default function LikedPostsPage() {
       sortBy={setSortBy}
       setSortOrder={setSortOrder}
       getPosts={getPosts}
-      readOnly={false}
     >
       <h1>
         <FontAwesomeIcon icon={faBookBookmark} />

@@ -17,7 +17,7 @@ export default function UserPostsPage() {
 
   const userId = useParams().userId;
   const currentUser = userService.getCurrentUser();
-  const IsOwnPosts = currentUser ? currentUser.userId === userId : false;
+  const IsOwnPosts = currentUser && currentUser.userId === userId
 
   const getPosts = useCallback(async () => {
     try {

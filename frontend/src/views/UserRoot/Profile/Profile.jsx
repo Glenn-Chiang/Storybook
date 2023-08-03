@@ -23,7 +23,7 @@ export default function Profile() {
   } = user;
 
   const currentUser = userService.getCurrentUser()
-  const IsOwnProfile = currentUser ? userId === currentUser.userId : false;
+  const IsOwnProfile = currentUser && userId === currentUser.userId;
 
   const [nameState, setNameState] = useState(displayName);
   const [aboutState, setAboutState] = useState(about);

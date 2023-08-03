@@ -8,9 +8,9 @@ import userService from "../../../services/userService";
 
 /* eslint-disable react/prop-types */
 export default function Comment({ comment, loadComments }) {
-  const currentUser = userService.getCurrentUser()
-  const userId = useParams().userId
-  const IsOwnComment = currentUser ? userId === currentUser.userId : false
+  const currentUser = userService.getCurrentUser();
+  const userId = useParams().userId;
+  const IsOwnComment = currentUser && userId === currentUser.userId;
 
   const [commentFormVisible, setCommentFormVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -19,7 +19,7 @@ export default function Comment({ comment, loadComments }) {
     try {
       await commentService.remove(comment.id);
       loadComments();
-      setDeleteModalVisible(false)
+      setDeleteModalVisible(false);
     } catch (error) {
       console.log("Error deleting comment:", error);
     }
@@ -28,7 +28,7 @@ export default function Comment({ comment, loadComments }) {
   const editComment = async (formData) => {
     try {
       await commentService.update(comment.id, formData.content);
-      setCommentFormVisible(false)
+      setCommentFormVisible(false);
       loadComments();
     } catch (error) {
       console.log("Error editing comment:", error);
@@ -47,14 +47,18 @@ export default function Comment({ comment, loadComments }) {
       </p>
 
       {commentFormVisible ? (
-        <CommentForm onSubmit={editComment} closeForm={() => setCommentFormVisible(false)} defaultValue={comment.content}/>
+        <CommentForm
+          onSubmit={editComment}
+          closeForm={() => setCommentFormVisible(false)}
+          defaultValue={comment.content}
+        />
       ) : (
         <p className="text-slate-500 text-md py-2">{comment.content}</p>
       )}
 
       {IsOwnComment && (
         <div className="flex gap-2 justify-start py-2">
-          <EditButton onClick={() => setCommentFormVisible(prev => !prev)} />
+          <EditButton onClick={() => setCommentFormVisible((prev) => !prev)} />
           <DeleteButton onClick={() => setDeleteModalVisible(true)} />
         </div>
       )}
