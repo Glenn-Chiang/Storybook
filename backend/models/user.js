@@ -36,15 +36,13 @@ const userSchema = new mongoose.Schema({
   friendRequestsReceived: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: [],
+      ref: "FriendRequest"
     },
   ],
   friendRequestsSent: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: [],
+      ref: "FriendRequest"
     },
   ],
 });

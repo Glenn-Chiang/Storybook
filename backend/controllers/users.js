@@ -2,6 +2,7 @@ const usersRouter = require("express").Router();
 const User = require("../models/user");
 const Post = require("../models/post");
 const Comment = require("../models/comment");
+const FriendRequest = require("../models/friendRequest")
 const bcrypt = require("bcrypt");
 const {
   tokenExtractor,
