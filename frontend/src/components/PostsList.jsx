@@ -3,7 +3,7 @@ import Post from './Post/Post'
 
 export default function PostsList({ posts, setPosts}) {
   return (
-    <section className="">
+    <section className="bg-transparent">
       <ul className="flex flex-col gap-8 pt-4">
         {
           posts.map((post) => (

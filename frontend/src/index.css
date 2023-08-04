@@ -15,14 +15,14 @@
     @apply text-2xl p-8 flex items-center justify-center gap-2;
   }
   h2 {
-    @apply text-xl;
+    @apply text-xl flex items-center gap-2;
   }
   button {
     @apply transition;
   }
   
   section {
-    @apply w-11/12 sm:w-4/5 rounded-xl p-4;
+    @apply w-11/12 sm:w-4/5 rounded-xl p-4 flex flex-col items-center bg-white m-auto;
   }
   input, textarea {
     @apply bg-slate-100 shadow rounded p-2 text-slate-500

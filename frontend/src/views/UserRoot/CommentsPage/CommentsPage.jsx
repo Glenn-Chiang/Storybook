@@ -28,7 +28,7 @@ export default function CommentsPage() {
         <FontAwesomeIcon icon={faComment} />
         Comments
       </h1>
-      <section>
+      <section className="bg-transparent">
         <ul className="flex flex-col gap-8">
           {comments.map((comment) => (
             <li key={comment.id}>

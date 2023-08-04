@@ -40,6 +40,11 @@ const sendFriendRequest = async (userId) => {
   return response.data
 }
 
+const getFriendRequests = async (userId) => {
+  const response = await axios.get(`${baseUrl}/${userId}/friendRequests`, config)
+  return response.data
+}
+
 export default {
   create,
   getAll,
@@ -48,5 +53,6 @@ export default {
   updateUser,
   getCurrentUser,
   logout,
-  sendFriendRequest
+  sendFriendRequest,
+  getFriendRequests
 };

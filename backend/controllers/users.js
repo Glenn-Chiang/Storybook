@@ -103,25 +103,16 @@ usersRouter.post("/:userId/friendRequests", async (req, res, next) => {
   }
 });
 
-// Get user's received friend requests
-usersRouter.get("/:userId/friendRequests/received", async (req, res, next) => {
+// Get user's sent and received friend requests
+usersRouter.get("/:userId/friendRequests", userAuthenticator, async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.userId).populate(
-      "friendRequestsReceived"
-    );
-    res.json(user.friendRequestsReceived);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Get user's sent friend requests
-usersRouter.get("/:userId/friendRequests/sent", async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.userId).populate(
-      "friendRequestsSent"
-    );
-    res.json(user.friendRequestsSent);
+    const user = await User.findById(req.params.userId)
+      .populate("friendRequestsReceived")
+      .populate("friendRequestsSent");
+    res.json({
+      received: user.friendRequestsReceived,
+      sent: user.friendRequestsSent,
+    });
   } catch (error) {
     next(error);
   }

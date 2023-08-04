@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData, useParams } from "react-router-dom";
 import userService from "../../services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import {
   faBookBookmark,
   faBookOpen,
@@ -11,12 +11,13 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { LinkButton } from "../../components/LinkButton";
-import UserContext from './UserContext'
+import UserContext from "./UserContext";
 
 export default function UserRoot() {
   const user = useLoaderData();
+  const userId = useParams().userId;
   const currentUser = userService.getCurrentUser();
-  const IsOwnProfile = currentUser ? currentUser.userId === user.userId : false;
+  const IsOwnProfile = currentUser && currentUser.userId === userId;
 
   return (
     <UserContext.Provider value={user}>
@@ -25,7 +26,7 @@ export default function UserRoot() {
         {user.displayName}
       </h1>
       <div className="flex justify-center gap-4">
-        <ProfileLinks userId={user.userId} IsOwnProfile={IsOwnProfile} />
+        <ProfileLinks IsOwnProfile={IsOwnProfile} />
       </div>
       <div>
         <Outlet />
@@ -36,7 +37,7 @@ export default function UserRoot() {
 
 export function ProfileLinks({ IsOwnProfile }) {
   return (
-    <div className="grid sm:grid-cols-5 grid-cols-2 gap-4">
+    <div className="grid sm:grid-cols-6 grid-cols-2 gap-4">
       <LinkButton route={"profile"}>
         <FontAwesomeIcon icon={faUserCircle} />
         Profile
@@ -49,14 +50,20 @@ export function ProfileLinks({ IsOwnProfile }) {
         <FontAwesomeIcon icon={faComment} />
         Comments
       </LinkButton>
+      {IsOwnProfile && (
+        <LinkButton route={"likedPosts"}>
+          <FontAwesomeIcon icon={faBookBookmark} />
+          Liked Posts
+        </LinkButton>
+      )}{" "}
       <LinkButton route={"friends"}>
         <FontAwesomeIcon icon={faUserFriends} />
         Friends
       </LinkButton>
       {IsOwnProfile ? (
-        <LinkButton route={"likedPosts"}>
-          <FontAwesomeIcon icon={faBookBookmark} />
-          Liked Posts
+        <LinkButton route={"friendRequests"}>
+          <FontAwesomeIcon icon={faEnvelope} />
+          Friend Requests
         </LinkButton>
       ) : (
         <LinkButton route={"addFriend"}>
