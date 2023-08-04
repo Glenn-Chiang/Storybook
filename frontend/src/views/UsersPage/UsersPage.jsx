@@ -46,11 +46,11 @@ export default function UsersPage() {
       <section className="flex flex-col m-auto p-4">
         <p>Showing results for: <span className="text-slate-400">{`"${searchTerms}"` || "All users"}</span></p>
         <ul className="p-4 flex flex-col gap-4 ">
-          {users.map((user) => (
+          {users.length > 0 ? users.map((user) => (
             <li key={user.id}>
               <UserLink user={user} />
             </li>
-          ))}
+          )) : <p className="text-slate-400 bg-white p-4 rounded-xl">No users found</p>}
         </ul>
       </section>
     </main>

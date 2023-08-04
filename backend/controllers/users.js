@@ -38,7 +38,7 @@ usersRouter.get("/", async (req, res, next) => {
   let filter = {}
 
   if (searchTerms?.trim()) {
-    filter = {[searchBy]: {$regex: new RegExp(searchTerms, 'i')}}
+    filter = {[searchBy]: {$regex: new RegExp(`^${searchTerms}`, 'i')}}
   }
 
   try {
