@@ -23,16 +23,30 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
-      default: []
-    }
+      default: [],
+    },
   ],
   friends: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default: []
-    }
-  ]
+      default: [],
+    },
+  ],
+  friendRequestsReceived: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
+  friendRequestsSent: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
 });
 
 userSchema.set("toJSON", {
