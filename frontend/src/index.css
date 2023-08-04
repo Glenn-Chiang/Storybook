@@ -20,8 +20,9 @@
   button {
     @apply transition;
   }
+  
   section {
-    @apply w-11/12 sm:w-4/5;
+    @apply w-11/12 sm:w-4/5 rounded-xl p-4;
   }
   input, textarea {
     @apply bg-slate-100 shadow rounded p-2 text-slate-500
