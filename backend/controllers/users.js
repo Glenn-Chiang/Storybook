@@ -81,42 +81,5 @@ usersRouter.put("/:userId", userAuthenticator, async (req, res, next) => {
   }
 });
 
-// Send friend request to user
-usersRouter.post("/:userId/friendRequests", async (req, res, next) => {
-  const requestingUser = req.userId;
-  const receivingUser = req.params.userId;
-  try {
-    // Update receiving user's received friend requests
-    const updatedUser = await User.findByIdAndUpdate(
-      receivingUser,
-      {
-        $push: { friendRequestsReceived: requestingUser },
-      },
-      { new: true, runValidators: true }
-    );
-    // Update requesting user's sent friend requests
-    await User.findByIdAndUpdate(requestingUser, {
-      $push: { friendRequestsSent: receivingUser },
-    });
-    res.json(updatedUser);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Get user's sent and received friend requests
-usersRouter.get("/:userId/friendRequests", userAuthenticator, async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.userId)
-      .populate("friendRequestsReceived")
-      .populate("friendRequestsSent");
-    res.json({
-      received: user.friendRequestsReceived,
-      sent: user.friendRequestsSent,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
 module.exports = usersRouter;

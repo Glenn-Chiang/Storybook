@@ -13,6 +13,7 @@ const postsRouter = require("./controllers/posts");
 const usersRouter = require("./controllers/users");
 const commentsRouter = require("./controllers/comments")
 const loginRouter = require("./controllers/login");
+const friendRequestsRouter = require("./controllers/friendRequests");
 
 const app = express();
 
@@ -37,6 +38,7 @@ async function buildApp() {
   app.use("/users", usersRouter);
   app.use("/posts", postsRouter);
   app.use("/comments", commentsRouter);
+  app.use(friendRequestsRouter)
 
   app.use(errorHandler);
   app.use(unknownEndpoint);
