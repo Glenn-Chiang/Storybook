@@ -40,8 +40,8 @@ const sendFriendRequest = async (userId) => {
   return response.data
 }
 
-const getFriendRequests = async (userId) => {
-  const response = await axios.get(`${baseUrl}/${userId}/friendRequests`, config)
+const getFriendRequests = async (userId, requestType) => {
+  const response = await axios.get(`${baseUrl}/${userId}/friendRequests/${requestType}`, config)
   return response.data
 }
 

@@ -6,10 +6,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLoaderData } from "react-router-dom";
-import NameLink from "../../../components/NameLink"
+import NameLink from "../../../components/NameLink";
 
 export default function FriendRequestsPage() {
-  const { received: requestsReceived, sent: requestsSent } = useLoaderData();
+  const { received: receivedRequests, sent: sentRequests } = useLoaderData();
   return (
     <main className="flex flex-col gap-4">
       <h1>
@@ -21,35 +21,53 @@ export default function FriendRequestsPage() {
           Received
           <FontAwesomeIcon icon={faCircleArrowLeft} />
         </h2>
-        <RequestList users={requestsReceived} requestType={"received"} />
+        <RequestList requests={receivedRequests} requestType={"received"} />
       </section>
       <section className="items-start">
         <h2>
           Sent
           <FontAwesomeIcon icon={faCircleArrowRight} />
         </h2>
-        <RequestList users={requestsSent} requestType={"sent"} />
+        <RequestList requests={sentRequests} requestType={"sent"} />
       </section>
     </main>
   );
 }
 
-function RequestList({ users, requestType }) {
+function RequestList({ requests, requestType }) {
   return (
     <ul className="py-4">
-      {users.length > 0 ? (
-        users.map((user) => (
-          <li key={user.id}>
-              <NameLink
-                to={`/users/${user.id}/profile`}
-                name={user.username}
-                isSelf={false}
-              />
-          </li>
-        ))
+      {requests.length > 0 ? (
+        requests.map((request) =>
+          requestType === "received" ? (
+            <ReceivedRequest key={request.id} request={request}/>
+          ) : (
+            <SentRequest key={request.id} request={request}/>
+          )
+        )
       ) : (
-        <p className="text-slate-400">No pending requests {requestType}</p>
+        <p className="text-slate-400">No requests</p>
       )}
     </ul>
   );
+}
+
+function ReceivedRequest({ request }) {
+  <li>
+    <NameLink
+      to={`/users/${request.sender.id}/profile`}
+      name={request.sender.username}
+      isSelf={false}
+    />
+  </li>;
+}
+
+function SentRequest({ request }) {
+  <li>
+    <NameLink
+      to={`/users/${request.recipient.id}/profile`}
+      name={request.recipient.username}
+      isSelf={false}
+    />
+  </li>;
 }
