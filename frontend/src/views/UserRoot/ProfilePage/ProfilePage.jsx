@@ -59,7 +59,7 @@ export default function ProfilePage() {
         Profile
       </h1>
 
-      <section className="flex flex-col gap-4 inset-x-0 m-auto bg-white rounded-xl p-4">
+      <section className="items-start gap-4">
         <div>
           <p>Username</p>
           <p className="text-slate-500">{username}</p>

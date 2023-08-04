@@ -6,6 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLoaderData } from "react-router-dom";
+import NameLink from "../../../components/NameLink"
 
 export default function FriendRequestsPage() {
   const { received: requestsReceived, sent: requestsSent } = useLoaderData();
@@ -35,11 +36,19 @@ export default function FriendRequestsPage() {
 
 function RequestList({ users, requestType }) {
   return (
-    <ul>
+    <ul className="py-4">
       {users.length > 0 ? (
-        users.map((user) => <li key={user.id}>{user.username}</li>)
+        users.map((user) => (
+          <li key={user.id}>
+              <NameLink
+                to={`/users/${user.id}/profile`}
+                name={user.username}
+                isSelf={false}
+              />
+          </li>
+        ))
       ) : (
-        <p className="text-slate-500">No pending requests {requestType}</p>
+        <p className="text-slate-400">No pending requests {requestType}</p>
       )}
     </ul>
   );

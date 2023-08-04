@@ -36,6 +36,7 @@ import { loader as likedPostsLoader } from "./views/UserRoot/LikedPostsPage/load
 import AddFriendPage from "./views/UserRoot/AddFriendPage/AddFriendPage";
 import FriendRequestsPage from "./views/UserRoot/FriendRequestsPage/FriendRequestsPage";
 import friendRequestsLoader from "./views/UserRoot/FriendRequestsPage/loader";
+import { loader as addFriendLoader } from "./views/UserRoot/AddFriendPage/loader";
 
 const router = createBrowserRouter([
   {
@@ -101,6 +102,7 @@ const router = createBrowserRouter([
           {
             path: "addFriend",
             element: <AddFriendPage />,
+            loader: addFriendLoader
           },
           {
             path: "friendRequests",

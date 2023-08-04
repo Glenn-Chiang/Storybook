@@ -37,7 +37,7 @@ export default function UserRoot() {
 
 export function ProfileLinks({ IsOwnProfile }) {
   return (
-    <div className="grid sm:grid-cols-6 grid-cols-2 gap-4">
+    <div className="grid sm:grid-cols-3 md:grid-cols-6 grid-cols-2 gap-4">
       <LinkButton route={"profile"}>
         <FontAwesomeIcon icon={faUserCircle} />
         Profile
