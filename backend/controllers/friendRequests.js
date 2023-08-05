@@ -29,13 +29,13 @@ friendRequestsRouter.post(
       await User.findByIdAndUpdate(
         recipient,
         {
-          $push: { friendRequestsReceived: savedFriendRequest },
+          $push: { friendRequestsReceived: savedFriendRequest._id },
         },
         { new: true, runValidators: true }
       );
       // Update sender
       await User.findByIdAndUpdate(sender, {
-        $push: { friendRequestsSent: savedFriendRequest },
+        $push: { friendRequestsSent: savedFriendRequest._id },
       });
 
       res.json(savedFriendRequest);
@@ -87,11 +87,11 @@ friendRequestsRouter.delete(
       );
       // Delete request from sender's sent requests
       await User.findByIdAndUpdate(req.params.userId, {
-        $pull: { friendRequestsSent: req.params.requestId },
+        $pull: { friendRequestsSent: deletedRequest._id },
       });
       // Delete request from recipient's received requests
       await User.findByIdAndUpdate(deletedRequest.recipient, {
-        $pull: { friendRequestsReceived: req.params.requestId },
+        $pull: { friendRequestsReceived: deletedRequest._id },
       });
       res.status(204).end();
     } catch (error) {
@@ -105,11 +105,31 @@ friendRequestsRouter.put(
   "/users/:userId/friendRequests/received/:requestId/:status",
   async (req, res, next) => {
     try {
-      const updatedRequest = await FriendRequest(req.params.requestId, {
-        status: req.params.status,
-      }); // Accepted/rejected
-      
-      res.json(updatedRequest)
+      // Update request status
+      const updatedRequest = await FriendRequest.findByIdAndUpdate(
+        req.params.requestId,
+        {
+          status: req.params.status,
+        }
+      );
+      const sender = updatedRequest.sender;
+      const recipient = updatedRequest.recipient;
+      // Remove request from sender's sent requests, regardless if request is accepted or rejected
+      await User.findByIdAndUpdate(sender, {
+        $pull: { friendRequestsSent: updatedRequest._id },
+      });
+      // Add each user to the other's friends field if request is accepted
+      if (req.params.status === "accepted") {
+        // Add sender as friend to recipient
+        await User.findByIdAndUpdate(recipient, {
+          $push: { friends: sender },
+        });
+        // Add recipient as friend to sender
+        await User.findByIdAndUpdate(sender, {
+          $push: { friends: recipient },
+        });
+      }
+      res.json(updatedRequest);
     } catch (error) {
       next(error);
     }
