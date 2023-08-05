@@ -36,13 +36,13 @@ const userSchema = new mongoose.Schema({
   friendRequestsReceived: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "FriendRequest"
+      ref: "FriendRequest",
     },
   ],
   friendRequestsSent: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "FriendRequest"
+      ref: "FriendRequest",
     },
   ],
 });
@@ -55,6 +55,9 @@ userSchema.set("toJSON", {
     delete returnedObject._id;
     delete returnedObject.__v;
     delete returnedObject.passwordHash;
+    delete returnedObject.likedPosts;
+    delete returnedObject.friendRequestsReceived;
+    delete returnedObject.friendRequestsSent;
   },
 });
 

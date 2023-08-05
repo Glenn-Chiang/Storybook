@@ -15,6 +15,9 @@ const postSchema = new mongoose.Schema({
 postSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
+    // delete returnedObject.likedBy; // likedBy is private data that only post author can access
+    returnedObject.datePosted = (new Date(returnedObject.datePosted)).toLocaleString()
+    returnedObject.lastUpdated = (new Date(returnedObject.datePosted)).toLocaleString()
     delete returnedObject._id;
     delete returnedObject.__v;
   },

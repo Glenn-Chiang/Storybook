@@ -68,7 +68,7 @@ export default function Post({ post, setPosts }) {
                 Date posted
               </span>
               <span className="text-slate-400">
-                {new Date(post.datePosted).toLocaleString()}
+                {post.datePosted}
               </span>
             </p>
             <p className="flex gap-4">
@@ -77,7 +77,7 @@ export default function Post({ post, setPosts }) {
                 Last updated
               </span>
               <span className="text-slate-400">
-                {new Date(post.lastUpdated).toLocaleString()}
+                {post.lastUpdated}
               </span>
             </p>
             <p className="text-sky-900/75 w-full py-2 rounded ">
