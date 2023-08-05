@@ -45,7 +45,7 @@ const userExtractor = async (req, res, next) => {
 };
 
 // Ensure that user's private resources can only be accessed/modified by themselves
-// e.g. likedPosts, displayName, about
+// e.g. likedPosts, friendRequests
 const userAuthenticator = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);

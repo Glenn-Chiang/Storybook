@@ -71,7 +71,6 @@ function ReceivedRequest({ request }) {
 }
 
 function SentRequest({ request }) {
-  // request.status = "accepted"
   return (
     <tr className="text-center">
       <td>

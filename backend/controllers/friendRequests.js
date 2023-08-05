@@ -45,11 +45,12 @@ friendRequestsRouter.post(
   }
 );
 
-friendRequestsRouter.use(userAuthenticator);
+// friendRequestsRouter.use(userAuthenticator);
 
 // Get friend requests sent by user
 friendRequestsRouter.get(
   "/users/:userId/friendRequests/sent",
+  userAuthenticator,
   async (req, res, next) => {
     try {
       const sentRequests = await FriendRequest.find({
@@ -65,6 +66,7 @@ friendRequestsRouter.get(
 // Get friend requests received by user
 friendRequestsRouter.get(
   "/users/:userId/friendRequests/received",
+  userAuthenticator,
   async (req, res, next) => {
     try {
       const receivedRequests = await FriendRequest.find({
