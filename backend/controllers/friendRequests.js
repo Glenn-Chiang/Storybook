@@ -45,10 +45,11 @@ friendRequestsRouter.post(
   }
 );
 
+friendRequestsRouter.use(userAuthenticator);
+
 // Get friend requests sent by user
 friendRequestsRouter.get(
   "/users/:userId/friendRequests/sent",
-  userAuthenticator,
   async (req, res, next) => {
     try {
       const sentRequests = await FriendRequest.find({
@@ -64,7 +65,6 @@ friendRequestsRouter.get(
 // Get friend requests received by user
 friendRequestsRouter.get(
   "/users/:userId/friendRequests/received",
-  userAuthenticator,
   async (req, res, next) => {
     try {
       const receivedRequests = await FriendRequest.find({
@@ -80,7 +80,6 @@ friendRequestsRouter.get(
 // Cancel a friend request sent by user
 friendRequestsRouter.delete(
   "/users/:userId/friendRequests/sent/:requestId",
-  userAuthenticator,
   async (req, res, next) => {
     try {
       const deletedRequest = await FriendRequest.findByIdAndDelete(
@@ -95,6 +94,22 @@ friendRequestsRouter.delete(
         $pull: { friendRequestsReceived: req.params.requestId },
       });
       res.status(204).end();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// Accept/reject friend request
+friendRequestsRouter.put(
+  "/users/:userId/friendRequests/received/:requestId/:status",
+  async (req, res, next) => {
+    try {
+      const updatedRequest = await FriendRequest(req.params.requestId, {
+        status: req.params.status,
+      }); // Accepted/rejected
+      
+      res.json(updatedRequest)
     } catch (error) {
       next(error);
     }

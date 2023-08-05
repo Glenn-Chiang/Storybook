@@ -3,8 +3,9 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   displayName: { type: String, required: true },
-  about: String,
   passwordHash: { type: String, required: true },
+  dateJoined: Date,
+  about: String,
   posts: [
     {
       type: mongoose.Schema.Types.ObjectId, // Array will contain objectIds of documents in the Post collection

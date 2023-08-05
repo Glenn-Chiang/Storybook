@@ -11,7 +11,7 @@ const friendRequestSchema = new mongoose.Schema({
   },
   status: String, // Accepted, pending, rejected
   dateSent: Date,
-  dateResponded: Date, // Date when recipient either accepts or rejects the request
+  dateResolved: Date, // Date when recipient either accepts or rejects the request
 });
 
 friendRequestSchema.set("toJSON", {

@@ -1,8 +1,6 @@
 const usersRouter = require("express").Router();
 const User = require("../models/user");
-const Post = require("../models/post");
-const Comment = require("../models/comment");
-const FriendRequest = require("../models/friendRequest")
+const FriendRequest = require("../models/friendRequest");
 const bcrypt = require("bcrypt");
 const {
   tokenExtractor,
@@ -26,6 +24,7 @@ usersRouter.post("/", async (req, res, next) => {
       username,
       displayName,
       passwordHash,
+      dateJoined: new Date(),
       about: "",
       posts: [],
       comments: [],
@@ -81,5 +80,24 @@ usersRouter.put("/:userId", userAuthenticator, async (req, res, next) => {
   }
 });
 
+// Add friend to user's friends field when user accepts friend request
+usersRouter.put("/:userId/friends", userAuthenticator, async (req, res, next) => {
+  const sender = req.body.friendId
+  const recipient = req.params.userId
+  try {
+    // Add sender to recipient's friends field
+    const updatedUser = await User.findByIdAndUpdate(recipient, {
+      $push: {friends: sender}
+    })
+    // Add recipient to sender's friends field
+    await User.findByIdAndUpdate(sender, {
+      $push: {friends, recipient}
+    })
+
+    res.json(updatedUser)
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = usersRouter;
