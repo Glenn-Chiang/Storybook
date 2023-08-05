@@ -81,7 +81,7 @@ friendRequestsRouter.get(
 
 // Cancel a friend request sent by user
 friendRequestsRouter.delete(
-  "/users/:userId/friendRequests/sent/:requestId",
+  "/users/:userId/friendRequests/sent/:requestId", userAuthenticator,
   async (req, res, next) => {
     try {
       const deletedRequest = await FriendRequest.findByIdAndDelete(
@@ -102,9 +102,26 @@ friendRequestsRouter.delete(
   }
 );
 
+// Close a friend request that has been resolved by the recipient i.e. accepted or rejected
+friendRequestsRouter.delete("/users/:userId/friendRequests/sent/:requestId/close", userAuthenticator, async (req, res, next) => {
+  try {
+    const closedRequest = await FriendRequest.findByIdAndDelete(
+      req.params.requestId
+    )
+    // Remove request from sender's sent requests
+    await User.findByIdAndUpdate(closedRequest.sender, {
+      $pull: {friendRequestsSent: closedRequest._id}
+    })
+    // TODO: Prevent user from closing a request that is still pending?
+    res.status(204).end()
+  } catch (error) {
+    next(error)
+  }
+})
+
 // Accept/reject friend request
 friendRequestsRouter.put(
-  "/users/:userId/friendRequests/received/:requestId/:status",
+  "/users/:userId/friendRequests/received/:requestId/:status", userAuthenticator,
   async (req, res, next) => {
     try {
       // Update request status
@@ -116,9 +133,9 @@ friendRequestsRouter.put(
       );
       const sender = updatedRequest.sender;
       const recipient = updatedRequest.recipient;
-      // Remove request from sender's sent requests, regardless if request is accepted or rejected
-      await User.findByIdAndUpdate(sender, {
-        $pull: { friendRequestsSent: updatedRequest._id },
+      // Remove request from recipient's received requests, regardless if request is accepted or rejected
+      await User.findByIdAndUpdate(recipient, {
+        $pull: { friendRequestsReceived: updatedRequest._id },
       });
       // Add each user to the other's friends field if request is accepted
       if (req.params.status === "accepted") {
