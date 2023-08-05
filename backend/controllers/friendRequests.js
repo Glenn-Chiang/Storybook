@@ -53,7 +53,7 @@ friendRequestsRouter.get(
     try {
       const sentRequests = await FriendRequest.find({
         sender: req.params.userId,
-      });
+      }).populate("recipient");
       res.json(sentRequests);
     } catch (error) {
       next(error);
@@ -68,7 +68,7 @@ friendRequestsRouter.get(
     try {
       const receivedRequests = await FriendRequest.find({
         recipient: req.params.userId,
-      });
+      }).populate("sender");
       res.json(receivedRequests);
     } catch (error) {
       next(error);

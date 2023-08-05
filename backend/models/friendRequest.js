@@ -15,9 +15,8 @@ const friendRequestSchema = new mongoose.Schema({
 
 friendRequestSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id
-      ? returnedObject._id.toString()
-      : returnedObject.id;
+    returnedObject.id = returnedObject._id.toString()
+    returnedObject.dateSent = (new Date(returnedObject.dateSent)).toLocaleString()
     delete returnedObject._id;
     delete returnedObject.__v;
   },

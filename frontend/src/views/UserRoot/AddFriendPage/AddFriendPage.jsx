@@ -10,6 +10,7 @@ export default function AddFriendPage() {
   const user = useContext(UserContext);
 
   const requestPending = useLoaderData();
+  // const requestPending = false;
 
   const sendFriendRequest = async () => {
     try {
@@ -29,12 +30,12 @@ export default function AddFriendPage() {
         {requestPending ? (
           <p className="text-slate-400">Request pending</p>
         ) : (
-          <form className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <p className="text-slate-500">
               Send a friend request to {user.username}?
             </p>
             <ConfirmButton onClick={sendFriendRequest}>Send</ConfirmButton>
-          </form>
+          </div>
         )}
       </section>
     </main>

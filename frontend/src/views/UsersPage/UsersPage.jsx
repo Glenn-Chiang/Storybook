@@ -43,7 +43,7 @@ export default function UsersPage() {
         <Dropdown label={"Search users by"} options={searchFields} setOption={setSearchBy}/>
       </div>
       <SearchBar onChange={handleInputChange} />
-      <section className="flex flex-col m-auto p-4">
+      <section className="bg-transparent">
         <p>Showing results for: <span className="text-slate-400">{`"${searchTerms}"` || "All users"}</span></p>
         <ul className="p-4 flex flex-col gap-4 ">
           {users.length > 0 ? users.map((user) => (
