@@ -11,12 +11,12 @@ const loader = async ({ params }) => {
       return redirect(`/users/${userId}/addFriend`);
     }
     const received = await friendRequestService.get(userId, "received");
-    const sent = await friendRequestService.get(userId, "sent")
-    return {received, sent};
+    const sent = await friendRequestService.get(userId, "sent");
+    return { received, sent };
   } catch (error) {
     console.log("Error getting friend requests:", error);
     return [];
   }
 };
 
-export default loader
+export default loader;

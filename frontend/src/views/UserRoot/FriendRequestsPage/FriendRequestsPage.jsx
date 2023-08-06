@@ -1,13 +1,17 @@
 /* eslint-disable react/prop-types */
 import {
+  faCheck,
   faCircleArrowLeft,
   faCircleArrowRight,
   faEnvelope,
+  faRemove,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLoaderData } from "react-router-dom";
 import NameLink from "../../../components/NameLink";
 import { CancelButton } from "../../../components/buttons";
+import friendRequestService from "../../../services/friendRequestService";
+import userService from "../../../services/userService";
 
 export default function FriendRequestsPage() {
   const { received: receivedRequests, sent: sentRequests } = useLoaderData();
@@ -54,50 +58,84 @@ function RequestList({ requests, requestType }) {
 }
 
 function ReceivedRequest({ request }) {
+  const user = userService.getCurrentUser();
+
+  const handleAccept = async () => {
+    try {
+      friendRequestService.resolve(user.id, request.id, "accepted");
+    } catch (error) {
+      console.log("Error accepting friend request:", error);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      friendRequestService.resolve(user.id, request.id, "rejected");
+    } catch (error) {
+      console.log("Error rejecting friend request:", error);
+    }
+  };
+
   return (
-    <li>
-      <NameLink
-        to={`/users/${request.sender.id}/profile`}
-        name={request.sender.username}
-        isSelf={false}
-      />
+    <li className="flex justify-between flex-col sm:flex-row text-center">
+      <div className="flex gap-2 items-center">
+        <span className="text-slate-400">From</span>
+        <NameLink
+          to={`/users/${request.sender.id}/profile`}
+          name={request.sender.username}
+          isSelf={false}
+        />
+        <span className="text-slate-400">on</span>
+        <span>{request.dateSent}</span>
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={handleAccept}
+          className="bg-teal-400 hover:bg-teal-500 text-white p-2 rounded-xl w-10 h-10"
+        >
+          <FontAwesomeIcon icon={faCheck} />
+        </button>
+        <button
+          onClick={handleReject}
+          className="bg-rose-400 hover:bg-rose-500 text-white p-2 rounded-xl w-10 h-10"
+        >
+          <FontAwesomeIcon icon={faRemove} />
+        </button>
+      </div>
     </li>
   );
 }
 
 function SentRequest({ request }) {
   return (
-    <li className="text-center flex items-center gap-2">
-      <div className="flex-1">
-        <NameLink
-          to={`/users/${request.recipient.id}/profile`}
-          name={request.recipient.username}
-          isSelf={false}
-        />
-      </div>
-      <div
-        className={`flex-1 p-2 rounded-lg capitalize ${
-          request.status === "pending"
-            ? "bg-slate-200 text-slate-400"
-            : request.status === "accepted"
-            ? "bg-green-200 text-emerald-400"
-            : "bg-rose-200 text-rose-400"
-        }`}
-      >
-        {request.status}
-      </div>
-      <div className="hidden flex-1 sm:flex flex-col">
-        <span className="text-slate-400">Date Sent</span>{" "}
+    <li className="text-center flex justify-between sm:flex-row flex-col">
+      <div className="flex items-center gap-2">
+        <span className="text-slate-400">To</span>
+        <div>
+          <NameLink
+            to={`/users/${request.recipient.id}/profile`}
+            name={request.recipient.username}
+            isSelf={false}
+          />
+        </div>
+        <span className="text-slate-400">on</span>
         <span>{request.dateSent}</span>
       </div>
-      <div className="hidden flex-1 sm:flex flex-col">
-        <span className="capitalize text-slate-400">
-          {request.status !== "pending" && `Date ${request.status}`}
-        </span>{" "}
-        <span className="text-slate-400">{request.dateResolved || "-"}</span>
-      </div>
-      <div className="flex-1">
-        {request.status === "pending" ? <CancelButton /> : <ClearButton />}
+      <div className="flex gap-2">
+        <div
+          className={`p-2 rounded-lg capitalize ${
+            request.status === "pending"
+              ? "bg-slate-200 text-slate-400"
+              : request.status === "accepted"
+              ? "bg-green-200 text-emerald-400"
+              : "bg-rose-200 text-rose-400"
+          }`}
+        >
+          {request.status}
+        </div>
+        <div>
+          {request.status === "pending" ? <CancelButton /> : <ClearButton />}
+        </div>
       </div>
     </li>
   );
