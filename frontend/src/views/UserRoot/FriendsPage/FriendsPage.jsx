@@ -2,6 +2,7 @@
 import { faSadCry, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLoaderData } from "react-router-dom";
+import UserLink from "../../../components/UserLink"
 
 export default function FriendsPage() {
   const friends = useLoaderData();
@@ -26,9 +27,11 @@ export default function FriendsPage() {
 
 function FriendsList({ friends }) {
   return (
-    <ul>
+    <ul className="w-full">
       {friends.map((user) => (
-        <li key={user.id}>{user.username}</li>
+        <li className="bg-white rounded-xl" key={user.id}>
+          <UserLink user={user}/>
+        </li>
       ))}
     </ul>
   );
