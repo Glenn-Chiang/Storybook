@@ -12,14 +12,15 @@ friendRequestsRouter.use(tokenExtractor, userExtractor);
 
 // Send friend request to user
 friendRequestsRouter.post(
-  "/users/:userId/friendRequests/sent/:recipientId", userAuthenticator,
+  "/users/:userId/friendRequests/sent/:recipientId",
+  userAuthenticator,
   async (req, res, next) => {
     const sender = req.params.userId;
-    const recipient = req.params.recipientId
+    const recipient = req.params.recipientId;
     try {
       const friendRequest = new FriendRequest({
-        sender: mongoose.Types.ObjectId(sender),
-        recipient: mongoose.Types.ObjectId(recipient),
+        sender: new mongoose.Types.ObjectId(sender),
+        recipient: new mongoose.Types.ObjectId(recipient),
         dateSent: new Date(),
         dateResolved: null,
         status: "pending",
@@ -81,9 +82,27 @@ friendRequestsRouter.get(
   }
 );
 
+// Get friend request sent by user to specific recipient
+friendRequestsRouter.get(
+  "/users/:userId/friendRequests/sent/:recipientId",
+  userAuthenticator,
+  async (req, res, next) => {
+    try {
+      const sentRequests = await FriendRequest.findOne({
+        sender: req.params.userId,
+        recipient: req.params.recipientId
+      })
+      res.json(sentRequests)
+    } catch (error) {
+      next(error)
+    }
+  }
+);
+
 // Cancel a friend request sent by user
 friendRequestsRouter.delete(
-  "/users/:userId/friendRequests/sent/:requestId", userAuthenticator,
+  "/users/:userId/friendRequests/sent/:requestId",
+  userAuthenticator,
   async (req, res, next) => {
     try {
       const deletedRequest = await FriendRequest.findByIdAndDelete(
@@ -105,25 +124,30 @@ friendRequestsRouter.delete(
 );
 
 // Close a friend request that has been resolved by the recipient i.e. accepted or rejected
-friendRequestsRouter.delete("/users/:userId/friendRequests/sent/:requestId/close", userAuthenticator, async (req, res, next) => {
-  try {
-    const closedRequest = await FriendRequest.findByIdAndDelete(
-      req.params.requestId
-    )
-    // Remove request from sender's sent requests
-    await User.findByIdAndUpdate(closedRequest.sender, {
-      $pull: {friendRequestsSent: closedRequest._id}
-    })
-    // TODO: Prevent user from closing a request that is still pending?
-    res.status(204).end()
-  } catch (error) {
-    next(error)
+friendRequestsRouter.delete(
+  "/users/:userId/friendRequests/sent/:requestId/close",
+  userAuthenticator,
+  async (req, res, next) => {
+    try {
+      const closedRequest = await FriendRequest.findByIdAndDelete(
+        req.params.requestId
+      );
+      // Remove request from sender's sent requests
+      await User.findByIdAndUpdate(closedRequest.sender, {
+        $pull: { friendRequestsSent: closedRequest._id },
+      });
+      // TODO: Prevent user from closing a request that is still pending?
+      res.status(204).end();
+    } catch (error) {
+      next(error);
+    }
   }
-})
+);
 
 // Accept/reject friend request
 friendRequestsRouter.put(
-  "/users/:userId/friendRequests/received/:requestId/:status", userAuthenticator,
+  "/users/:userId/friendRequests/received/:requestId/:status",
+  userAuthenticator,
   async (req, res, next) => {
     try {
       // Update request status

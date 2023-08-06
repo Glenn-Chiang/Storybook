@@ -66,7 +66,6 @@ function ReceivedRequest({ request }) {
 }
 
 function SentRequest({ request }) {
-  request.status = "accepted";
   return (
     <li className="text-center flex items-center gap-2">
       <div className="flex-1">

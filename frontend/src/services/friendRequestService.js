@@ -19,6 +19,12 @@ const get = async (userId, requestType) => {
   return response.data;
 };
 
+// Check if sender has already sent friend request to recipient; used in AddFriend page
+const getOne = async (senderId, recipientId) => {
+  const response = await axios.get(`${baseUrl}/${senderId}/friendRequests/sent/${recipientId}`, config)
+  return response.data
+}
+
 const cancel = async (userId, requestId) => {
   const response = await axios.delete(
     `${baseUrl}/${userId}/friendRequests/sent/${requestId}`,
@@ -43,4 +49,4 @@ const resolve = async (userId, requestId, status) => {
   return response.data;
 };
 
-export default { send, get, cancel, close, resolve };
+export default { send, get, getOne, cancel, close, resolve };
