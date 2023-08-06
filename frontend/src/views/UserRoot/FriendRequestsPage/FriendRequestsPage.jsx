@@ -41,7 +41,7 @@ export default function FriendRequestsPage() {
 
 function RequestList({ requests, requestType }) {
   return (
-    <ul className="w-full">
+    <ul className="w-full flex flex-col gap-4">
       {requests.length > 0 ? (
         requests.map((request) =>
           requestType === "received" ? (
