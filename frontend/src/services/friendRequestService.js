@@ -2,9 +2,9 @@ import axios from "axios";
 import config from "./config";
 const baseUrl = "http://localhost:3000/users";
 
-const send = async (userId) => {
+const send = async (senderId, recipientId) => {
   const response = await axios.post(
-    `${baseUrl}/${userId}/friendRequests`,
+    `${baseUrl}/${senderId}/friendRequests/sent/${recipientId}`,
     null,
     config
   );

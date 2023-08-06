@@ -5,16 +5,16 @@ import { useContext } from "react";
 import UserContext from "../UserContext";
 import { useLoaderData } from "react-router-dom";
 import friendRequestService from "../../../services/friendRequestService";
+import userService from "../../../services/userService"
 
 export default function AddFriendPage() {
   const user = useContext(UserContext);
-
+  const currentUser = userService.getCurrentUser()
   const requestPending = useLoaderData();
-  // const requestPending = false;
 
   const sendFriendRequest = async () => {
     try {
-      await friendRequestService.send(user.id);
+      await friendRequestService.send(currentUser.userId, user.id);
     } catch (error) {
       console.log("Error sending friend request");
     }
