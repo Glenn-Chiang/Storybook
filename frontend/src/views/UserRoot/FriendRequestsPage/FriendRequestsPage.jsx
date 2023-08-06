@@ -7,14 +7,37 @@ import {
   faRemove,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLoaderData } from "react-router-dom";
+import {
+  useLoaderData,
+  useParams,
+} from "react-router-dom";
 import NameLink from "../../../components/NameLink";
 import { CancelButton } from "../../../components/buttons";
 import friendRequestService from "../../../services/friendRequestService";
-import userService from "../../../services/userService";
+import { useEffect, useState, useCallback } from "react";
 
 export default function FriendRequestsPage() {
-  const { received: receivedRequests, sent: sentRequests } = useLoaderData();
+  const [friendRequests, setFriendRequests] = useState(useLoaderData());
+
+  const { received: receivedRequests, sent: sentRequests } = friendRequests;
+
+  const userId = useParams().userId;
+
+  const getFriendRequests = useCallback(async () => {
+    try {
+      const received = await friendRequestService.get(userId, "received");
+      const sent = await friendRequestService.get(userId, "sent");
+      setFriendRequests({ received, sent });
+    } catch (error) {
+      console.log("Error getting friend requests:", error);
+      return [];
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    getFriendRequests();
+  }, [getFriendRequests]);
+
   return (
     <main className="flex flex-col gap-4">
       <h1>
@@ -26,28 +49,44 @@ export default function FriendRequestsPage() {
           Received
           <FontAwesomeIcon icon={faCircleArrowLeft} />
         </h2>
-        <RequestList requests={receivedRequests} requestType={"received"} />
+        <RequestList
+          requests={receivedRequests}
+          requestType={"received"}
+          updateState={getFriendRequests}
+        />
       </section>
       <section className="items-start">
         <h2>
           Sent
           <FontAwesomeIcon icon={faCircleArrowRight} />
         </h2>
-        <RequestList requests={sentRequests} requestType={"sent"} />
+        <RequestList
+          requests={sentRequests}
+          requestType={"sent"}
+          updateState={getFriendRequests}
+        />
       </section>
     </main>
   );
 }
 
-function RequestList({ requests, requestType }) {
+function RequestList({ requests, requestType, updateState }) {
   return (
     <ul className="w-full flex flex-col gap-4">
       {requests.length > 0 ? (
         requests.map((request) =>
           requestType === "received" ? (
-            <ReceivedRequest key={request.id} request={request} />
+            <ReceivedRequest
+              key={request.id}
+              request={request}
+              updateState={updateState}
+            />
           ) : (
-            <SentRequest key={request.id} request={request} />
+            <SentRequest
+              key={request.id}
+              request={request}
+              updateState={updateState}
+            />
           )
         )
       ) : (
@@ -57,12 +96,13 @@ function RequestList({ requests, requestType }) {
   );
 }
 
-function ReceivedRequest({ request }) {
-  const user = userService.getCurrentUser();
+function ReceivedRequest({ request, updateState }) {
+  const userId = useParams().userId;
 
   const handleAccept = async () => {
     try {
-      friendRequestService.resolve(user.id, request.id, "accepted");
+      await friendRequestService.resolve(userId, request.id, "accepted");
+      updateState();
     } catch (error) {
       console.log("Error accepting friend request:", error);
     }
@@ -70,7 +110,8 @@ function ReceivedRequest({ request }) {
 
   const handleReject = async () => {
     try {
-      friendRequestService.resolve(user.id, request.id, "rejected");
+      await friendRequestService.resolve(userId, request.id, "rejected");
+      updateState();
     } catch (error) {
       console.log("Error rejecting friend request:", error);
     }
@@ -106,7 +147,27 @@ function ReceivedRequest({ request }) {
   );
 }
 
-function SentRequest({ request }) {
+function SentRequest({ request, updateState }) {
+  const userId = useParams().userId
+
+  const handleCancel = async () => {
+    try {
+      await friendRequestService.cancel(userId, request.id);
+      updateState()
+    } catch (error) {
+      console.log("Error cancelling friend request:", error);
+    }
+  };
+
+  const handleClose = async () => {
+    try {
+      await friendRequestService.close(userId, request.id);
+      updateState()
+    } catch (error) {
+      console.log("Error closing resolved friend request:", error);
+    }
+  };
+
   return (
     <li className="text-center flex justify-between sm:flex-row flex-col">
       <div className="flex items-center gap-2">
@@ -134,20 +195,20 @@ function SentRequest({ request }) {
           {request.status}
         </div>
         <div>
-          {request.status === "pending" ? <CancelButton /> : <ClearButton />}
+          {request.status === "pending" ? <CancelButton onClick={handleCancel}/> : <CloseButton onClick={handleClose}/>}
         </div>
       </div>
     </li>
   );
 }
 
-function ClearButton({ handleClick }) {
+function CloseButton({ onClick }) {
   return (
     <button
       className="bg-sky-300 hover:bg-sky-400 text-white p-2 rounded-xl"
-      onClick={handleClick}
+      onClick={onClick}
     >
-      OK
+      Close
     </button>
   );
 }

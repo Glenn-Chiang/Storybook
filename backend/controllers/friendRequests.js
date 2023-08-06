@@ -73,6 +73,7 @@ friendRequestsRouter.get(
   async (req, res, next) => {
     try {
       const receivedRequests = await FriendRequest.find({
+        status: "pending",
         recipient: req.params.userId,
       }).populate("sender").sort({dateSent: "desc"});
       res.json(receivedRequests);
