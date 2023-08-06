@@ -36,6 +36,11 @@ const getFriends = async (userId) => {
   return response.data
 }
 
+const unfriend = async (userId, friendId) => {
+  const response = await axios.delete(`${baseUrl}/${userId}/friends/${friendId}`, config)
+  return response
+}
+
 const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
 
 const logout = () => localStorage.removeItem("currentUser");
@@ -47,6 +52,7 @@ export default {
   getMatches,
   updateUser,
   getFriends,
+  unfriend,
   getCurrentUser,
   logout,
 };

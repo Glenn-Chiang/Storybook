@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import { faSadCry, faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import UserLink from "../../../components/UserLink"
+import userService from "../../../services/userService";
 
 export default function FriendsPage() {
   const friends = useLoaderData();
@@ -26,8 +27,13 @@ export default function FriendsPage() {
 }
 
 function FriendsList({ friends }) {
-  const handleUnfriend = (friendId) => {
-    console.log(friendId)
+  const userId = useParams().userId
+  const handleUnfriend = async (friendId) => {
+    try {
+      await userService.unfriend(userId, friendId)
+    } catch (error) {
+      console.log("Error unfriending user:", error)
+    }
   }
 
   return (
