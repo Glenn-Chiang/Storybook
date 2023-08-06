@@ -21,6 +21,7 @@ friendRequestsRouter.post(
         sender: mongoose.Types.ObjectId(sender),
         recipient: mongoose.Types.ObjectId(recipient),
         dateSent: new Date(),
+        dateResolved: null,
         status: "pending",
       });
 

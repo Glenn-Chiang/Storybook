@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
 import {
-  faCancel,
   faCircleArrowLeft,
   faCircleArrowRight,
   faEnvelope,
-  faRemove,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLoaderData } from "react-router-dom";
 import NameLink from "../../../components/NameLink";
+import { CancelButton } from "../../../components/buttons";
 
 export default function FriendRequestsPage() {
   const { received: receivedRequests, sent: sentRequests } = useLoaderData();
@@ -38,51 +37,47 @@ export default function FriendRequestsPage() {
 
 function RequestList({ requests, requestType }) {
   return (
-    <table className="w-full">
-      <tbody>
-        {requests.length > 0 ? (
-          requests.map((request) =>
-            requestType === "received" ? (
-              <ReceivedRequest key={request.id} request={request} />
-            ) : (
-              <SentRequest key={request.id} request={request} />
-            )
+    <ul className="w-full">
+      {requests.length > 0 ? (
+        requests.map((request) =>
+          requestType === "received" ? (
+            <ReceivedRequest key={request.id} request={request} />
+          ) : (
+            <SentRequest key={request.id} request={request} />
           )
-        ) : (
-          <tr className="text-slate-400">
-            <td className="py-4">No requests {requestType}</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+        )
+      ) : (
+        <p className="text-slate-400">No requests {requestType}</p>
+      )}
+    </ul>
   );
 }
 
 function ReceivedRequest({ request }) {
   return (
-    <tr>
+    <li>
       <NameLink
         to={`/users/${request.sender.id}/profile`}
         name={request.sender.username}
         isSelf={false}
       />
-    </tr>
+    </li>
   );
 }
 
 function SentRequest({ request }) {
+  request.status = "accepted";
   return (
-    <tr className="text-center">
-      <td>
+    <li className="text-center flex items-center gap-2">
+      <div className="flex-1">
         <NameLink
           to={`/users/${request.recipient.id}/profile`}
           name={request.recipient.username}
           isSelf={false}
         />
-      </td>
-      <td className="text-slate-400">{request.dateSent}</td>
-      <td
-        className={`p-2 rounded-lg capitalize ${
+      </div>
+      <div
+        className={`flex-1 p-2 rounded-lg capitalize ${
           request.status === "pending"
             ? "bg-slate-200 text-slate-400"
             : request.status === "accepted"
@@ -91,27 +86,31 @@ function SentRequest({ request }) {
         }`}
       >
         {request.status}
-      </td>
-      <td>
+      </div>
+      <div className="hidden flex-1 sm:flex flex-col">
+        <span className="text-slate-400">Date Sent</span>{" "}
+        <span>{request.dateSent}</span>
+      </div>
+      <div className="hidden flex-1 sm:flex flex-col">
+        <span className="capitalize text-slate-400">
+          {request.status !== "pending" && `Date ${request.status}`}
+        </span>{" "}
+        <span className="text-slate-400">{request.dateResolved || "-"}</span>
+      </div>
+      <div className="flex-1">
         {request.status === "pending" ? <CancelButton /> : <ClearButton />}
-      </td>
-    </tr>
-  );
-}
-
-function CancelButton({ handleClick }) {
-  return (
-    <button className="bg-rose-400 text-white hover:bg-rose-500 rounded-xl p-2 w-10 h-10 relative group" onClick={handleClick}>
-      <FontAwesomeIcon icon={faCancel} />
-      <span className="bg-rose-200 text-rose-400 absolute top-12 -left-10 md:top-0 md:left-12 p-2 rounded-lg w-max hidden group-hover:inline-block">Cancel request</span>
-    </button>
+      </div>
+    </li>
   );
 }
 
 function ClearButton({ handleClick }) {
   return (
-    <button onClick={handleClick}>
-      <FontAwesomeIcon icon={faRemove} />
+    <button
+      className="bg-sky-300 hover:bg-sky-400 text-white p-2 rounded-xl"
+      onClick={handleClick}
+    >
+      OK
     </button>
   );
 }
