@@ -53,7 +53,7 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-// Get user object
+// Get user; used for getting basic info e.g. about, displayName
 usersRouter.get("/:userId", async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);
@@ -62,6 +62,16 @@ usersRouter.get("/:userId", async (req, res, next) => {
     next(error);
   }
 });
+
+// Get user's friends
+usersRouter.get("/:userId/friends", async (req, res, next) => {
+  try {
+    const friends = await User.find({friends: {$in: req.params.userId}})
+    res.json(friends)
+  } catch (error) {
+    next(error)
+  }
+})
 
 usersRouter.use(tokenExtractor, userExtractor);
 

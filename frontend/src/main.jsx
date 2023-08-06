@@ -37,6 +37,7 @@ import AddFriendPage from "./views/UserRoot/AddFriendPage/AddFriendPage";
 import FriendRequestsPage from "./views/UserRoot/FriendRequestsPage/FriendRequestsPage";
 import friendRequestsLoader from "./views/UserRoot/FriendRequestsPage/loader";
 import { loader as addFriendLoader } from "./views/UserRoot/AddFriendPage/loader";
+import { loader as friendsLoader } from "./views/UserRoot/FriendsPage/loader"
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,7 @@ const router = createBrowserRouter([
           {
             path: "friends",
             element: <FriendsPage />,
+            loader: friendsLoader
           },
           {
             path: "profile",

@@ -31,6 +31,11 @@ const updateUser = async (userId, updatedData) => {
   return response.data;
 };
 
+const getFriends = async (userId) => {
+  const response = await axios.get(`${baseUrl}/${userId}/friends`)
+  return response.data
+}
+
 const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
 
 const logout = () => localStorage.removeItem("currentUser");
@@ -41,6 +46,7 @@ export default {
   getUser,
   getMatches,
   updateUser,
+  getFriends,
   getCurrentUser,
   logout,
 };
