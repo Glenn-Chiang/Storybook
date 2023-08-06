@@ -26,13 +26,26 @@ export default function FriendsPage() {
 }
 
 function FriendsList({ friends }) {
+  const handleUnfriend = (friendId) => {
+    console.log(friendId)
+  }
+
   return (
     <ul className="w-full">
       {friends.map((user) => (
-        <li className="bg-white rounded-xl" key={user.id}>
+        <li className="bg-white rounded-xl relative" key={user.id}>
           <UserLink user={user}/>
+          <UnfriendButton onClick={() => handleUnfriend(user.id)}/>
         </li>
       ))}
     </ul>
   );
+}
+
+function UnfriendButton({onClick}) {
+  return (
+    <button onClick={onClick} className="absolute top-1 right-1 p-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-400 hover:text-slate-500">
+      Unfriend
+    </button>
+  )
 }
