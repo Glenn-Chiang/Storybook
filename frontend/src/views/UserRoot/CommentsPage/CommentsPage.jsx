@@ -28,15 +28,19 @@ export default function CommentsPage() {
         <FontAwesomeIcon icon={faComment} />
         Comments
       </h1>
-      <section className="bg-transparent">
-        <ul className="flex flex-col gap-8">
-          {comments.map((comment) => (
-            <li key={comment.id}>
-              <Comment comment={comment} loadComments={loadComments}/>
-            </li>
-          ))}
-        </ul>
-      </section>
+      {comments.length > 0 ? (
+        <section className="bg-transparent">
+          <ul className="flex flex-col gap-8">
+            {comments.map((comment) => (
+              <li key={comment.id}>
+                <Comment comment={comment} loadComments={loadComments} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : (
+        <section className="text-slate-400">No comments found</section>
+      )}
     </main>
   );
 }

@@ -50,7 +50,7 @@ export default function PostsPageLayout({
       </button>
 
       {displayedPosts.length === 0 ? (
-        <p className="text-slate-400 text-center p-4">No posts found</p>
+        <section className="text-slate-400 text-center p-4">No posts found</section>
       ) : (
         <PostsList posts={displayedPosts} setPosts={getPosts} />
       )}
