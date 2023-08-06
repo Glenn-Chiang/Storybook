@@ -1,5 +1,6 @@
 import { redirect } from "react-router-dom";
 import userService from "../../../services/userService";
+import friendRequestService from "../../../services/friendRequestService";
 
 const loader = async ({ params }) => {
   const userId = params.userId;
@@ -9,8 +10,8 @@ const loader = async ({ params }) => {
     if (!authorized) {
       return redirect(`/users/${userId}/addFriend`);
     }
-    const received = await userService.getFriendRequests(userId, "received");
-    const sent = await userService.getFriendRequests(userId, "sent")
+    const received = await friendRequestService.get(userId, "received");
+    const sent = await friendRequestService.get(userId, "sent")
     return {received, sent};
   } catch (error) {
     console.log("Error getting friend requests:", error);

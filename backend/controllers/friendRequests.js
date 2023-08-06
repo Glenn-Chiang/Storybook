@@ -6,19 +6,20 @@ const {
 } = require("../utils/middleware");
 const User = require("../models/user");
 const FriendRequest = require("../models/friendRequest");
+const { default: mongoose } = require("mongoose");
 
 friendRequestsRouter.use(tokenExtractor, userExtractor);
 
 // Send friend request to user
 friendRequestsRouter.post(
-  "/users/:userId/friendRequests",
+  "/users/:userId/friendRequests/sent/:recipientId", userAuthenticator,
   async (req, res, next) => {
-    const sender = req.userId;
-    const recipient = req.params.userId;
+    const sender = req.params.userId;
+    const recipient = req.params.recipientId
     try {
       const friendRequest = new FriendRequest({
-        sender,
-        recipient,
+        sender: mongoose.Types.ObjectId(sender),
+        recipient: mongoose.Types.ObjectId(recipient),
         dateSent: new Date(),
         status: "pending",
       });
@@ -88,7 +89,7 @@ friendRequestsRouter.delete(
         req.params.requestId
       );
       // Delete request from sender's sent requests
-      await User.findByIdAndUpdate(req.params.userId, {
+      await User.findByIdAndUpdate(deletedRequest.sender, {
         $pull: { friendRequestsSent: deletedRequest._id },
       });
       // Delete request from recipient's received requests

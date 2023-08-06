@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConfirmButton } from "../../../components/buttons";
 import { useContext } from "react";
 import UserContext from "../UserContext";
-import userService from "../../../services/userService";
 import { useLoaderData } from "react-router-dom";
+import friendRequestService from "../../../services/friendRequestService";
 
 export default function AddFriendPage() {
   const user = useContext(UserContext);
@@ -14,7 +14,7 @@ export default function AddFriendPage() {
 
   const sendFriendRequest = async () => {
     try {
-      await userService.sendFriendRequest(user.id);
+      await friendRequestService.send(user.id);
     } catch (error) {
       console.log("Error sending friend request");
     }

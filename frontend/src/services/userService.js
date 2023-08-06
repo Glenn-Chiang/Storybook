@@ -35,16 +35,6 @@ const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser"));
 
 const logout = () => localStorage.removeItem("currentUser");
 
-const sendFriendRequest = async (userId) => {
-  const response = await axios.post(`${baseUrl}/${userId}/friendRequests`, null, config)
-  return response.data
-}
-
-const getFriendRequests = async (userId, requestType) => {
-  const response = await axios.get(`${baseUrl}/${userId}/friendRequests/${requestType}`, config)
-  return response.data
-}
-
 export default {
   create,
   getAll,
@@ -53,6 +43,4 @@ export default {
   updateUser,
   getCurrentUser,
   logout,
-  sendFriendRequest,
-  getFriendRequests
 };
