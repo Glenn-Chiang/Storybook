@@ -66,12 +66,12 @@ usersRouter.get("/:userId", async (req, res, next) => {
 // Get user's friends
 usersRouter.get("/:userId/friends", async (req, res, next) => {
   try {
-    const friends = await User.find({friends: {$in: req.params.userId}})
-    res.json(friends)
+    const friends = await User.find({ friends: { $in: req.params.userId } });
+    res.json(friends);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
 usersRouter.use(tokenExtractor, userExtractor);
 
@@ -90,24 +90,25 @@ usersRouter.put("/:userId", userAuthenticator, async (req, res, next) => {
   }
 });
 
-// // Add friend to user's friends field when user accepts friend request
-// usersRouter.put("/:userId/friends", userAuthenticator, async (req, res, next) => {
-//   const sender = req.body.friendId
-//   const recipient = req.params.userId
-//   try {
-//     // Add sender to recipient's friends field
-//     const updatedUser = await User.findByIdAndUpdate(recipient, {
-//       $push: {friends: sender}
-//     })
-//     // Add recipient to sender's friends field
-//     await User.findByIdAndUpdate(sender, {
-//       $push: {friends, recipient}
-//     })
-
-//     res.json(updatedUser)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
+// Unfriend users mutually
+usersRouter.delete(
+  "/:userId/friends/:friendId",
+  userAuthenticator,
+  async (req, res, next) => {
+    try {
+      // Remove friend from currentUser's friends list
+      await User.findByIdAndUpdate(req.params.userId, {
+        $pull: { friends: req.params.friendId },
+      });
+      // Remove currentUser from friend's friends list
+      await User.findByIdAndUpdate(req.params.friendId, {
+        $pull: { friends: req.params.userId },
+      });
+      res.status(204).end();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = usersRouter;
