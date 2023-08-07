@@ -27,16 +27,21 @@ export default function Post({ post }) {
   const currentUser = userService.getCurrentUser();
   const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
 
+  const [liked, setLiked] = useState(
+    currentUser && post.likedBy.includes(currentUser.userId)
+  );
+  const [likeCount, setLikeCount] = useState(post.likedBy.length);
+
   const likePost = async () => {
     try {
+      setLiked((prev) => !prev);
+      setLikeCount(prev => liked ? prev - 1 : prev + 1)
       await postService.like(post.id);
       updatePostsState();
     } catch (error) {
       console.log("Error liking post: ", error);
     }
   };
-
-  const alreadyLiked = currentUser && post.likedBy.includes(currentUser.userId);
 
   const deletePost = async () => {
     try {
@@ -82,9 +87,9 @@ export default function Post({ post }) {
           <div className="flex justify-between items-end">
             <div className="flex gap-2 text-xl">
               <LikeButton
-                liked={alreadyLiked}
+                liked={liked}
                 onClick={likePost}
-                likeCount={post.likedBy.length}
+                likeCount={likeCount}
               />
               <CommentButton
                 onClick={() => setCommentsVisible((prev) => !prev)}
@@ -124,7 +129,7 @@ function LikeButton({ liked, onClick, likeCount }) {
       <button
         disabled={!currentUser}
         onClick={onClick}
-        className={`text-white disabled:bg-sky-500/50 ${
+        className={`text-white transition-none disabled:bg-sky-500/50 ${
           liked
             ? "bg-teal-400 hover:bg-teal-500 "
             : "bg-sky-500 hover:bg-sky-600"
