@@ -38,6 +38,11 @@ const getFriends = async (userId) => {
   return response.data
 }
 
+const checkFriend = async (userId, friendId) => {
+  const response = await axios.get(`${baseUrl}/${userId}/friends/${friendId}`)
+  return response.data
+}
+
 const unfriend = async (userId, friendId) => {
   const config = getConfig();
 
@@ -56,6 +61,7 @@ export default {
   getMatches,
   updateUser,
   getFriends,
+  checkFriend,
   unfriend,
   getCurrentUser,
   logout,

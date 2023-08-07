@@ -84,6 +84,7 @@ friendRequestsRouter.get(
 );
 
 // Get friend request sent by user to specific recipient
+// This is used to check if the user has already sent an unresolved request to the recipient, so as to prevent the user from spamming requests
 friendRequestsRouter.get(
   "/users/:userId/friendRequests/sent/:recipientId",
   userAuthenticator,
