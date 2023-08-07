@@ -128,7 +128,6 @@ postsRouter.post("/", async (req, res, next) => {
 postsRouter.put("/:postId/likes", async (req, res, next) => {
   const postId = req.params.postId;
   const currentUser = await User.findById(req.userId);
-
   const alreadyLiked = currentUser.likedPosts.includes(postId);
 
   try {
@@ -137,7 +136,7 @@ postsRouter.put("/:postId/likes", async (req, res, next) => {
         await Post.findByIdAndUpdate(
           postId,
           {
-            $pull: { likedBy: currentUser._id },
+            $pull: { likedBy: currentUser._id }, 
           },
           { new: true }
         )

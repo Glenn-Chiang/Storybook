@@ -1,6 +1,6 @@
 import axios from "axios";
-import config from "./config";
 const baseUrl = "http://localhost:3000/users";
+import getConfig from "./config";
 
 const create = async (username, displayName, password) => {
   const response = await axios.post(baseUrl, {
@@ -22,11 +22,13 @@ const getMatches = async (searchTerms, searchBy) => {
 };
 
 const getUser = async (userId) => {
-  const response = await axios.get(`${baseUrl}/${userId}`, config);
+  const response = await axios.get(`${baseUrl}/${userId}`);
   return response.data;
 };
 
 const updateUser = async (userId, updatedData) => {
+  const config = getConfig();
+
   const response = await axios.put(`${baseUrl}/${userId}`, updatedData, config);
   return response.data;
 };
@@ -37,6 +39,8 @@ const getFriends = async (userId) => {
 }
 
 const unfriend = async (userId, friendId) => {
+  const config = getConfig();
+
   const response = await axios.delete(`${baseUrl}/${userId}/friends/${friendId}`, config)
   return response
 }

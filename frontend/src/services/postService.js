@@ -1,8 +1,10 @@
 import axios from "axios";
-import config from "./config";
 const baseUrl = "http://localhost:3000/posts";
+import getConfig from "./config";
 
 const getAll = async (sortBy, sortOrder) => {
+  const config = getConfig();
+
   const response = await axios.get(
     `${baseUrl}?sortBy=${sortBy}&sortOrder=${sortOrder}`,
     config
@@ -18,6 +20,8 @@ const getByUser = async (userId, sortBy, sortOrder) => {
 };
 
 const getLikedByUser = async (userId, sortBy, sortOrder) => {
+  const config = getConfig();
+
   const response = await axios.get(
     `${baseUrl}/users/${userId}/likedPosts?sortBy=${sortBy}&sortOrder=${sortOrder}`,
     config
@@ -26,11 +30,15 @@ const getLikedByUser = async (userId, sortBy, sortOrder) => {
 };
 
 const create = async (newObject) => {
+  const config = getConfig();
+
   const response = await axios.post(baseUrl, newObject, config);
   return response.data;
 };
 
 const edit = async (postId, updateData) => {
+  const config = getConfig();
+
   const response = await axios.put(
     `${baseUrl}/${postId}/edit`,
     updateData,
@@ -40,15 +48,15 @@ const edit = async (postId, updateData) => {
 };
 
 const like = async (postId) => {
-  const response = await axios.put(
-    `${baseUrl}/${postId}/likes`,
-    { likes: 1 },
-    config
-  );
+  const config = getConfig();
+
+  const response = await axios.put(`${baseUrl}/${postId}/likes`, null, config);
   return response.data;
 };
 
 const deletePost = async (postId) => {
+  const config = getConfig();
+
   const response = await axios.delete(`${baseUrl}/${postId}`, config);
   return response;
 };

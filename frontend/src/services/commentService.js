@@ -1,6 +1,6 @@
 import axios from "axios";
-import config from "./config";
 const baseUrl = "http://localhost:3000/comments";
+import getConfig from "./config";
 
 const getByPost = async (postId) => {
   const response = await axios.get(`${baseUrl}/posts/${postId}/comments`);
@@ -15,6 +15,8 @@ const getByUser = async (userId) => {
 };
 
 const create = async (postId, commentObject) => {
+  const config = getConfig();
+
   const response = await axios.post(
     `${baseUrl}/posts/${postId}/comments`,
     commentObject,
@@ -24,15 +26,19 @@ const create = async (postId, commentObject) => {
 };
 
 const update = async (commentId, updateData) => {
+  const config = getConfig();
+
   const response = await axios.put(
     `${baseUrl}/${commentId}`,
-    { content: updateData},
+    { content: updateData },
     config
   );
   return response.data;
 };
 
 const remove = async (commentId) => {
+  const config = getConfig();
+
   const response = await axios.delete(`${baseUrl}/${commentId}`, config);
   return response.data;
 };

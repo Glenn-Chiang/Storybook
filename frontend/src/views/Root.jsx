@@ -6,12 +6,16 @@ import userService from "../services/userService";
 
 export default function Root() {
   const [currentUser, setCurrentUser] = useState(null)
-
+  // console.log('Context user:', currentUser)
+  // const user = userService.getCurrentUser();
+  // console.log("Local storage user: ", user);
+  
   useEffect(() => {
-    const currentUser = userService.getCurrentUser()
-    if (currentUser) {
-      setCurrentUser(currentUser)
-    }
+    const user = userService.getCurrentUser()
+    // console.log('Local storage user: ', user)
+    if (user) {
+      setCurrentUser(user)
+    } 
   }, [])
 
   return (

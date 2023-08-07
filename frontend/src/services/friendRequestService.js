@@ -1,8 +1,10 @@
 import axios from "axios";
-import config from "./config";
 const baseUrl = "http://localhost:3000/users";
+import getConfig from "./config";
 
 const send = async (senderId, recipientId) => {
+  const config = getConfig();
+
   const response = await axios.post(
     `${baseUrl}/${senderId}/friendRequests/sent/${recipientId}`,
     null,
@@ -12,6 +14,8 @@ const send = async (senderId, recipientId) => {
 };
 
 const get = async (userId, requestType) => {
+  const config = getConfig();
+
   const response = await axios.get(
     `${baseUrl}/${userId}/friendRequests/${requestType}`,
     config
@@ -21,6 +25,8 @@ const get = async (userId, requestType) => {
 
 // Check if sender has already sent friend request to recipient; used in AddFriend page
 const getOne = async (senderId, recipientId) => {
+  const config = getConfig();
+
   const response = await axios.get(
     `${baseUrl}/${senderId}/friendRequests/sent/${recipientId}`,
     config
@@ -29,6 +35,8 @@ const getOne = async (senderId, recipientId) => {
 };
 
 const cancel = async (userId, requestId) => {
+  const config = getConfig();
+
   const response = await axios.delete(
     `${baseUrl}/${userId}/friendRequests/sent/${requestId}`,
     config
@@ -37,6 +45,8 @@ const cancel = async (userId, requestId) => {
 };
 
 const close = async (userId, requestId) => {
+  const config = getConfig();
+
   const response = await axios.delete(
     `${baseUrl}/${userId}/friendRequests/sent/${requestId}/close`,
     config
@@ -45,6 +55,8 @@ const close = async (userId, requestId) => {
 };
 
 const resolve = async (userId, requestId, status) => {
+  const config = getConfig();
+
   const response = await axios.put(
     `${baseUrl}/${userId}/friendRequests/received/${requestId}/${status}`,
     null,

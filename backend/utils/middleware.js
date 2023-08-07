@@ -34,6 +34,7 @@ const userExtractor = async (req, res, next) => {
       return res.status(401).json({ error: "invalid token" });
     }
     const user = await User.findById(token.id);
+    // console.log(user.username)
     if (!user) {
       return res.status(401).json({ error: "request made by unrecognized user"})
     }

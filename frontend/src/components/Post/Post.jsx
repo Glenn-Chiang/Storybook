@@ -18,16 +18,14 @@ import NameLink from "../NameLink";
 import PostsContext from "../../contexts/PostsContext";
 
 export default function Post({ post }) {
-  const updatePostsState = useContext(PostsContext)
+  const updatePostsState = useContext(PostsContext);
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
 
   const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser
-    ? currentUser.userId === post.author?.id
-    : false;
+  const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
 
   const likePost = async () => {
     try {
@@ -38,9 +36,7 @@ export default function Post({ post }) {
     }
   };
 
-  const alreadyLiked = currentUser
-    ? post.likedBy.includes(currentUser.userId)
-    : false;
+  const alreadyLiked = currentUser && post.likedBy.includes(currentUser.userId);
 
   const deletePost = async () => {
     try {
@@ -70,18 +66,14 @@ export default function Post({ post }) {
                 <FontAwesomeIcon icon={faCalendarPlus} />
                 Date posted
               </span>
-              <span className="text-slate-400">
-                {post.datePosted}
-              </span>
+              <span className="text-slate-400">{post.datePosted}</span>
             </p>
             <p className="flex gap-4">
               <span className="flex gap-2 items-center text-slate-400">
                 <FontAwesomeIcon icon={faCalendarCheck} />
                 Last updated
               </span>
-              <span className="text-slate-400">
-                {post.lastUpdated}
-              </span>
+              <span className="text-slate-400">{post.lastUpdated}</span>
             </p>
             <p className="text-sky-900/75 w-full py-2 rounded ">
               {post.content}
@@ -109,13 +101,9 @@ export default function Post({ post }) {
             </div>
           </div>
         </div>
-        {commentsVisible && (
-          <CommentSection comments={post.comments}/>
-        )}
+        {commentsVisible && <CommentSection comments={post.comments} />}
         {editModalVisible && (
-          <EditModal
-            closeModal={() => setEditModalVisible(false)}
-          />
+          <EditModal closeModal={() => setEditModalVisible(false)} />
         )}
         {deleteModalVisible && (
           <DeleteModal
