@@ -2,7 +2,11 @@
 import { Outlet, useLoaderData, useParams } from "react-router-dom";
 import userService from "../../services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPlus, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faPlus,
+  faUserCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   faBookBookmark,
   faBookOpen,
@@ -18,7 +22,7 @@ export default function UserRoot() {
   const userId = useParams().userId;
   const currentUser = userService.getCurrentUser();
   const IsOwnProfile = currentUser && currentUser.userId === userId;
-  
+
   return (
     <UserContext.Provider value={user}>
       <h1 className="text-3xl">
@@ -37,11 +41,7 @@ export default function UserRoot() {
 
 export function ProfileLinks({ IsOwnProfile }) {
   return (
-    <div
-      className={`grid sm:grid-cols-3 ${
-        IsOwnProfile ? "md:grid-cols-6" : "md:grid-cols-5"
-      } grid-cols-2 gap-4`}
-    >
+    <div className={`grid md:grid-cols-5 grid-cols-3 gap-4`}>
       <LinkButton route={"profile"}>
         <FontAwesomeIcon icon={faUserCircle} />
         Profile

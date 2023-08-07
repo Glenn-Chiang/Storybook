@@ -22,17 +22,17 @@ export default function PostForm({ post, closeForm, onSubmit }) {
 
   return (
     <form
-      className="flex flex-col items-center"
+      className="flex flex-col items-center w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full">
         <div className="flex gap-4 flex-col ">
           <label htmlFor="title">Title</label>
           <input
             id="title"
             defaultValue={post ? post.title : ""}
             {...register("title", { required: "Title is required" })}
-            className="shadow bg-slate-100 text-slate-500 rounded p-2 w-80"
+            className="shadow bg-slate-100 text-slate-500 rounded p-2 w-full"
           ></input>
         </div>
         {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
@@ -49,7 +49,7 @@ export default function PostForm({ post, closeForm, onSubmit }) {
                 message: "Content must contain at least 5 characters",
               },
             })}
-            className="shadow bg-slate-100 text-slate-500 rounded p-2 h-40 w-80"
+            className="shadow bg-slate-100 text-slate-500 rounded p-2 h-40 w-full"
           ></textarea>
         </div>
         {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}

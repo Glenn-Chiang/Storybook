@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { ConfirmButton, CancelButton } from "../../../components/buttons";
+import ErrorAlert from "../../../components/ErrorAlert"
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import PostForm from "../../../components/PostForm";
 import postService from "../../../services/postService";
 
 export default function CreatePostPage() {
@@ -43,5 +45,64 @@ export default function CreatePostPage() {
         )}
       </section>
     </main>
+  );
+}
+
+
+function PostForm({ post, closeForm, onSubmit }) {
+  const handleCancel = () => {
+    closeForm();
+  };
+
+  const {
+    register,
+    handleSubmit,
+    setFocus,
+    formState: { errors },
+  } = useForm();
+
+  useEffect(() => {
+    setFocus("title");
+  }, [setFocus]);
+
+  return (
+    <form
+      className="flex flex-col items-center w-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="flex flex-col gap-4 w-full">
+        <div className="flex gap-4 flex-col ">
+          <label htmlFor="title">Title</label>
+          <input
+            id="title"
+            defaultValue={post ? post.title : ""}
+            {...register("title", { required: "Title is required" })}
+            className="shadow bg-slate-100 text-slate-500 rounded p-2 w-full"
+          ></input>
+        </div>
+        {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
+
+        <div className="flex gap-4 flex-col ">
+          <label htmlFor="content">Content</label>
+          <textarea
+            id="content"
+            defaultValue={post ? post.content : ""}
+            {...register("content", {
+              required: "Content is required",
+              minLength: {
+                value: 5,
+                message: "Content must contain at least 5 characters",
+              },
+            })}
+            className="shadow bg-slate-100 text-slate-500 rounded p-2 h-40 w-full"
+          ></textarea>
+        </div>
+        {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
+      </div>
+      <div className="flex gap-2 p-4">
+        <ConfirmButton>Create Post</ConfirmButton>
+        <CancelButton onClick={handleCancel} />
+      </div>
+    </form>
   );
 }
