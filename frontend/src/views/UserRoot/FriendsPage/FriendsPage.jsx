@@ -29,7 +29,7 @@ export default function FriendsPage() {
     <main>
       <h1>
         <FontAwesomeIcon icon={faUserFriends} />
-        Friends
+        Friends ({friends.length})
       </h1>
       {friends.length > 0 ? (
         <section className="bg-transparent">

@@ -38,6 +38,7 @@ import FriendRequestsPage from "./views/UserRoot/FriendRequestsPage/FriendReques
 import friendRequestsLoader from "./views/UserRoot/FriendRequestsPage/loader";
 import { loader as addFriendLoader } from "./views/UserRoot/AddFriendPage/loader";
 import { loader as friendsLoader } from "./views/UserRoot/FriendsPage/loader"
+import CreatePostPage from "./views/UserRoot/CreatePostPage/CreatePostPage";
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
         element: <UserRoot />,
         loader: userLoader,
         children: [
+          {
+            path: "createPost",
+            element: <CreatePostPage/>
+          },
           {
             path: "posts",
             element: <UserPostsPage />,

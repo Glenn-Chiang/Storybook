@@ -2,6 +2,7 @@
 import {
   faBookOpen,
   faBookReader,
+  faPlus,
   faSignIn,
   faSignOut,
   faUserCircle,
@@ -15,7 +16,7 @@ import AuthContext from "../contexts/AuthContext";
 // import userService  from "../services/userService"
 
 export default function Navbar() {
-  const currentUser = useContext(AuthContext).currentUser
+  const currentUser = useContext(AuthContext).currentUser;
   // const currentUser = userService.getCurrentUser()
 
   return (
@@ -40,24 +41,34 @@ export default function Navbar() {
       </NavItem>
 
       {currentUser ? (
-        <NavItem>
-          <FontAwesomeIcon icon={faUserCircle} />
-          <NavDropdown position={"right-0"}>
-            <DropdownLink to={`users/${currentUser.userId}/profile`}>
-              <FontAwesomeIcon icon={faUserCircle} />
-              My Profile
-            </DropdownLink>
-            <DropdownLink to={"/logout"}>
-              <FontAwesomeIcon icon={faSignOut} />
-              Logout
-            </DropdownLink>
-          </NavDropdown>
-        </NavItem>
+        <div className="flex ">
+          <NavLink
+            to={`/users/${currentUser.userId}/createPost`}
+            className={
+              "flex items-center justify-center hover:bg-sky-300 hover:text-sky-600 w-10"
+            }
+          >
+            <FontAwesomeIcon icon={faPlus} />
+          </NavLink>
+          <NavItem>
+            <FontAwesomeIcon icon={faUserCircle} />
+            <NavDropdown position={"right-0"}>
+              <DropdownLink to={`users/${currentUser.userId}/profile`}>
+                <FontAwesomeIcon icon={faUserCircle} />
+                My Profile
+              </DropdownLink>
+              <DropdownLink to={"/logout"}>
+                <FontAwesomeIcon icon={faSignOut} />
+                Logout
+              </DropdownLink>
+            </NavDropdown>
+          </NavItem>
+        </div>
       ) : (
         <NavLink
           to={"/login"}
           className={
-            "p-4 text-xl flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600"
+            " text-xl flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600"
           }
         >
           <FontAwesomeIcon icon={faSignIn} />
@@ -72,7 +83,7 @@ function NavItem({ children }) {
   return (
     <div
       className={
-        "p-4 text-xl flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600 group"
+        "p-2 text-xl flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600 group"
       }
     >
       {children}

@@ -2,12 +2,10 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import CreatePostBox from "../../components/CreatePostBox";
 import PostsPageLayout from "../../components/PostsPageLayout";
 import postService from "../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
-import userService from "../../services/userService";
 import PostsContext from "../../contexts/PostsContext";
 
 export default function UserPostsPage() {
@@ -17,8 +15,6 @@ export default function UserPostsPage() {
   const [sortOrder, setSortOrder] = useState("desc");
 
   const userId = useParams().userId;
-  const currentUser = userService.getCurrentUser();
-  const IsOwnPosts = currentUser && currentUser.userId === userId
 
   const getPosts = useCallback(async () => {
     try {
@@ -44,7 +40,6 @@ export default function UserPostsPage() {
           <FontAwesomeIcon icon={faBookOpen} />
           Posts
         </h1>
-        {IsOwnPosts && <CreatePostBox />}
       </PostsPageLayout>
     </PostsContext.Provider>
   );

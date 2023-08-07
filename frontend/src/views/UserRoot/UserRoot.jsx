@@ -2,7 +2,7 @@
 import { Outlet, useLoaderData, useParams } from "react-router-dom";
 import userService from "../../services/userService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPlus, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import {
   faBookBookmark,
   faBookOpen,
@@ -45,6 +45,10 @@ export function ProfileLinks({ IsOwnProfile }) {
       <LinkButton route={"profile"}>
         <FontAwesomeIcon icon={faUserCircle} />
         Profile
+      </LinkButton>
+      <LinkButton route={"createPost"}>
+        <FontAwesomeIcon icon={faPlus} />
+        Create Post
       </LinkButton>
       <LinkButton route={"posts"}>
         <FontAwesomeIcon icon={faBookOpen} />
