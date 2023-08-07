@@ -75,18 +75,17 @@ usersRouter.get("/:userId/friends", async (req, res, next) => {
 
 // Check if user already has another user in their friends list
 // Prevent user from sending friend request to a user who is already their friend
-usersRouter.get("/:userId/friends/:friendId"),
-  async (req, res, next) => {
-    try {
-      const areFriends = await User.exists({
-        _id: req.params.userId,
-        friends: { $in: req.params.friendId },
-      });
-      res.json(areFriends);
-    } catch (error) {
-      next(error);
-    }
-  };
+usersRouter.get("/:userId/friends/:friendId", async (req, res, next) => {
+  try {
+    const friend = await User.exists({
+      _id: req.params.userId,
+      friends: { $in: req.params.friendId },
+    });
+    res.json(friend);
+  } catch (error) {
+    next(error);
+  }
+});
 
 usersRouter.use(tokenExtractor, userExtractor);
 

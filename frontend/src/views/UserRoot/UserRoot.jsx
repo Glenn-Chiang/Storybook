@@ -18,7 +18,7 @@ export default function UserRoot() {
   const userId = useParams().userId;
   const currentUser = userService.getCurrentUser();
   const IsOwnProfile = currentUser && currentUser.userId === userId;
-
+  
   return (
     <UserContext.Provider value={user}>
       <h1 className="text-3xl">
