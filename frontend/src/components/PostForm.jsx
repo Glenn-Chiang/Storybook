@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import ErrorAlert from "./errorAlert";
+import ErrorAlert from "./ErrorAlert";
 import { ConfirmButton, CancelButton } from "./buttons";
 
 export default function PostForm({ post, closeForm, onSubmit }) {

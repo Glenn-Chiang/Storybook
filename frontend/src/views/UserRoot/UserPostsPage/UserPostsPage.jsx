@@ -1,15 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
-import PostsPageLayout from "../../components/PostsPageLayout";
-import postService from "../../services/postService";
+import { useLoaderData, useParams } from "react-router-dom";
+import PostsPageLayout from "../../../components/PostsPageLayout";
+import postService from "../../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
-import PostsContext from "../../contexts/PostsContext";
+import PostsContext from "../../../contexts/PostsContext";
 
 export default function UserPostsPage() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(useLoaderData());
 
   const [sortBy, setSortBy] = useState("datePosted");
   const [sortOrder, setSortOrder] = useState("desc");

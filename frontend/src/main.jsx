@@ -19,7 +19,7 @@ import { loader as usersLoader } from "./views/UsersPage/loader";
 
 import UserRoot from "./views/UserRoot/UserRoot";
 import ProfilePage from "./views/UserRoot/ProfilePage/ProfilePage";
-import UserPostsPage from "./views/UserRoot/userPostsPage";
+import UserPostsPage from "./views/UserRoot//UserPostsPage/UserPostsPage";
 import CommentsPage from "./views/UserRoot/CommentsPage/CommentsPage";
 import FriendsPage from "./views/UserRoot/FriendsPage/FriendsPage";
 import LikedPostsPage from "./views/UserRoot/LikedPostsPage/LikedPostsPage";
@@ -29,15 +29,16 @@ import InfoPage from "./views/GroupPages/InfoPage";
 import GroupPostsPage from "./views/GroupPages/GroupPostsPage";
 import MembersPage from "./views/GroupPages/MembersPage";
 
-import { loader as profileLoader } from "./views/UserRoot/ProfilePage/loader";
 import { loader as userLoader } from "./views/UserRoot/loader";
+import { loader as userPostsLoader } from "./views/UserRoot/UserPostsPage/loader";
+import { loader as profileLoader } from "./views/UserRoot/ProfilePage/loader";
 import { loader as commentsLoader } from "./views/UserRoot/CommentsPage/loader";
 import { loader as likedPostsLoader } from "./views/UserRoot/LikedPostsPage/loader";
 import AddFriendPage from "./views/UserRoot/AddFriendPage/AddFriendPage";
 import FriendRequestsPage from "./views/UserRoot/FriendRequestsPage/FriendRequestsPage";
 import friendRequestsLoader from "./views/UserRoot/FriendRequestsPage/loader";
 import { loader as addFriendLoader } from "./views/UserRoot/AddFriendPage/loader";
-import { loader as friendsLoader } from "./views/UserRoot/FriendsPage/loader"
+import { loader as friendsLoader } from "./views/UserRoot/FriendsPage/loader";
 import CreatePostPage from "./views/UserRoot/CreatePostPage/CreatePostPage";
 
 const router = createBrowserRouter([
@@ -80,11 +81,12 @@ const router = createBrowserRouter([
         children: [
           {
             path: "createPost",
-            element: <CreatePostPage/>
+            element: <CreatePostPage />,
           },
           {
             path: "posts",
             element: <UserPostsPage />,
+            loader: userPostsLoader,
           },
           {
             path: "comments",
@@ -94,7 +96,7 @@ const router = createBrowserRouter([
           {
             path: "friends",
             element: <FriendsPage />,
-            loader: friendsLoader
+            loader: friendsLoader,
           },
           {
             path: "profile",
@@ -109,12 +111,12 @@ const router = createBrowserRouter([
           {
             path: "addFriend",
             element: <AddFriendPage />,
-            loader: addFriendLoader
+            loader: addFriendLoader,
           },
           {
             path: "friendRequests",
             element: <FriendRequestsPage />,
-            loader: friendRequestsLoader
+            loader: friendRequestsLoader,
           },
         ],
       },
