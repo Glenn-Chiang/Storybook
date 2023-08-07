@@ -4,6 +4,7 @@ import { faBookBookmark } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useEffect, useState } from "react";
 import { useLoaderData, useParams } from "react-router-dom";
 import postService from "../../../services/postService";
+import PostsContext from "../../../contexts/PostsContext";
 
 export default function LikedPostsPage() {
   const [posts, setPosts] = useState(useLoaderData());
@@ -27,16 +28,18 @@ export default function LikedPostsPage() {
   }, [getPosts]);
 
   return (
-    <PostsPageLayout
-      posts={posts}
-      sortBy={setSortBy}
-      setSortOrder={setSortOrder}
-      getPosts={getPosts}
-    >
-      <h1>
-        <FontAwesomeIcon icon={faBookBookmark} />
-        Liked Posts
-      </h1>
-    </PostsPageLayout>
+    <PostsContext.Provider value={getPosts}>
+      <PostsPageLayout
+        posts={posts}
+        sortBy={setSortBy}
+        setSortOrder={setSortOrder}
+        getPosts={getPosts}
+      >
+        <h1>
+          <FontAwesomeIcon icon={faBookBookmark} />
+          Liked Posts
+        </h1>
+      </PostsPageLayout>
+    </PostsContext.Provider>
   );
 }

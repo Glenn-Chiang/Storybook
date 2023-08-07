@@ -1,10 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import postService from "../services/postService";
 import Header from "../components/Header";
-
-// import TeleportButton from "../components/TeleportButton";
 import PostsPageLayout from "../components/PostsPageLayout";
 // import { useLoaderData } from "react-router-dom";
+import PostsContext from "../contexts/PostsContext";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
@@ -36,15 +35,17 @@ export default function AllPostsPage() {
   }, [getPosts]);
 
   return (
-    <PostsPageLayout
-      posts={posts}
-      setSortBy={setSortBy}
-      setSortOrder={setSortOrder}
-      getPosts={getPosts}
-    >
-      <div className="flex flex-col items-center">
-        <Header />
-      </div>
-    </PostsPageLayout>
+    <PostsContext.Provider value={getPosts}>
+      <PostsPageLayout
+        posts={posts}
+        setSortBy={setSortBy}
+        setSortOrder={setSortOrder}
+        getPosts={getPosts}
+      >
+        <div className="flex flex-col items-center">
+          <Header />
+        </div>
+      </PostsPageLayout>
+    </PostsContext.Provider>
   );
 }

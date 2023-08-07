@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import PostForm from "./PostForm";
 import postService from "../services/postService";
+import PostsContext from "../contexts/PostsContext";
 
-export default function CreatePostBox({ setPosts }) {
+export default function CreatePostBox() {
   const [showForm, setShowForm] = useState(false);
+  const updatePostsState = useContext(PostsContext)
 
   const handleClick = () => {
     setShowForm(true);
@@ -17,9 +19,9 @@ export default function CreatePostBox({ setPosts }) {
     const lastUpdated = datePosted;
     const newPost = { ...formData, datePosted, lastUpdated};
     try {
-      await postService.create(newPost);
-      setPosts(); // Sync application state with database after each crud operation
       setShowForm(false);
+      await postService.create(newPost);
+      updatePostsState()
     } catch (error) {
       console.log("Error creating post: ", error);
     }

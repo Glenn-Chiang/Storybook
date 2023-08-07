@@ -11,7 +11,6 @@ export default function PostsPageLayout({
   posts,
   setSortBy,
   setSortOrder,
-  getPosts,
 }) {
   const [configIsVisible, setConfigIsVisible] = useState(false);
 
@@ -52,7 +51,7 @@ export default function PostsPageLayout({
       {displayedPosts.length === 0 ? (
         <section className="text-slate-400 text-center p-4">No posts found</section>
       ) : (
-        <PostsList posts={displayedPosts} setPosts={getPosts} />
+        <PostsList posts={displayedPosts} />
       )}
 
       <TeleportButton forwardedRef={topRef} />

@@ -9,11 +9,13 @@ import { PostContext } from "./PostContext";
 import { DeleteButton, EditButton } from "../buttons";
 import DeleteModal from "../DeleteModal";
 import NameLink from "../NameLink";
+import PostsContext from "../../contexts/PostsContext";
 
-export default function CommentSection({ comments, setPosts }) {
+export default function CommentSection({ comments }) {
   const currentUser = userService.getCurrentUser();
   const post = useContext(PostContext);
   const [commentFormVisible, setCommentFormVisible] = useState(false);
+  const updatePostsState = useContext(PostsContext);
 
   const handleSubmitComment = async (formData) => {
     const commentObject = {
@@ -23,7 +25,7 @@ export default function CommentSection({ comments, setPosts }) {
     try {
       await commentService.create(post.id, commentObject);
       setCommentFormVisible(false);
-      setPosts();
+      updatePostsState();
     } catch (error) {
       console.log("Error posting comment:", error);
     }
@@ -52,7 +54,7 @@ export default function CommentSection({ comments, setPosts }) {
         <ul className="flex flex-col gap-4 py-4">
           {comments.map((comment, index) => (
             <li key={index}>
-              <Comment comment={comment} loadComments={setPosts} />
+              <Comment comment={comment} />
             </li>
           ))}
         </ul>
@@ -63,8 +65,9 @@ export default function CommentSection({ comments, setPosts }) {
   );
 }
 
-function Comment({ comment, loadComments }) {
+function Comment({ comment }) {
   const currentUser = userService.getCurrentUser();
+  const updatePostsState = useContext(PostsContext);
 
   const IsOwnComment = currentUser
     ? currentUser.userId === comment.author.id
@@ -76,7 +79,7 @@ function Comment({ comment, loadComments }) {
   const deleteComment = async () => {
     try {
       await commentService.remove(comment.id);
-      loadComments();
+      updatePostsState();
       setDeleteModalVisible(false);
     } catch (error) {
       console.log("Error deleting comment:", error);
@@ -87,7 +90,7 @@ function Comment({ comment, loadComments }) {
     try {
       await commentService.update(comment.id, formData.content);
       setCommentFormVisible(false);
-      loadComments();
+      updatePostsState();
     } catch (error) {
       console.log("Error editing comment:", error);
     }

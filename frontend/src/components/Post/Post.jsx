@@ -9,14 +9,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditButton, DeleteButton } from "../buttons";
 import EditModal from "../EditModal";
 import DeleteModal from "../DeleteModal";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CommentSection from "./CommentSection";
 import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
 import NameLink from "../NameLink";
+import PostsContext from "../../contexts/PostsContext";
 
-export default function Post({ post, setPosts }) {
+export default function Post({ post }) {
+  const updatePostsState = useContext(PostsContext)
+
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
@@ -29,7 +32,7 @@ export default function Post({ post, setPosts }) {
   const likePost = async () => {
     try {
       await postService.like(post.id);
-      setPosts();
+      updatePostsState();
     } catch (error) {
       console.log("Error liking post: ", error);
     }
@@ -42,7 +45,7 @@ export default function Post({ post, setPosts }) {
   const deletePost = async () => {
     try {
       await postService.deletePost(post.id);
-      setPosts();
+      updatePostsState();
     } catch (error) {
       console.log("Error deleting post: ", error);
     }
@@ -107,12 +110,11 @@ export default function Post({ post, setPosts }) {
           </div>
         </div>
         {commentsVisible && (
-          <CommentSection comments={post.comments} setPosts={setPosts} />
+          <CommentSection comments={post.comments}/>
         )}
         {editModalVisible && (
           <EditModal
             closeModal={() => setEditModalVisible(false)}
-            setPosts={setPosts}
           />
         )}
         {deleteModalVisible && (

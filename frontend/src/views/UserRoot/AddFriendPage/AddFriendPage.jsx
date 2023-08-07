@@ -2,7 +2,7 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConfirmButton } from "../../../components/buttons";
 import { useContext, useState } from "react";
-import UserContext from "../UserContext";
+import UserContext from "../../../contexts/UserContext";
 import { useLoaderData } from "react-router-dom";
 import friendRequestService from "../../../services/friendRequestService";
 import userService from "../../../services/userService"

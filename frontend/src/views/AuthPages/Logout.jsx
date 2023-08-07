@@ -4,7 +4,7 @@ import { ConfirmButton } from "../../components/buttons";
 import userService from "../../services/userService";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import AuthContext from "../../AuthContext";
+import AuthContext from "../../contexts/AuthContext";
 
 export default function Logout() {
   const navigate = useNavigate();

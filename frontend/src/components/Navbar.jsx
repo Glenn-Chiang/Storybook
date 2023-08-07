@@ -11,7 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, NavLink } from "react-router-dom";
 import { useContext } from "react";
-import AuthContext from "../AuthContext";
+import AuthContext from "../contexts/AuthContext";
 // import userService  from "../services/userService"
 
 export default function Navbar() {

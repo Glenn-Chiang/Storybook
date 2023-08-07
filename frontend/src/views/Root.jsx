@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import AuthContext from "../AuthContext"
+import AuthContext from "../contexts/AuthContext"
 import userService from "../services/userService";
 
 export default function Root() {

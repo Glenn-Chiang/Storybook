@@ -11,7 +11,7 @@ import {
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { LinkButton } from "../../components/LinkButton";
-import UserContext from "./UserContext";
+import UserContext from "../../contexts/UserContext";
 
 export default function UserRoot() {
   const user = useLoaderData();

@@ -10,7 +10,7 @@ import { ConfirmButton } from "../../components/buttons";
 import loginService from "../../services/loginService";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import AuthContext from "../../AuthContext";
+import AuthContext from "../../contexts/AuthContext";
 
 export default function Login() {
   const authState = useContext(AuthContext)

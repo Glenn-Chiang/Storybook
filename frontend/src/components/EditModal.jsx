@@ -6,14 +6,16 @@ import PostForm from "./PostForm";
 import postService from "../services/postService";
 import { useContext } from "react";
 import { PostContext } from "./Post/PostContext";
+import PostsContext from "../contexts/PostsContext"
 
-export default function EditModal({ closeModal, setPosts }) {
+export default function EditModal({ closeModal }) {
   const postToUpdate = useContext(PostContext)
+  const updatePostsState = useContext(PostsContext)
 
   const handleSubmit = async (formData) => {
     try {
       await postService.edit(postToUpdate.id, {title: formData.title, content: formData.content, lastUpdated: new Date()});
-      setPosts();
+      updatePostsState()
     } catch (error) {
       console.log("Error editing post: ", error.response.data.error);
     }
