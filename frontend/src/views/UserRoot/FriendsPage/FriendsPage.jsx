@@ -46,7 +46,8 @@ export default function FriendsPage() {
 
 function FriendsList({ friends, updateState }) {
   const userId = useParams().userId;
-
+  const currentUser = userService.getCurrentUser()
+  const isOwnPage = currentUser && currentUser.userId === userId
   const [modalShown, setModalShown] = useState(false);
 
   const handleUnfriend = async (friendId) => {
@@ -65,7 +66,7 @@ function FriendsList({ friends, updateState }) {
       {friends.map((user) => (
         <li className="bg-white rounded-xl relative" key={user.id}>
           <UserLink user={user} />
-          <UnfriendButton onClick={() => setModalShown(true)} />
+          {isOwnPage && <UnfriendButton onClick={() => setModalShown(true)} />}
           {modalShown && (
             <UnfriendModal
               username={user.username}

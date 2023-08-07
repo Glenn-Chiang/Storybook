@@ -205,7 +205,7 @@ function SentRequest({ request, updateState }) {
 function CloseButton({ onClick }) {
   return (
     <button
-      className="bg-sky-300 hover:bg-sky-400 text-white p-2 rounded-xl"
+      className="bg-slate-200 hover:bg-slate-300 text-slate-400 hover:text-slate-500 p-2 rounded-xl"
       onClick={onClick}
     >
       Close

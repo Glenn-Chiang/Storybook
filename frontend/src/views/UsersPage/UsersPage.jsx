@@ -53,7 +53,7 @@ export default function UsersPage() {
             {`"${searchTerms}"` || "All users"}
           </span>
         </p>
-        <ul className="p-4 flex flex-col gap-4 ">
+        <ul className="p-4 flex flex-col gap-4 w-full">
           {users.length > 0 ? (
             users.map((user) => (
               <li key={user.id}>

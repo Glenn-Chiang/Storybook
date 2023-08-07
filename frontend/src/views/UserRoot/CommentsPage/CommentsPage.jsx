@@ -30,7 +30,7 @@ export default function CommentsPage() {
       </h1>
       {comments.length > 0 ? (
         <section className="bg-transparent">
-          <ul className="flex flex-col gap-8">
+          <ul className="flex flex-col gap-8 w-full">
             {comments.map((comment) => (
               <li key={comment.id}>
                 <Comment comment={comment} loadComments={loadComments} />
