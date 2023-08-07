@@ -9,9 +9,12 @@ import {
 import { ConfirmButton } from "../../components/buttons";
 import loginService from "../../services/loginService";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import AuthContext from "../../AuthContext";
 
 export default function Login() {
+  const authState = useContext(AuthContext)
+
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
@@ -27,7 +30,7 @@ export default function Login() {
     try {
       const user = await loginService.login(username, password);
       localStorage.setItem("currentUser", JSON.stringify(user));
-      // postService.setToken(user.token)
+      authState.setCurrentUser(user)
       navigate("/");
     } catch (error) {
       const errorMessage = error.response.data.error;

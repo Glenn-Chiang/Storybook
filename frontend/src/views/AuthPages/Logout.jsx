@@ -3,13 +3,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ConfirmButton } from "../../components/buttons";
 import userService from "../../services/userService";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../../AuthContext";
 
 export default function Logout() {
   const navigate = useNavigate();
 
+  const authState = useContext(AuthContext)
+
   const handleLogout = () => {
     try {
       userService.logout();
+      authState.setCurrentUser(null)
       console.log("Logged out");
       navigate("/login");
     } catch (error) {

@@ -9,11 +9,14 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import userService from "../services/userService";
+import { Link, NavLink } from "react-router-dom";
+import { useContext } from "react";
+import AuthContext from "../AuthContext";
+// import userService  from "../services/userService"
 
 export default function Navbar() {
-  const currentUser = userService.getCurrentUser();
+  const currentUser = useContext(AuthContext).currentUser
+  // const currentUser = userService.getCurrentUser()
 
   return (
     <nav className="flex justify-between fixed w-full h-10 bg-sky-200 text-sky-500 z-10">
@@ -37,7 +40,7 @@ export default function Navbar() {
       </NavItem>
 
       {currentUser ? (
-        <NavItem to={`users/${currentUser.userId}/profile`}>
+        <NavItem>
           <FontAwesomeIcon icon={faUserCircle} />
           <NavDropdown position={"right-0"}>
             <DropdownLink to={`users/${currentUser.userId}/profile`}>
@@ -51,10 +54,15 @@ export default function Navbar() {
           </NavDropdown>
         </NavItem>
       ) : (
-        <NavItem to={"/login"}>
+        <NavLink
+          to={"/login"}
+          className={
+            "p-4 text-xl flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600"
+          }
+        >
           <FontAwesomeIcon icon={faSignIn} />
           Login
-        </NavItem>
+        </NavLink>
       )}
     </nav>
   );
