@@ -1,8 +1,12 @@
-# React + Vite
+Storybook is a feature-rich social media app where users can create content, post comments, find friends and more. It relies entirely on user-generated content to populate its feed.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Features:
+- Create text-based posts
+- Edit and delete their own posts
+- Browse posts created by other users
+- Sort and filter posts
+- Like/unlike and comment on posts
+- Edit and delete their own comments
+- Edit their own profiles
+- Search for other users and view their profiles
+- Send friend requests, as well as accept or reject received friend requests
