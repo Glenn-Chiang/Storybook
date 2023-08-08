@@ -42,13 +42,15 @@ export default function CommentSection({ comments }) {
             defaultValue={""}
           />
         ) : (
-          <button
-            className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
-            onClick={() => setCommentFormVisible(true)}
-          >
-            <FontAwesomeIcon icon={faPlusCircle} />
-            Post a comment
-          </button>
+          <div className="pt-4">
+            <button
+              className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
+              onClick={() => setCommentFormVisible(true)}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
+              Post a comment
+            </button>
+          </div>
         ))}
       {comments?.length > 0 ? (
         <ul className="flex flex-col gap-4 py-4">
