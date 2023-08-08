@@ -16,6 +16,7 @@ import postService from "../../services/postService";
 import userService from "../../services/userService";
 import NameLink from "../NameLink";
 import PostsContext from "../../contexts/PostsContext";
+import Alert from "../Alert";
 
 export default function Post({ post }) {
   const updatePostsState = useContext(PostsContext);
@@ -23,6 +24,7 @@ export default function Post({ post }) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   const currentUser = userService.getCurrentUser();
   const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
@@ -43,14 +45,32 @@ export default function Post({ post }) {
     }
   };
 
+  const editPost = async (formData) => {
+    try {
+      setEditModalVisible(false)
+      await postService.edit(post.id, {
+        title: formData.title,
+        content: formData.content,
+        lastUpdated: new Date(),
+      });
+      updatePostsState();
+      setAlert('Changes saved!');
+      setTimeout(() => setAlert(null), 2000);
+    } catch (error) {
+      console.log("Error editing post: ", error.response.data.error);
+    }
+  };
+
   const deletePost = async () => {
     try {
+      setDeleteModalVisible(false);
       await postService.deletePost(post.id);
       updatePostsState();
+      setAlert('Post deleted!');
+      setTimeout(() => setAlert(null), 2000);
     } catch (error) {
       console.log("Error deleting post: ", error);
     }
-    setDeleteModalVisible(false);
   };
 
   return (
@@ -108,7 +128,7 @@ export default function Post({ post }) {
         </div>
         {commentsVisible && <CommentSection comments={post.comments} />}
         {editModalVisible && (
-          <EditModal closeModal={() => setEditModalVisible(false)} />
+          <EditModal closeModal={() => setEditModalVisible(false)} handleSubmit={editPost}/>
         )}
         {deleteModalVisible && (
           <DeleteModal
@@ -118,6 +138,7 @@ export default function Post({ post }) {
           />
         )}
       </div>
+      {alert && <Alert>{alert}</Alert>}
     </PostContext.Provider>
   );
 }

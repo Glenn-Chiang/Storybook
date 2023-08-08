@@ -1,14 +1,16 @@
 /* eslint-disable react/prop-types */
 import { useForm } from "react-hook-form";
 import { ConfirmButton, CancelButton } from "../../../components/buttons";
-import ErrorAlert from "../../../components/ErrorAlert"
+import ErrorAlert from "../../../components/ErrorAlert";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import postService from "../../../services/postService";
+import Alert from "../../../components/Alert";
 
 export default function CreatePostPage() {
   const [showForm, setShowForm] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleClick = () => {
     setShowForm(true);
@@ -20,6 +22,8 @@ export default function CreatePostPage() {
     const newPost = { ...formData, datePosted, lastUpdated };
     try {
       setShowForm(false);
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 2000);
       await postService.create(newPost);
     } catch (error) {
       console.log("Error creating post: ", error);
@@ -44,10 +48,10 @@ export default function CreatePostPage() {
           </button>
         )}
       </section>
+      {showAlert && <Alert>Your post has been submitted!</Alert>}
     </main>
   );
 }
-
 
 function PostForm({ post, closeForm, onSubmit }) {
   const handleCancel = () => {
