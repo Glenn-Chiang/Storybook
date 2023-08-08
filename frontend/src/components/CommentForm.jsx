@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import ErrorAlert from "./errorAlert";
+import ErrorAlert from "./ErrorAlert"
 import { CancelButton, ConfirmButton } from "./buttons";
 
 /* eslint-disable react/prop-types */
