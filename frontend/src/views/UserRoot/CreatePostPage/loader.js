@@ -11,4 +11,5 @@ export const loader = async ({params}) => {
   if (currentUser.userId !== params.userId) {
     return redirect(`/users/${currentUser.userId}/createPost`)
   }
+  return null
 }

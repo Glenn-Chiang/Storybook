@@ -33,7 +33,7 @@ export default function CommentSection({ comments }) {
 
   return (
     <div className="p-4 rounded-xl">
-      <h2 className="py-4">Comments ({comments.length})</h2>
+      <h2>Comments ({comments.length})</h2>
       {currentUser &&
         (commentFormVisible ? (
           <CommentForm
@@ -59,7 +59,7 @@ export default function CommentSection({ comments }) {
           ))}
         </ul>
       ) : (
-        <p className="py-4 text-slate-500">No comments</p>
+        <p className="text-slate-500 py-4">No comments</p>
       )}
     </div>
   );
