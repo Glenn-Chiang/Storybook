@@ -7,14 +7,12 @@ import {
   faRemove,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  useLoaderData,
-  useParams,
-} from "react-router-dom";
+import { useLoaderData, useParams } from "react-router-dom";
 import NameLink from "../../../components/NameLink";
 import { CancelButton } from "../../../components/buttons";
 import friendRequestService from "../../../services/friendRequestService";
 import { useEffect, useState, useCallback } from "react";
+import Alert from "../../../components/Alert";
 
 export default function FriendRequestsPage() {
   const [friendRequests, setFriendRequests] = useState(useLoaderData());
@@ -71,6 +69,13 @@ export default function FriendRequestsPage() {
 }
 
 function RequestList({ requests, requestType, updateState }) {
+  const [alert, setAlert] = useState(null);
+
+  const flashAlert = (message) => {
+    setAlert(message);
+    setTimeout(() => setAlert(null), 2000);
+  };
+
   return (
     <ul className="w-full flex flex-col gap-4">
       {requests.length > 0 ? (
@@ -80,27 +85,31 @@ function RequestList({ requests, requestType, updateState }) {
               key={request.id}
               request={request}
               updateState={updateState}
+              flashAlert={flashAlert}
             />
           ) : (
             <SentRequest
               key={request.id}
               request={request}
               updateState={updateState}
+              flashAlert={flashAlert}
             />
           )
         )
       ) : (
         <p className="text-slate-400">No requests {requestType}</p>
       )}
+      {alert && <Alert>{alert}</Alert>}
     </ul>
   );
 }
 
-function ReceivedRequest({ request, updateState }) {
+function ReceivedRequest({ request, updateState, flashAlert }) {
   const userId = useParams().userId;
 
   const handleAccept = async () => {
     try {
+      flashAlert(`You are now friends with ${request.sender.displayName}!`);
       await friendRequestService.resolve(userId, request.id, "accepted");
       updateState();
     } catch (error) {
@@ -110,6 +119,7 @@ function ReceivedRequest({ request, updateState }) {
 
   const handleReject = async () => {
     try {
+      flashAlert(`You have rejected ${request.sender.displayName}'s friend request!`);
       await friendRequestService.resolve(userId, request.id, "rejected");
       updateState();
     } catch (error) {
@@ -147,13 +157,16 @@ function ReceivedRequest({ request, updateState }) {
   );
 }
 
-function SentRequest({ request, updateState }) {
-  const userId = useParams().userId
+function SentRequest({ request, updateState, flashAlert }) {
+  const userId = useParams().userId;
 
   const handleCancel = async () => {
     try {
+      flashAlert(
+        `You have cancelled your friend request to ${request.recipient.displayName}`
+      );
       await friendRequestService.cancel(userId, request.id);
-      updateState()
+      updateState();
     } catch (error) {
       console.log("Error cancelling friend request:", error);
     }
@@ -161,8 +174,9 @@ function SentRequest({ request, updateState }) {
 
   const handleClose = async () => {
     try {
+      flashAlert("Friend request closed");
       await friendRequestService.close(userId, request.id);
-      updateState()
+      updateState();
     } catch (error) {
       console.log("Error closing resolved friend request:", error);
     }
@@ -195,7 +209,11 @@ function SentRequest({ request, updateState }) {
           {request.status}
         </div>
         <div>
-          {request.status === "pending" ? <CancelButton onClick={handleCancel}/> : <CloseButton onClick={handleClose}/>}
+          {request.status === "pending" ? (
+            <CancelButton onClick={handleCancel} />
+          ) : (
+            <CloseButton onClick={handleClose} />
+          )}
         </div>
       </div>
     </li>
