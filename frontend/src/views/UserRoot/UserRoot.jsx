@@ -19,10 +19,6 @@ import UserContext from "../../contexts/UserContext";
 
 export default function UserRoot() {
   const user = useLoaderData();
-  const userId = useParams().userId;
-  const currentUser = userService.getCurrentUser();
-  const IsOwnProfile = currentUser && currentUser.userId === userId;
-
   return (
     <UserContext.Provider value={user}>
       <h1 className="text-3xl">
@@ -30,7 +26,7 @@ export default function UserRoot() {
         {user.displayName}
       </h1>
       <div className="flex justify-center gap-4">
-        <ProfileLinks IsOwnProfile={IsOwnProfile} />
+        <ProfileLinks />
       </div>
       <div>
         <Outlet />
@@ -39,17 +35,26 @@ export default function UserRoot() {
   );
 }
 
-export function ProfileLinks({ IsOwnProfile }) {
+export function ProfileLinks() {
+  const userId = useParams().userId;
+  const currentUser = userService.getCurrentUser();
+  const IsOwnProfile = currentUser && currentUser.userId === userId;
   return (
-    <div className={`grid md:grid-cols-5 grid-cols-3 gap-4`}>
+    <div
+      className={`grid md:grid-cols-5 grid-cols-3 ${
+        currentUser || "grid-cols-2 md:grid-cols-4"
+      } gap-4`}
+    >
       <LinkButton route={"profile"}>
         <FontAwesomeIcon icon={faUserCircle} />
         Profile
       </LinkButton>
-      <LinkButton route={"createPost"}>
-        <FontAwesomeIcon icon={faPlus} />
-        Create Post
-      </LinkButton>
+      {currentUser && (
+        <LinkButton route={"createPost"}>
+          <FontAwesomeIcon icon={faPlus} />
+          Create Post
+        </LinkButton>
+      )}
       <LinkButton route={"posts"}>
         <FontAwesomeIcon icon={faBookOpen} />
         Posts
@@ -74,10 +79,12 @@ export function ProfileLinks({ IsOwnProfile }) {
           Friend Requests
         </LinkButton>
       ) : (
-        <LinkButton route={"addFriend"}>
-          <FontAwesomeIcon icon={faUserPlus} />
-          Add Friend
-        </LinkButton>
+        currentUser && (
+          <LinkButton route={"addFriend"}>
+            <FontAwesomeIcon icon={faUserPlus} />
+            Add Friend
+          </LinkButton>
+        )
       )}
     </div>
   );

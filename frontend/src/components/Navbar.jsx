@@ -68,7 +68,7 @@ export default function Navbar() {
         <NavLink
           to={"/login"}
           className={
-            " text-xl flex gap-2 items-center hover:bg-sky-300 hover:text-sky-600"
+            " text-xl flex gap-2 p-2 items-center hover:bg-sky-300 hover:text-sky-600"
           }
         >
           <FontAwesomeIcon icon={faSignIn} />

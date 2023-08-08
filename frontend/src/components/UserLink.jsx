@@ -11,7 +11,7 @@ import NameLink from "./NameLink";
 
 export default function UserLink({ user }) {
   const currentUser = userService.getCurrentUser();
-  const isSelf = currentUser.userId === user.id;
+  const isSelf = currentUser && currentUser.userId === user.id;
   return (
     <article className="bg-white rounded-xl p-4 text-start">
       <NameLink

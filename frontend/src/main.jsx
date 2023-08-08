@@ -29,7 +29,8 @@ import InfoPage from "./views/GroupPages/InfoPage";
 import GroupPostsPage from "./views/GroupPages/GroupPostsPage";
 import MembersPage from "./views/GroupPages/MembersPage";
 
-import { loader as userLoader } from "./views/UserRoot/loader";
+import { loader as userLoader } from "./views/UserRoot//loader";
+import { loader as createPostLoader } from "./views/UserRoot/CreatePostPage/loader"
 import { loader as userPostsLoader } from "./views/UserRoot/UserPostsPage/loader";
 import { loader as profileLoader } from "./views/UserRoot/ProfilePage/loader";
 import { loader as commentsLoader } from "./views/UserRoot/CommentsPage/loader";
@@ -82,6 +83,7 @@ const router = createBrowserRouter([
           {
             path: "createPost",
             element: <CreatePostPage />,
+            loader: createPostLoader
           },
           {
             path: "posts",
