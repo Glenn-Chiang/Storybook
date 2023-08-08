@@ -1,15 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import postService from "../services/postService";
 import Header from "../components/Header";
 import PostsPageLayout from "../components/PostsPageLayout";
-// import { useLoaderData } from "react-router-dom";
-import PostsContext from "../contexts/PostsContext";
+import { useQuery } from "react-query";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
 export default function AllPostsPage() {
-  const [posts, setPosts] = useState([]);
-
   const sortFields = [
     { value: "datePosted", label: "Date posted" },
     { value: "lastUpdated", label: "Last updated" },
@@ -21,31 +18,27 @@ export default function AllPostsPage() {
   const [sortBy, setSortBy] = useState(sortFields[0].value);
   const [sortOrder, setSortOrder] = useState(sortOrders[0].value);
 
-  const getPosts = useCallback(async () => {
-    try {
-      const posts = await postService.getAll(sortBy, sortOrder);
-      setPosts(posts);
-    } catch (error) {
-      console.log("Error getting posts: ", error);
-    }
-  }, [sortBy, sortOrder]);
-
-  useEffect(() => {
-    getPosts();
-  }, [getPosts]);
+  const { isLoading, isError, data, error } = useQuery(
+    ["posts", sortBy, sortOrder],
+    () => postService.getAll(sortBy, sortOrder)
+  );
 
   return (
-    <PostsContext.Provider value={getPosts}>
-      <PostsPageLayout
-        posts={posts}
-        setSortBy={setSortBy}
-        setSortOrder={setSortOrder}
-        getPosts={getPosts}
-      >
-        <div className="flex flex-col items-center">
-          <Header />
-        </div>
-      </PostsPageLayout>
-    </PostsContext.Provider>
+    <main>
+      <div className="flex flex-col items-center">
+        <Header />
+      </div>
+      {isLoading ? (
+        <section>Loading...</section>
+      ) : isError ? (
+        <section>Error: {error.message}</section>
+      ) : (
+        <PostsPageLayout
+          posts={data}
+          setSortBy={setSortBy}
+          setSortOrder={setSortOrder}
+        ></PostsPageLayout>
+      )}
+    </main>
   );
 }
