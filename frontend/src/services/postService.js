@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3000/posts";
+const baseUrl = `${import.meta.env.VITE_BASE_URL}/posts`;
 import getConfig from "./config";
 
 const getAll = async (sortBy, sortOrder) => {

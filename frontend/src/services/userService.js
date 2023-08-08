@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3000/users";
+const baseUrl = `${import.meta.env.VITE_BASE_URL}/users`;
 import getConfig from "./config";
 
 const create = async (username, displayName, password) => {

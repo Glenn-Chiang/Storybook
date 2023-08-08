@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3000/comments";
+const baseUrl = `${import.meta.env.VITE_BASE_URL}/comments`;
 import getConfig from "./config";
 
 const getByPost = async (postId) => {
