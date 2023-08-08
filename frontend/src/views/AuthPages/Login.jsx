@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import ErrorAlert from "../../components/errorAlert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLock,
@@ -7,6 +6,7 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmButton } from "../../components/buttons";
+import ErrorAlert from "../../components/ErrorAlert";
 import loginService from "../../services/loginService";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
