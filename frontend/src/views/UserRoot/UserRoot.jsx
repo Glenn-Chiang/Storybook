@@ -51,7 +51,7 @@ export function ProfileLinks() {
         <FontAwesomeIcon icon={faUserCircle} />
         Profile
       </LinkButton>
-      {currentUser && (
+      {IsOwnProfile && (
         <LinkButton route={"createPost"}>
           <FontAwesomeIcon icon={faPlus} />
           Create Post

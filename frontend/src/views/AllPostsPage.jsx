@@ -3,6 +3,7 @@ import postService from "../services/postService";
 import Header from "../components/Header";
 import PostsPageLayout from "../components/PostsPageLayout";
 import { useQuery } from "react-query";
+import ErrorAlert from "../components/ErrorAlert";
 
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
@@ -31,7 +32,9 @@ export default function AllPostsPage() {
       {isLoading ? (
         <section>Loading...</section>
       ) : isError ? (
-        <section>Error: {error.message}</section>
+        <section>
+          <ErrorAlert>Error: {error.message}</ErrorAlert>
+        </section>
       ) : (
         <PostsPageLayout
           posts={data}

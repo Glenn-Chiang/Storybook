@@ -16,6 +16,7 @@ import postService from "../../services/postService";
 import userService from "../../services/userService";
 import NameLink from "../NameLink";
 import PostsContext from "../../contexts/PostsContext";
+import { useMutation } from "react-query";
 
 export default function Post({ post, flashAlert }) {
   const updatePostsState = useContext(PostsContext);
@@ -43,10 +44,12 @@ export default function Post({ post, flashAlert }) {
     }
   };
 
+  const editPostMutation = useMutation((updateData) => postService.edit(post.id, updateData))
+
   const editPost = async (formData) => {
     try {
       setEditModalVisible(false)
-      await postService.edit(post.id, {
+      editPostMutation.mutate({
         title: formData.title,
         content: formData.content,
         lastUpdated: new Date(),
