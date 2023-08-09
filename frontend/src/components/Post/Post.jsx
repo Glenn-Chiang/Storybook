@@ -37,15 +37,13 @@ export default function Post({ post, flashAlert }) {
     },
     onMutate: () => {
       // TODO: Optimistic update
-
+      setLiked((prev) => !prev);
+      setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+    },
+    onError: (error) => {
+      flashAlert(`Error liking post: ${error.message}`, "error")
     }
   });
-
-  const handleLike = () => {
-    setLiked((prev) => !prev);
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
-    likeMutation.mutate()
-  };
 
   const editMutation = useMutation(
     (updateData) => postService.edit(post.id, updateData),
@@ -55,6 +53,9 @@ export default function Post({ post, flashAlert }) {
         queryClient.invalidateQueries("posts"); // Refetch updated data
         flashAlert("Changes saved!", "success");
       },
+      onError: (error) => {
+        flashAlert(`Error editing post: ${error.message}`, "error")
+      }
     }
   );
 
@@ -71,12 +72,11 @@ export default function Post({ post, flashAlert }) {
       setDeleteModalVisible(false);
       queryClient.invalidateQueries("posts")
       flashAlert("Post deleted!", "success");
+    },
+    onError: (error) => {
+      flashAlert(`Error deleting post: ${error.message}`, "error")
     }
   })
-
-  const handleDelete = () => {
-    deleteMutation.mutate()
-  };
 
   return (
     <PostContext.Provider value={post}>
@@ -113,7 +113,7 @@ export default function Post({ post, flashAlert }) {
             <div className="flex gap-2 text-xl">
               <LikeButton
                 liked={liked}
-                onClick={handleLike}
+                onClick={likeMutation.mutate}
                 likeCount={likeCount}
               />
               <CommentButton
@@ -141,7 +141,7 @@ export default function Post({ post, flashAlert }) {
         {deleteModalVisible && (
           <DeleteModal
             closeModal={() => setDeleteModalVisible(false)}
-            onSubmit={handleDelete}
+            onSubmit={deleteMutation.mutate}
             resourceType={"post"}
           />
         )}
