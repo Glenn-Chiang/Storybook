@@ -5,38 +5,38 @@ import CommentForm from "../CommentForm";
 import { useContext, useState } from "react";
 import commentService from "../../services/commentService";
 import userService from "../../services/userService";
-import { PostContext } from "./PostContext";
 import { DeleteButton, EditButton } from "../buttons";
 import DeleteModal from "../DeleteModal";
 import NameLink from "../NameLink";
-import PostsContext from "../../contexts/PostsContext";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import ErrorMessage from "../ErrorMessage";
+import { PostContext } from "./PostContext";
 
 export default function CommentSection({ postId }) {
+  const currentUser = userService.getCurrentUser();
+  const [commentFormVisible, setCommentFormVisible] = useState(false);
+
   const {
     isLoading,
     isError,
     data: comments,
   } = useQuery(["comments", postId], () => commentService.getByPost(postId));
 
-  const currentUser = userService.getCurrentUser();
-  const post = useContext(PostContext);
-  const [commentFormVisible, setCommentFormVisible] = useState(false);
-  const updatePostsState = useContext(PostsContext);
+  const queryClient = useQueryClient();
 
-  const handleSubmitComment = async (formData) => {
-    const commentObject = {
+  const createCommentMutation = useMutation(
+    (commentData) => commentService.create(postId, commentData),
+    {
+      onMutate: () => setCommentFormVisible(false),
+      onSuccess: () => queryClient.invalidateQueries(["comments", postId]),
+    }
+  );
+
+  const handleCreate = async (formData) => {
+    createCommentMutation.mutate({
       content: formData.content,
       datePosted: new Date(),
-    };
-    try {
-      await commentService.create(post.id, commentObject);
-      setCommentFormVisible(false);
-      updatePostsState();
-    } catch (error) {
-      console.log("Error posting comment:", error);
-    }
+    });
   };
 
   return (
@@ -44,7 +44,7 @@ export default function CommentSection({ postId }) {
       <h2>Comments ({comments?.length})</h2>
       {commentFormVisible && (
         <CommentForm
-          onSubmit={handleSubmitComment}
+          onSubmit={handleCreate}
           closeForm={() => setCommentFormVisible(false)}
           defaultValue={""}
         />
@@ -87,8 +87,7 @@ function CommentsList({ comments }) {
 
 function Comment({ comment }) {
   const currentUser = userService.getCurrentUser();
-  const updatePostsState = useContext(PostsContext);
-
+  const post = useContext(PostContext);
   const IsOwnComment = currentUser
     ? currentUser.userId === comment.author.id
     : false;
@@ -96,29 +95,28 @@ function Comment({ comment }) {
   const [commentFormVisible, setCommentFormVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
-  const deleteComment = async () => {
-    try {
-      await commentService.remove(comment.id);
-      updatePostsState();
-      setDeleteModalVisible(false);
-    } catch (error) {
-      console.log("Error deleting comment:", error);
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation(() => commentService.remove(comment.id), {
+    onMutate: () => setDeleteModalVisible(false),
+    onSuccess: () => queryClient.invalidateQueries(["comments", post.id]),
+  });
+
+  const editMutation = useMutation(
+    (updateData) => commentService.update(comment.id, updateData),
+    {
+      onMutate: () => setCommentFormVisible(false),
+      onSuccess: () => queryClient.invalidateQueries(["comments", post.id]),
     }
-  };
+  );
 
   const editComment = async (formData) => {
-    try {
-      await commentService.update(comment.id, formData.content);
-      setCommentFormVisible(false);
-      updatePostsState();
-    } catch (error) {
-      console.log("Error editing comment:", error);
-    }
+    editMutation.mutate(formData.content);
   };
 
   return (
     <article className="flex gap-8 justify-between">
-      <div className="">
+      <div className="w-full">
         <NameLink
           to={`/users/${comment.author.id}/profile`}
           name={comment.author.displayName}
@@ -152,7 +150,7 @@ function Comment({ comment }) {
         <DeleteModal
           closeModal={() => setDeleteModalVisible(false)}
           resourceType={"comment"}
-          onSubmit={deleteComment}
+          onSubmit={deleteMutation.mutate}
         />
       )}
     </article>

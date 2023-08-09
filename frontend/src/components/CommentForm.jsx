@@ -23,11 +23,11 @@ export default function CommentForm({ onSubmit, closeForm, defaultValue }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex-col flex gap-4 py-4"
+      className="flex-col flex gap-4 py-4 w-full"
     >
       <textarea
         defaultValue={defaultValue}
-        className="shadow bg-slate-100 rounded p-2 text-slate-500"
+        className="shadow bg-slate-100 rounded p-2 text-slate-500 w-full"
         {...register("content", {
           required: "Comment cannot be empty",
 
