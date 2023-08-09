@@ -3,14 +3,17 @@ const baseUrl = `${import.meta.env.VITE_BASE_URL}/posts`;
 import getConfig from "./config";
 
 const getAll = async (sortBy, sortOrder) => {
-  const config = getConfig();
 
   const response = await axios.get(
     `${baseUrl}?sortBy=${sortBy}&sortOrder=${sortOrder}`,
-    config
   );
   return response.data;
 };
+
+const getById = async (postId) => {
+  const response = await axios.get(`${baseUrl}/${postId}`)
+  return response.data
+}
 
 const getByUser = async (userId, sortBy, sortOrder) => {
   const response = await axios.get(
@@ -63,6 +66,7 @@ const deletePost = async (postId) => {
 
 export default {
   getAll,
+  getById,
   getByUser,
   getLikedByUser,
   create,

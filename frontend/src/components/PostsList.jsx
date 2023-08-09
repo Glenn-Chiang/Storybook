@@ -23,7 +23,7 @@ export default function PostsList({ posts}) {
         {
           posts.map((post) => (
             <li key={post.id}>
-              <Post post={post} flashAlert={flashAlert}/>
+              <Post postId={post.id} flashAlert={flashAlert}/>
             </li>
           ))}
       </ul>

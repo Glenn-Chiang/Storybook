@@ -27,7 +27,7 @@ postsRouter.get("/", async (req, res, next) => {
 
 postsRouter.get("/:postId", async (req, res, next) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.postId).populate("author");
     if (post) {
       res.json(post);
     } else {

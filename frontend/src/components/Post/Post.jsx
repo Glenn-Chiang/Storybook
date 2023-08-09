@@ -15,32 +15,41 @@ import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
 import NameLink from "../NameLink";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import ErrorMessage from "../ErrorMessage";
 
-export default function Post({ post, flashAlert }) {
+export default function Post({ postId, flashAlert }) {
   const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
+  const queryClient = useQueryClient();
+
+  const {
+    data: post,
+    isLoading,
+    isError,
+  } = useQuery(["posts", postId], () => postService.getById(postId), {
+    onSuccess: (data) => {
+      setLikeCount(data.likedBy.length);
+      setLiked(data.likedBy.includes(data.author?.id));
+    },
+  });
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
-  const [liked, setLiked] = useState(
-    currentUser && post.likedBy.includes(currentUser.userId)
-  );
-  const [likeCount, setLikeCount] = useState(post.likedBy.length);
+  const [likeCount, setLikeCount] = useState(0);
+  const [liked, setLiked] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  const likeMutation = useMutation(() => postService.like(post.id),
-  {
-    onMutate: () => {
-      // TODO: Optimistic update
+  const likeMutation = useMutation(() => postService.like(post?.id), {
+    onMutate: () => { // Optimistic update
       setLiked((prev) => !prev);
       setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
     },
     onError: (error) => {
-      flashAlert(`Error liking post: ${error.message}`, "error")
-    }
+      setLiked((prev) => !prev)
+      setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
+      flashAlert(`Error liking post: ${error.message}`, "error");
+    },
+    onSuccess: () => queryClient.invalidateQueries(["posts", postId]),
   });
 
   const editMutation = useMutation(
@@ -50,12 +59,12 @@ export default function Post({ post, flashAlert }) {
         setEditModalVisible(false);
       },
       onSuccess: () => {
-        queryClient.invalidateQueries("posts");
+        queryClient.invalidateQueries(["posts", postId]); // Only refetch for this post
         flashAlert("Changes saved!", "success");
       },
       onError: (error) => {
-        flashAlert(`Error editing post: ${error.message}`, "error")
-      }
+        flashAlert(`Error editing post: ${error.message}`, "error");
+      },
     }
   );
 
@@ -72,13 +81,27 @@ export default function Post({ post, flashAlert }) {
       setDeleteModalVisible(false);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries("posts")
+      queryClient.invalidateQueries("posts");
       flashAlert("Post deleted!", "success");
     },
     onError: (error) => {
-      flashAlert(`Error deleting post: ${error.message}`, "error")
-    }
-  })
+      flashAlert(`Error deleting post: ${error.message}`, "error");
+    },
+  });
+
+  if (isLoading) {
+    return <section>Loading post...</section>;
+  }
+
+  if (isError) {
+    return (
+      <section>
+        <ErrorMessage>Error loading post</ErrorMessage>
+      </section>
+    );
+  }
+
+  const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
 
   return (
     <PostContext.Provider value={post}>
