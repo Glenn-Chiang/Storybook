@@ -6,8 +6,8 @@ export default function Dropdown({ label, options, setOption }) {
   }
   return (
     <div className="flex gap-2 items-center">
-      <label htmlFor="sortDropdown">{label}</label>
-      <select onChange={handleChange} id="sortDropdown" className="capitalize rounded-xl p-2 shadow">
+      <label htmlFor={label}>{label}</label>
+      <select onChange={handleChange} id={label} className="capitalize rounded-xl p-2 shadow">
         {options.map((option, index) => {
           return (
             <option key={index} value={option.value}>

@@ -7,7 +7,6 @@ import postService from "../../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
-import ErrorMessage from "../../../components/ErrorMessage";
 
 export default function UserPostsPage() {
   const [sortBy, setSortBy] = useState("datePosted");
@@ -15,8 +14,9 @@ export default function UserPostsPage() {
 
   const userId = useParams().userId;
 
-  const { isLoading, isError, data, error } = useQuery("posts", () =>
-    postService.getByUser(userId, sortBy, sortOrder)
+  const { isLoading, isError, data } = useQuery(
+    ["posts", sortBy, sortOrder],
+    () => postService.getByUser(userId, sortBy, sortOrder)
   );
 
   return (
@@ -25,19 +25,14 @@ export default function UserPostsPage() {
         <FontAwesomeIcon icon={faBookOpen} />
         Posts
       </h1>
-      {isLoading ? (
-        <section>Loading posts...</section>
-      ) : isError ? (
-        <section>
-          <ErrorMessage>{error.message}</ErrorMessage>
-        </section>
-      ) : (
-        <PostsPageLayout
-          posts={data}
-          setSortBy={setSortBy}
-          setSortOrder={setSortOrder}
-        ></PostsPageLayout>
-      )}
+
+      <PostsPageLayout
+        isLoading={isLoading}
+        isError={isError}
+        posts={data}
+        setSortBy={setSortBy}
+        setSortOrder={setSortOrder}
+      />
     </main>
   );
 }
