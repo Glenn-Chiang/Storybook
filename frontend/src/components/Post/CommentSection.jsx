@@ -28,7 +28,10 @@ export default function CommentSection({ postId }) {
     (commentData) => commentService.create(postId, commentData),
     {
       onMutate: () => setCommentFormVisible(false),
-      onSuccess: () => queryClient.invalidateQueries(["comments", postId]),
+      onSuccess: () => {
+        queryClient.invalidateQueries(["posts", postId]);
+        queryClient.invalidateQueries(["comments", postId]);
+      },
     }
   );
 
@@ -99,7 +102,10 @@ function Comment({ comment }) {
 
   const deleteMutation = useMutation(() => commentService.remove(comment.id), {
     onMutate: () => setDeleteModalVisible(false),
-    onSuccess: () => queryClient.invalidateQueries(["comments", post.id]),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", post.id]);
+      queryClient.invalidateQueries(["posts", post.id]);
+    },
   });
 
   const editMutation = useMutation(
