@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useForm } from "react-hook-form";
 import { ConfirmButton, CancelButton } from "../../../components/buttons";
-import ErrorAlert from "../../../components/ErrorAlert";
+import ErrorMessage from "../../../components/ErrorMessage";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import postService from "../../../services/postService";
-import Alert from "../../../components/Alert";
+import { SuccessAlert } from "../../../components/Alert";
 
 export default function CreatePostPage() {
   const [showForm, setShowForm] = useState(false);
@@ -48,7 +48,7 @@ export default function CreatePostPage() {
           </button>
         )}
       </section>
-      {showAlert && <Alert>Your post has been submitted!</Alert>}
+      {showAlert && <SuccessAlert>Your post has been submitted!</SuccessAlert>}
     </main>
   );
 }
@@ -84,7 +84,7 @@ function PostForm({ post, closeForm, onSubmit }) {
             className="shadow bg-slate-100 text-slate-500 rounded p-2 w-full"
           ></input>
         </div>
-        {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
+        {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
 
         <div className="flex gap-4 flex-col ">
           <label htmlFor="content">Content</label>
@@ -101,7 +101,7 @@ function PostForm({ post, closeForm, onSubmit }) {
             className="shadow bg-slate-100 text-slate-500 rounded p-2 h-40 w-full"
           ></textarea>
         </div>
-        {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
+        {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
       </div>
       <div className="flex gap-2 p-4">
         <ConfirmButton>Create Post</ConfirmButton>

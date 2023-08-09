@@ -12,7 +12,7 @@ import NameLink from "../../../components/NameLink";
 import { CancelButton } from "../../../components/buttons";
 import friendRequestService from "../../../services/friendRequestService";
 import { useEffect, useState, useCallback } from "react";
-import Alert from "../../../components/Alert";
+import {SuccessAlert} from "../../../components/Alert";
 
 export default function FriendRequestsPage() {
   const [friendRequests, setFriendRequests] = useState(useLoaderData());
@@ -99,7 +99,7 @@ function RequestList({ requests, requestType, updateState }) {
       ) : (
         <p className="text-slate-400">No requests {requestType}</p>
       )}
-      {alert && <Alert>{alert}</Alert>}
+      {alert && <SuccessAlert>{alert}</SuccessAlert>}
     </ul>
   );
 }

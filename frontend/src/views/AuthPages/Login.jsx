@@ -6,7 +6,7 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmButton } from "../../components/buttons";
-import ErrorAlert from "../../components/ErrorAlert";
+import ErrorMessage from "../../components/ErrorMessage";
 import loginService from "../../services/loginService";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
@@ -61,7 +61,7 @@ export default function Login() {
             {...register("username", { required: "Username cannot be empty" })}
           />
         </div>
-        {errors.username && <ErrorAlert>{errors.username.message}</ErrorAlert>}
+        {errors.username && <ErrorMessage>{errors.username.message}</ErrorMessage>}
         <div className="flex flex-col gap-2 items-stretch">
           <label htmlFor="password" className="flex gap-2 items-center">
             <FontAwesomeIcon icon={faLock} />
@@ -74,8 +74,8 @@ export default function Login() {
             {...register("password", { required: "Password cannot be empty" })}
           />
         </div>
-        {errors.password && <ErrorAlert>{errors.password.message}</ErrorAlert>}
-        {error && <ErrorAlert>{error}</ErrorAlert>}
+        {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <ConfirmButton>Login</ConfirmButton>
       </form>
       <p className="text-slate-500 p-4">

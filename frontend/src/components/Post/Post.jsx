@@ -9,67 +9,73 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditButton, DeleteButton } from "../buttons";
 import EditModal from "../EditModal";
 import DeleteModal from "../DeleteModal";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import CommentSection from "./CommentSection";
 import { PostContext } from "./PostContext";
 import postService from "../../services/postService";
 import userService from "../../services/userService";
 import NameLink from "../NameLink";
-import PostsContext from "../../contexts/PostsContext";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 export default function Post({ post, flashAlert }) {
-  const updatePostsState = useContext(PostsContext);
+  const currentUser = userService.getCurrentUser();
+  const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [commentsVisible, setCommentsVisible] = useState(false);
-  
-  const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
-  
   const [liked, setLiked] = useState(
     currentUser && post.likedBy.includes(currentUser.userId)
-    );
-    const [likeCount, setLikeCount] = useState(post.likedBy.length);
-    
-  const likePost = async () => {
-    try {
-      setLiked((prev) => !prev);
-      setLikeCount(prev => liked ? prev - 1 : prev + 1)
-      await postService.like(post.id);
-      updatePostsState();
-    } catch (error) {
-      console.log("Error liking post: ", error);
+  );
+  const [likeCount, setLikeCount] = useState(post.likedBy.length);
+
+  const queryClient = useQueryClient();
+
+  const likeMutation = useMutation(() => postService.like(post.id),
+  {
+    onSuccess: () => {
+    },
+    onMutate: () => {
+      // TODO: Optimistic update
+
     }
+  });
+
+  const handleLike = () => {
+    setLiked((prev) => !prev);
+    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+    likeMutation.mutate()
   };
 
-  const editPostMutation = useMutation((updateData) => postService.edit(post.id, updateData))
-
-  const editPost = async (formData) => {
-    try {
-      setEditModalVisible(false)
-      editPostMutation.mutate({
-        title: formData.title,
-        content: formData.content,
-        lastUpdated: new Date(),
-      });
-      updatePostsState();
-      flashAlert('Changes saved!');
-    } catch (error) {
-      console.log("Error editing post: ", error.response.data.error);
+  const editMutation = useMutation(
+    (updateData) => postService.edit(post.id, updateData),
+    {
+      onSuccess: () => {
+        setEditModalVisible(false);
+        queryClient.invalidateQueries("posts"); // Refetch updated data
+        flashAlert("Changes saved!", "success");
+      },
     }
+  );
+
+  const handleEdit = (formData) => {
+    editMutation.mutate({
+      title: formData.title,
+      content: formData.content,
+      lastUpdated: new Date(),
+    });
   };
 
-  const deletePost = async () => {
-    try {
+  const deleteMutation = useMutation(() => postService.deletePost(post.id), {
+    onSuccess: () => {
       setDeleteModalVisible(false);
-      await postService.deletePost(post.id);
-      updatePostsState();
-      flashAlert('Post deleted!');
-    } catch (error) {
-      console.log("Error deleting post: ", error);
+      queryClient.invalidateQueries("posts")
+      flashAlert("Post deleted!", "success");
     }
+  })
+
+  const handleDelete = () => {
+    deleteMutation.mutate()
   };
 
   return (
@@ -107,7 +113,7 @@ export default function Post({ post, flashAlert }) {
             <div className="flex gap-2 text-xl">
               <LikeButton
                 liked={liked}
-                onClick={likePost}
+                onClick={handleLike}
                 likeCount={likeCount}
               />
               <CommentButton
@@ -127,12 +133,15 @@ export default function Post({ post, flashAlert }) {
         </div>
         {commentsVisible && <CommentSection comments={post.comments} />}
         {editModalVisible && (
-          <EditModal closeModal={() => setEditModalVisible(false)} handleSubmit={editPost}/>
+          <EditModal
+            closeModal={() => setEditModalVisible(false)}
+            handleSubmit={handleEdit}
+          />
         )}
         {deleteModalVisible && (
           <DeleteModal
             closeModal={() => setDeleteModalVisible(false)}
-            onSubmit={deletePost}
+            onSubmit={handleDelete}
             resourceType={"post"}
           />
         )}

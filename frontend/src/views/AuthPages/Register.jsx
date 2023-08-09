@@ -6,7 +6,7 @@ import {
   faUserAlt,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import ErrorAlert from "../../components/ErrorAlert";
+import ErrorMessage from "../../components/ErrorMessage";
 import { ConfirmButton } from "../../components/buttons";
 import { Link, useNavigate } from "react-router-dom";
 import userService from "../../services/userService";
@@ -61,7 +61,7 @@ export default function Register() {
           />
         </div>
         {errors.displayName && (
-          <ErrorAlert>{errors.displayName.message}</ErrorAlert>
+          <ErrorMessage>{errors.displayName.message}</ErrorMessage>
         )}
         <div className="flex flex-col gap-2">
           <label htmlFor="username" className="flex gap-2 items-center">
@@ -75,7 +75,7 @@ export default function Register() {
             {...register("username", { required: "Username cannot be empty" })}
           />
         </div>
-        {errors.username && <ErrorAlert>{errors.username.message}</ErrorAlert>}
+        {errors.username && <ErrorMessage>{errors.username.message}</ErrorMessage>}
         <div className="flex flex-col gap-2 items-stretch">
           <label htmlFor="password" className="flex gap-2 items-center">
             <FontAwesomeIcon icon={faLock} />
@@ -88,8 +88,8 @@ export default function Register() {
             {...register("password", { required: "Password cannot be empty" })}
           />
         </div>
-        {errors.password && <ErrorAlert>{errors.password.message}</ErrorAlert>}
-        {error && <ErrorAlert>{error}</ErrorAlert>}
+        {errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <ConfirmButton>Register</ConfirmButton>
       </form>
       <p className="text-slate-500 p-4">

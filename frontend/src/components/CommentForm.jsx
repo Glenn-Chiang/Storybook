@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import ErrorAlert from "./ErrorAlert"
+import ErrorMessage from "./ErrorMessage";
 import { CancelButton, ConfirmButton } from "./buttons";
 
 /* eslint-disable react/prop-types */
-export default function CommentForm({ onSubmit, closeForm, defaultValue}) {
-
+export default function CommentForm({ onSubmit, closeForm, defaultValue }) {
   const handleCancel = () => {
     closeForm();
   };
@@ -38,7 +37,7 @@ export default function CommentForm({ onSubmit, closeForm, defaultValue}) {
           },
         })}
       />
-      {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
+      {errors.content && <ErrorMessage>{errors.content.message}</ErrorMessage>}
       <div className="flex gap-2">
         <ConfirmButton>Post comment</ConfirmButton>
         <CancelButton onClick={handleCancel} />

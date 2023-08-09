@@ -7,7 +7,7 @@ import postService from "../../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "react-query";
-import ErrorAlert from "../../../components/ErrorAlert";
+import ErrorMessage from "../../../components/ErrorMessage";
 
 export default function UserPostsPage() {
   const [sortBy, setSortBy] = useState("datePosted");
@@ -29,7 +29,7 @@ export default function UserPostsPage() {
         <section>Loading posts...</section>
       ) : isError ? (
         <section>
-          <ErrorAlert>{error.message}</ErrorAlert>
+          <ErrorMessage>{error.message}</ErrorMessage>
         </section>
       ) : (
         <PostsPageLayout

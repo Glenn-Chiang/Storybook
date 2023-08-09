@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import ErrorAlert from "./ErrorAlert";
+import ErrorMessage from "./ErrorMessage";
 import { ConfirmButton, CancelButton } from "./buttons";
 
 export default function PostForm({ post, closeForm, onSubmit }) {
@@ -35,7 +35,7 @@ export default function PostForm({ post, closeForm, onSubmit }) {
             className="shadow bg-slate-100 text-slate-500 rounded p-2 w-full"
           ></input>
         </div>
-        {errors.title && <ErrorAlert>{errors.title.message}</ErrorAlert>}
+        {errors.title && <ErrorMessage>{errors.title.message}</ErrorMessage>}
 
         <div className="flex gap-4 flex-col ">
           <label htmlFor="content">Content</label>
@@ -52,7 +52,9 @@ export default function PostForm({ post, closeForm, onSubmit }) {
             className="shadow bg-slate-100 text-slate-500 rounded p-2 h-40 w-full"
           ></textarea>
         </div>
-        {errors.content && <ErrorAlert>{errors.content.message}</ErrorAlert>}
+        {errors.content && (
+          <ErrorMessage>{errors.content.message}</ErrorMessage>
+        )}
       </div>
       <div className="flex gap-2 p-4">
         <ConfirmButton>Confirm</ConfirmButton>

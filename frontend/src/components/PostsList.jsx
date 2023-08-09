@@ -1,13 +1,20 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import Post from './Post/Post'
-import Alert from "./Alert"
+import { ErrorAlert, SuccessAlert } from './Alert';
 
 export default function PostsList({ posts}) {
-  const [alert, setAlert] = useState(null);
-  const flashAlert = (message) => {
-    setAlert(message);
-    setTimeout(() => setAlert(null), 2000);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null)
+
+  const flashAlert = (message, status) => {
+    if (status === "success") {
+      setSuccessMessage(message);
+      setTimeout(() => setSuccessMessage(null), 2000);
+    } else {
+      setErrorMessage(message)
+      setTimeout(() => setErrorMessage(null), 2000) // TODO: Instead of timing out, error alert shoudl remain displayed until the user chooses to close it
+    }
   };
 
   return (
@@ -20,7 +27,8 @@ export default function PostsList({ posts}) {
             </li>
           ))}
       </ul>
-      {alert && <Alert>{alert}</Alert>}
+      {successMessage && <SuccessAlert>{successMessage}</SuccessAlert>}
+      {errorMessage && <ErrorAlert>{errorMessage}</ErrorAlert>}
     </section>
   );
 }
