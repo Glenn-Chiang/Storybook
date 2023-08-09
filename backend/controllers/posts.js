@@ -16,14 +16,8 @@ postsRouter.get("/", async (req, res, next) => {
   try {
     const posts = await Post.find({})
       .sort({ [sortBy]: sortOrder })
-      .populate("author", { username: 1, displayName: 1 })
-      .populate({
-        path: "comments",
-        options: {
-          sort: { [sortBy]: sortOrder },
-        },
-        populate: { path: "author", select: "username displayName" },
-      });
+      .populate("author", { username: 1, displayName: 1 });
+
     console.log(posts[0]);
     res.json(posts);
   } catch (error) {
@@ -51,17 +45,7 @@ postsRouter.get("/users/:userId/posts", async (req, res, next) => {
   try {
     const posts = await Post.find({ author: req.params.userId })
       .sort({ [sortBy]: sortOrder })
-      .populate("author")
-      .populate({
-        path: "comments",
-        options: {
-          sort: { datePosted: -1 },
-        },
-        populate: {
-          path: "author",
-          select: "username displayName",
-        },
-      });
+      .populate("author");
 
     res.json(posts);
   } catch (error) {
@@ -76,20 +60,12 @@ postsRouter.get(
   "/users/:userId/likedPosts",
   userAuthenticator,
   async (req, res, next) => {
-    const {sortBy, sortOrder} = req.query
+    const { sortBy, sortOrder } = req.query;
     try {
       const posts = await Post.find({ likedBy: { $in: [req.params.userId] } })
-        .sort({[sortBy]: sortOrder})
-        .populate("author")
-        .populate({
-          path: "comments",
-          options: {
-            sort: { datePosted: -1 },
-          },
-          populate: {
-            path: "author",
-          },
-        });
+        .sort({ [sortBy]: sortOrder })
+        .populate("author");
+
       res.json(posts);
     } catch (error) {
       next(error);
@@ -136,7 +112,7 @@ postsRouter.put("/:postId/likes", async (req, res, next) => {
         await Post.findByIdAndUpdate(
           postId,
           {
-            $pull: { likedBy: currentUser._id }, 
+            $pull: { likedBy: currentUser._id },
           },
           { new: true }
         )

@@ -33,8 +33,6 @@ export default function Post({ post, flashAlert }) {
 
   const likeMutation = useMutation(() => postService.like(post.id),
   {
-    onSuccess: () => {
-    },
     onMutate: () => {
       // TODO: Optimistic update
       setLiked((prev) => !prev);
@@ -48,9 +46,11 @@ export default function Post({ post, flashAlert }) {
   const editMutation = useMutation(
     (updateData) => postService.edit(post.id, updateData),
     {
-      onSuccess: () => {
+      onMutate: () => {
         setEditModalVisible(false);
-        queryClient.invalidateQueries("posts"); // Refetch updated data
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries("posts");
         flashAlert("Changes saved!", "success");
       },
       onError: (error) => {
@@ -68,8 +68,10 @@ export default function Post({ post, flashAlert }) {
   };
 
   const deleteMutation = useMutation(() => postService.deletePost(post.id), {
-    onSuccess: () => {
+    onMutate: () => {
       setDeleteModalVisible(false);
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries("posts")
       flashAlert("Post deleted!", "success");
     },
@@ -131,7 +133,7 @@ export default function Post({ post, flashAlert }) {
             </div>
           </div>
         </div>
-        {commentsVisible && <CommentSection comments={post.comments} />}
+        {commentsVisible && <CommentSection postId={post.id} />}
         {editModalVisible && (
           <EditModal
             closeModal={() => setEditModalVisible(false)}

@@ -20,6 +20,18 @@ commentsRouter.get("/users/:userId/comments", async (req, res, next) => {
   }
 });
 
+// Get all comments under post
+commentsRouter.get("/posts/:postId/comments", async (req, res, next) => {
+  try {
+    const comments = await Comment.find({ post: req.params.postId })
+      .sort({ datePosted: "desc" })
+      .populate("author");
+    res.json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
+
 commentsRouter.use(tokenExtractor, userExtractor);
 
 // Create a comment under a post
@@ -51,7 +63,7 @@ commentsRouter.post("/posts/:postId/comments", async (req, res, next) => {
 });
 
 const authorAuthenticator = async (req, res, next) => {
-  const commentId = req.params.commentId
+  const commentId = req.params.commentId;
   try {
     const comment = await Comment.findById(commentId);
     const authorId = comment.author;

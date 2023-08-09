@@ -10,8 +10,16 @@ import { DeleteButton, EditButton } from "../buttons";
 import DeleteModal from "../DeleteModal";
 import NameLink from "../NameLink";
 import PostsContext from "../../contexts/PostsContext";
+import { useQuery } from "react-query";
+import ErrorMessage from "../ErrorMessage";
 
-export default function CommentSection({ comments }) {
+export default function CommentSection({ postId }) {
+  const {
+    isLoading,
+    isError,
+    data: comments,
+  } = useQuery(["comments", postId], () => commentService.getByPost(postId));
+
   const currentUser = userService.getCurrentUser();
   const post = useContext(PostContext);
   const [commentFormVisible, setCommentFormVisible] = useState(false);
@@ -33,37 +41,47 @@ export default function CommentSection({ comments }) {
 
   return (
     <div className="p-4 rounded-xl">
-      <h2>Comments ({comments.length})</h2>
-      {currentUser &&
-        (commentFormVisible ? (
-          <CommentForm
-            onSubmit={handleSubmitComment}
-            closeForm={() => setCommentFormVisible(false)}
-            defaultValue={""}
-          />
-        ) : (
-          <div className="pt-4">
-            <button
-              className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
-              onClick={() => setCommentFormVisible(true)}
-            >
-              <FontAwesomeIcon icon={faPlusCircle} />
-              Post a comment
-            </button>
-          </div>
-        ))}
-      {comments?.length > 0 ? (
-        <ul className="flex flex-col gap-4 py-4">
-          {comments.map((comment, index) => (
-            <li key={index}>
-              <Comment comment={comment} />
-            </li>
-          ))}
-        </ul>
+      <h2>Comments ({comments?.length})</h2>
+      {commentFormVisible && (
+        <CommentForm
+          onSubmit={handleSubmitComment}
+          closeForm={() => setCommentFormVisible(false)}
+          defaultValue={""}
+        />
+      )}
+      {currentUser && (
+        <div className="pt-4">
+          <button
+            className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
+            onClick={() => setCommentFormVisible(true)}
+          >
+            <FontAwesomeIcon icon={faPlusCircle} />
+            Post a comment
+          </button>
+        </div>
+      )}
+      {isLoading ? (
+        <p className="text-slate-400 py-4">Loading comments...</p>
+      ) : isError ? (
+        <ErrorMessage>Error loading comments</ErrorMessage>
       ) : (
-        <p className="text-slate-500 py-4">No comments</p>
+        <CommentsList comments={comments} />
       )}
     </div>
+  );
+}
+
+function CommentsList({ comments }) {
+  return comments.length > 0 ? (
+    <ul className="flex flex-col gap-4 py-4">
+      {comments.map((comment, index) => (
+        <li key={index}>
+          <Comment comment={comment} />
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p className="text-slate-400 py-4">No comments</p>
   );
 }
 
