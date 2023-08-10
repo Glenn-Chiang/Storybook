@@ -86,6 +86,9 @@ export default function PostPage() {
     deleteMutation.mutate();
   };
 
+  const [commentsVisible, setCommentsVisible] = useState(true);
+  const toggleComments = () => setCommentsVisible((prev) => !prev);
+
   if (isLoading) {
     return <section>Loading post...</section>;
   }
@@ -108,8 +111,9 @@ export default function PostPage() {
           handleLike={handleLike}
           showEdit={() => setEditModalVisible(true)}
           showDelete={() => setDeleteModalVisible(true)}
+          toggleComments={toggleComments}
         />
-        <CommentSection postId={postId} />
+        {commentsVisible && <CommentSection postId={postId} />}
       </main>
       {editModalVisible && (
         <EditModal

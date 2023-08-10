@@ -4,7 +4,7 @@ import PostsConfig from "./PostsConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortAmountDesc } from "@fortawesome/free-solid-svg-icons";
 import ErrorMessage from "./ErrorMessage";
-import Post from "./Post";
+import PostPreview from "./PostPreview";
 
 /* eslint-disable react/prop-types */
 export default function PostsPage({
@@ -62,7 +62,7 @@ export default function PostsPage({
           <ul className="flex flex-col gap-8 pt-4">
             {posts.map((post) => (
               <li key={post.id}>
-                <Post post={post}/>
+                <PostPreview post={post}/>
               </li>
             ))}
           </ul>

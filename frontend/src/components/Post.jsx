@@ -7,11 +7,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { EditButton, DeleteButton } from "./buttons";
-import { useContext } from "react";
 import { PostContext } from "../contexts/PostContext";
 import userService from "../services/userService";
 import NameLink from "./NameLink";
-import { Link } from "react-router-dom";
 
 export default function Post({
   post,
@@ -20,6 +18,7 @@ export default function Post({
   handleLike,
   showEdit,
   showDelete,
+  toggleComments
 }) {
   const currentUser = userService.getCurrentUser();
   const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
@@ -62,7 +61,7 @@ export default function Post({
                 onClick={handleLike}
                 likeCount={likeCount}
               />
-              <CommentButton commentCount={post.comments.length} />
+              <CommentButton commentCount={post.comments.length} onClick={toggleComments}/>
             </div>
             <div className="flex text-xl gap-2 justify-center">
               {IsOwnPost && (
@@ -99,16 +98,15 @@ function LikeButton({ liked, onClick, likeCount }) {
   );
 }
 
-function CommentButton({ commentCount }) {
-  const postId = useContext(PostContext).id;
+function CommentButton({ commentCount, onClick }) {
   return (
     <div className="flex sm:flex-row-reverse gap-1">
-      <Link
-        to={`/posts/${postId}`}
+      <button
+        onClick={onClick}
         className="flex items-center justify-center text-white bg-sky-500 hover:bg-sky-600 w-8 h-8 rounded-xl"
       >
         <FontAwesomeIcon icon={faComment} />
-      </Link>
+      </button>
       <span>{commentCount}</span>
     </div>
   );
