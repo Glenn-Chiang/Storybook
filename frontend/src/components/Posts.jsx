@@ -1,13 +1,13 @@
 import { useRef, useState } from "react";
-import PostsList from "./PostsList";
 import TeleportButton from "./TeleportButton";
 import PostsConfig from "./PostsConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortAmountDesc } from "@fortawesome/free-solid-svg-icons";
 import ErrorMessage from "./ErrorMessage";
+import Post from "./Post";
 
 /* eslint-disable react/prop-types */
-export default function PostsPageLayout({
+export default function PostsPage({
   isLoading,
   isError,
   posts,
@@ -46,17 +46,27 @@ export default function PostsPageLayout({
       >
         <FontAwesomeIcon icon={faSortAmountDesc} />
       </button>
-      {isLoading ? (<section>Loading posts...</section>) : isError ? (
-      <section>
-        <ErrorMessage>Error loading posts</ErrorMessage>
-      </section> 
-      ):
-      displayedPosts.length === 0 ? (
+
+      {isLoading ? (
+        <section>Loading posts...</section>
+      ) : isError ? (
+        <section>
+          <ErrorMessage>Error loading posts</ErrorMessage>
+        </section>
+      ) : displayedPosts.length === 0 ? (
         <section className="text-slate-400 text-center p-4">
           No posts found
         </section>
       ) : (
-        <PostsList posts={displayedPosts} />
+        <section className="bg-transparent">
+          <ul className="flex flex-col gap-8 pt-4">
+            {posts.map((post) => (
+              <li key={post.id}>
+                <Post post={post}/>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
       <TeleportButton forwardedRef={topRef} />
     </div>

@@ -36,6 +36,7 @@ import friendRequestsLoader from "./views/UserRoot/FriendRequestsPage/loader";
 import { loader as addFriendLoader } from "./views/UserRoot/AddFriendPage/loader";
 import { loader as friendsLoader } from "./views/UserRoot/FriendsPage/loader";
 import CreatePostPage from "./views/UserRoot/CreatePostPage/CreatePostPage";
+import PostPage from "./views/PostPage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "/posts",
         element: <AllPostsPage />,
+      },
+      {
+        path: "/posts/:postId",
+        element: <PostPage/>
       },
       {
         path: "/login",

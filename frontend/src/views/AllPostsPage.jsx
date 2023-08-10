@@ -1,11 +1,11 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import postService from "../services/postService";
 import Header from "../components/Header";
-import PostsPageLayout from "../components/PostsPageLayout";
 import { useQuery } from "react-query";
+import PostsPage from "../components/Posts"
 
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable react/prop-types */
 export default function AllPostsPage() {
   const sortFields = [
     { value: "datePosted", label: "Date posted" },
@@ -28,13 +28,13 @@ export default function AllPostsPage() {
       <div className="flex flex-col items-center">
         <Header />
       </div>
-      <PostsPageLayout
-        isLoading={isLoading}
-        isError={isError}
-        posts={data}
-        setSortBy={setSortBy}
-        setSortOrder={setSortOrder}
-      ></PostsPageLayout>
+        <PostsPage
+          isLoading={isLoading}
+          isError={isError}
+          posts={data}
+          setSortBy={setSortBy}
+          setSortOrder={setSortOrder}
+        ></PostsPage>
     </main>
   );
 }

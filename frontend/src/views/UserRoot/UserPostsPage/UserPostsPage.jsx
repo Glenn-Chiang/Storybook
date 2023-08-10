@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import PostsPageLayout from "../../../components/PostsPageLayout";
+import PostsPage from "../../../components/Posts"
 import postService from "../../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +15,7 @@ export default function UserPostsPage() {
   const userId = useParams().userId;
 
   const { isLoading, isError, data } = useQuery(
-    ["posts", sortBy, sortOrder],
+    ["userPosts", sortBy, sortOrder],
     () => postService.getByUser(userId, sortBy, sortOrder)
   );
 
@@ -25,8 +25,7 @@ export default function UserPostsPage() {
         <FontAwesomeIcon icon={faBookOpen} />
         Posts
       </h1>
-
-      <PostsPageLayout
+      <PostsPage
         isLoading={isLoading}
         isError={isError}
         posts={data}

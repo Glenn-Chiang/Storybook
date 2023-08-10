@@ -1,16 +1,17 @@
 /* eslint-disable react/prop-types */
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import CommentForm from "../CommentForm";
+import CommentForm from "./CommentForm";
 import { useContext, useState } from "react";
-import commentService from "../../services/commentService";
-import userService from "../../services/userService";
-import { DeleteButton, EditButton } from "../buttons";
-import DeleteModal from "../DeleteModal";
-import NameLink from "../NameLink";
+import commentService from "../services/commentService";
+import userService from "../services/userService";
+import { DeleteButton, EditButton } from "./buttons";
+import DeleteModal from "./DeleteModal";
+import NameLink from "./NameLink";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import ErrorMessage from "../ErrorMessage";
-import { PostContext } from "./PostContext";
+import ErrorMessage from "./ErrorMessage";
+import { PostContext } from "../contexts/PostContext";
+// import PostsContext from "../../contexts/PostsContext";
 
 export default function CommentSection({ postId }) {
   const currentUser = userService.getCurrentUser();
@@ -43,26 +44,28 @@ export default function CommentSection({ postId }) {
   };
 
   return (
-    <div className="p-4 rounded-xl">
-      <h2>Comments ({comments?.length})</h2>
-      {commentFormVisible && (
-        <CommentForm
-          onSubmit={handleCreate}
-          closeForm={() => setCommentFormVisible(false)}
-          defaultValue={""}
-        />
-      )}
-      {currentUser && (
-        <div className="pt-4">
-          <button
-            className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
-            onClick={() => setCommentFormVisible(true)}
-          >
-            <FontAwesomeIcon icon={faPlusCircle} />
-            Post a comment
-          </button>
-        </div>
-      )}
+    <section className="w-full">
+      <div className="w-full p-4">
+        <h2>Comments ({comments?.length})</h2>
+        {commentFormVisible && (
+          <CommentForm
+            onSubmit={handleCreate}
+            closeForm={() => setCommentFormVisible(false)}
+            defaultValue={""}
+          />
+        )}
+        {currentUser && (
+          <div className="pt-4">
+            <button
+              className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
+              onClick={() => setCommentFormVisible(true)}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
+              Post a comment
+            </button>
+          </div>
+        )}
+      </div>
       {isLoading ? (
         <p className="text-slate-400 py-4">Loading comments...</p>
       ) : isError ? (
@@ -70,7 +73,7 @@ export default function CommentSection({ postId }) {
       ) : (
         <CommentsList comments={comments} />
       )}
-    </div>
+    </section>
   );
 }
 
@@ -91,6 +94,7 @@ function CommentsList({ comments }) {
 function Comment({ comment }) {
   const currentUser = userService.getCurrentUser();
   const post = useContext(PostContext);
+
   const IsOwnComment = currentUser
     ? currentUser.userId === comment.author.id
     : false;
