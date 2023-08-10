@@ -22,7 +22,6 @@ export default function Post({
   showDelete,
 }) {
   const currentUser = userService.getCurrentUser();
-
   const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
 
   return (
@@ -30,7 +29,7 @@ export default function Post({
       <div className="flex justify-between flex-col gap-4 shadow p-6 rounded-xl bg-white">
         <div className="flex gap-4 flex-col">
           <div className="flex flex-col items-start gap-2 w-full">
-            <h2>{post.title}</h2>
+            <h2 className="text-2xl">{post.title}</h2>
             <p className="text-sky-500 flex gap-2">
               <NameLink
                 to={`/users/${post.author?.id}/profile`}

@@ -46,7 +46,6 @@ export default function CommentSection({ postId }) {
   return (
     <section className="w-full">
       <div className="w-full p-4">
-        <h2>Comments ({comments?.length})</h2>
         {commentFormVisible && (
           <CommentForm
             onSubmit={handleCreate}
@@ -54,7 +53,7 @@ export default function CommentSection({ postId }) {
             defaultValue={""}
           />
         )}
-        {currentUser && (
+        {(currentUser && !commentFormVisible) && (
           <div className="pt-4">
             <button
               className="text-white bg-sky-500 hover:bg-sky-600 p-2 rounded-xl flex gap-2 items-center"
@@ -79,7 +78,7 @@ export default function CommentSection({ postId }) {
 
 function CommentsList({ comments }) {
   return comments.length > 0 ? (
-    <ul className="flex flex-col gap-4 py-4">
+    <ul className="flex flex-col gap-4 py-4 w-full p-4">
       {comments.map((comment, index) => (
         <li key={index}>
           <Comment comment={comment} />

@@ -9,6 +9,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import userService from "../services/userService";
 import EditModal from "../components/EditModal";
 import DeleteModal from "../components/DeleteModal";
+import { PostContext } from "../contexts/PostContext";
 
 export default function PostPage() {
   const postId = useParams().postId;
@@ -44,12 +45,6 @@ export default function PostPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["posts", postId]); // Only refetch this post
-      queryClient.invalidateQueries([
-        "posts",
-        "users",
-        currentUser.userId,
-        "liked",
-      ]); // Unliking a post will remove it from LikedPostsPage, therefore we need to refetch likedPosts
     },
   });
 
@@ -58,9 +53,6 @@ export default function PostPage() {
   const editMutation = useMutation(
     (updateData) => postService.edit(post.id, updateData),
     {
-      onMutate: () => {
-        setEditModalVisible(false);
-      },
       onSuccess: () => {
         queryClient.invalidateQueries(["posts", postId]); // Only refetch this post
         console.log("Changes saved!", "success");
@@ -72,6 +64,7 @@ export default function PostPage() {
   );
 
   const handleEdit = (formData) => {
+    setEditModalVisible(false);
     editMutation.mutate({
       title: formData.title,
       content: formData.content,
@@ -80,11 +73,7 @@ export default function PostPage() {
   };
 
   const deleteMutation = useMutation(() => postService.deletePost(post.id), {
-    onMutate: () => {
-      setDeleteModalVisible(false);
-    },
     onSuccess: () => {
-      queryClient.invalidateQueries("posts"); // Refetch posts for current page
       console.log("Post deleted!", "success");
     },
     onError: (error) => {
@@ -92,7 +81,10 @@ export default function PostPage() {
     },
   });
 
-  const handleDelete = () => deleteMutation.mutate();
+  const handleDelete = () => {
+    setDeleteModalVisible(false);
+    deleteMutation.mutate();
+  };
 
   if (isLoading) {
     return <section>Loading post...</section>;
@@ -107,7 +99,7 @@ export default function PostPage() {
   }
 
   return (
-    <>
+    <PostContext.Provider value={post}>
       <main className="p-4 flex flex-col gap-4">
         <Post
           post={post}
@@ -132,6 +124,6 @@ export default function PostPage() {
           resourceType={"post"}
         />
       )}
-    </>
+    </PostContext.Provider>
   );
 }
