@@ -14,8 +14,7 @@ export default function PostsPage({
   setSortBy,
   setSortOrder,
 }) {
-  const [configIsVisible, setConfigIsVisible] = useState(false);
-
+  const [filterVisible, setFilterVisible] = useState(false);
   const [filterBy, setFilterBy] = useState("title");
   const [filterTerms, setFilterTerms] = useState("");
 
@@ -31,7 +30,7 @@ export default function PostsPage({
 
   return (
     <div className="flex flex-col items-center">
-      {configIsVisible && (
+      {filterVisible && (
         <PostsConfig
           setSortBy={setSortBy}
           setSortOrder={setSortOrder}
@@ -40,7 +39,7 @@ export default function PostsPage({
         />
       )}
       <button
-        onClick={() => setConfigIsVisible((prev) => !prev)}
+        onClick={() => setFilterVisible((prev) => !prev)}
         className=""
         ref={topRef}
       >

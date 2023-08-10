@@ -1,27 +1,28 @@
 /* eslint-disable react/prop-types */
 import {
-  faArrowUp,
   faCalendarCheck,
   faCalendarPlus,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { EditButton, DeleteButton } from "./buttons";
-import { useContext } from "react";
+import { DeleteButton, LikeButton } from "./buttons";
+import { useContext, useState } from "react";
 import { PostContext } from "../contexts/PostContext";
 import userService from "../services/userService";
 import NameLink from "./NameLink";
 import { Link } from "react-router-dom";
+import DeleteModal from "./DeleteModal";
 
 export default function PostPreview({
   post,
   liked,
   likeCount,
   handleLike,
-  showDelete,
+  handleDelete,
 }) {
   const currentUser = userService.getCurrentUser();
   const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   return (
     <PostContext.Provider value={post}>
@@ -29,7 +30,10 @@ export default function PostPreview({
         <div className="flex gap-4 flex-col">
           <div className="flex flex-col items-start gap-2 w-full">
             <h2>
-              <Link to={`/posts/${post.id}`} className="hover:underline underline-offset-8">
+              <Link
+                to={`/posts/${post.id}`}
+                className="hover:underline underline-offset-8"
+              >
                 {post.title}
               </Link>
             </h2>
@@ -64,36 +68,20 @@ export default function PostPreview({
                 liked={liked}
                 onClick={handleLike}
                 likeCount={likeCount}
+                disabled={!currentUser}
               />
               <CommentButton commentCount={post.comments.length} />
             </div>
             <div className="flex text-xl gap-2 justify-center">
-              {IsOwnPost && <DeleteButton onClick={showDelete} />}
+              {IsOwnPost && <DeleteButton onClick={() => setDeleteModalVisible(true)} />}
             </div>
           </div>
         </div>
       </div>
+      {deleteModalVisible && (
+        <DeleteModal closeModal={() => setDeleteModalVisible(false)} onSubmit={handleDelete} resourceType={"post"}/>
+      )}
     </PostContext.Provider>
-  );
-}
-
-function LikeButton({ liked, onClick, likeCount }) {
-  const currentUser = userService.getCurrentUser();
-  return (
-    <div className="flex sm:flex-row-reverse gap-1">
-      <button
-        disabled={!currentUser}
-        onClick={onClick}
-        className={`text-white transition-none disabled:bg-sky-500/50 ${
-          liked
-            ? "bg-teal-400 hover:bg-teal-500 "
-            : "bg-sky-500 hover:bg-sky-600"
-        } w-8 h-8 rounded-xl`}
-      >
-        <FontAwesomeIcon icon={faArrowUp} />
-      </button>
-      <span className={`${liked && "text-teal-400"}`}>{likeCount}</span>
-    </div>
   );
 }
 

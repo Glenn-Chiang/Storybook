@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp, faEdit, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function ConfirmButton({children, onClick}) {
@@ -40,5 +40,24 @@ export function DeleteButton({ onClick }) {
     >
       <FontAwesomeIcon icon={faTrashCan} />
     </button>
+  );
+}
+
+export function LikeButton({ liked, onClick, likeCount, disabled }) {
+  return (
+    <div className="flex sm:flex-row-reverse gap-1">
+      <button
+        disabled={disabled}
+        onClick={onClick}
+        className={`text-white transition-none disabled:bg-sky-500/50 ${
+          liked
+            ? "bg-teal-400 hover:bg-teal-500 "
+            : "bg-sky-500 hover:bg-sky-600"
+        } w-8 h-8 rounded-xl`}
+      >
+        <FontAwesomeIcon icon={faArrowUp} />
+      </button>
+      <span className={`${liked && "text-teal-400"}`}>{likeCount}</span>
+    </div>
   );
 }

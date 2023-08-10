@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
 import {
-  faArrowUp,
   faCalendarCheck,
   faCalendarPlus,
   faComment,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { EditButton, DeleteButton } from "./buttons";
+import { EditButton, DeleteButton, LikeButton } from "./buttons";
 import { PostContext } from "../contexts/PostContext";
 import userService from "../services/userService";
 import NameLink from "./NameLink";
@@ -60,6 +59,7 @@ export default function Post({
                 liked={liked}
                 onClick={handleLike}
                 likeCount={likeCount}
+                disabled={!currentUser}
               />
               <CommentButton commentCount={post.comments.length} onClick={toggleComments}/>
             </div>
@@ -77,27 +77,6 @@ export default function Post({
     </PostContext.Provider>
   );
 }
-
-function LikeButton({ liked, onClick, likeCount }) {
-  const currentUser = userService.getCurrentUser();
-  return (
-    <div className="flex sm:flex-row-reverse gap-1">
-      <button
-        disabled={!currentUser}
-        onClick={onClick}
-        className={`text-white transition-none disabled:bg-sky-500/50 ${
-          liked
-            ? "bg-teal-400 hover:bg-teal-500 "
-            : "bg-sky-500 hover:bg-sky-600"
-        } w-8 h-8 rounded-xl`}
-      >
-        <FontAwesomeIcon icon={faArrowUp} />
-      </button>
-      <span className={`${liked && "text-teal-400"}`}>{likeCount}</span>
-    </div>
-  );
-}
-
 function CommentButton({ commentCount, onClick }) {
   return (
     <div className="flex sm:flex-row-reverse gap-1">

@@ -124,7 +124,7 @@ function Comment({ comment }) {
   };
 
   return (
-    <article className="flex gap-8 justify-between">
+    <article className="flex justify-between flex-col sm:flex-row">
       <div className="w-full">
         <NameLink
           to={`/users/${comment.author.id}/profile`}
@@ -146,7 +146,7 @@ function Comment({ comment }) {
       </div>
       <div>
         {IsOwnComment && (
-          <div className="flex flex-col gap-2 justify-start py-2">
+          <div className="flex sm:flex-col gap-2 justify-start py-2">
             <EditButton
               onClick={() => setCommentFormVisible((prev) => !prev)}
             />
