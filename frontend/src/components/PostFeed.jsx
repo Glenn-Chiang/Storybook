@@ -4,20 +4,22 @@ import PostsConfig from "./PostsConfig";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortAmountDesc } from "@fortawesome/free-solid-svg-icons";
 import ErrorMessage from "./ErrorMessage";
-import PostPreview from "./PostPreview";
+import PostList from "./PostList";
 
 /* eslint-disable react/prop-types */
-export default function PostsPage({
+export default function PostFeed({
   isLoading,
   isError,
   posts,
-  setSortBy,
+  handleDelete,
+  handleLike,
   setSortOrder,
+  setSortBy,
 }) {
+  const topRef = useRef();
   const [filterVisible, setFilterVisible] = useState(false);
   const [filterBy, setFilterBy] = useState("title");
   const [filterTerms, setFilterTerms] = useState("");
-
   const handleFilterChange = (event) => {
     setFilterTerms(event.target.value);
   };
@@ -25,9 +27,7 @@ export default function PostsPage({
   const displayedPosts = posts?.filter((post) =>
     post[filterBy].toLowerCase().includes(filterTerms.toLowerCase())
   );
-
-  const topRef = useRef();
-
+  
   return (
     <div className="flex flex-col items-center">
       {filterVisible && (
@@ -38,11 +38,7 @@ export default function PostsPage({
           handleFilterChange={handleFilterChange}
         />
       )}
-      <button
-        onClick={() => setFilterVisible((prev) => !prev)}
-        className=""
-        ref={topRef}
-      >
+      <button onClick={() => setFilterVisible((prev) => !prev)} ref={topRef}>
         <FontAwesomeIcon icon={faSortAmountDesc} />
       </button>
 
@@ -57,15 +53,7 @@ export default function PostsPage({
           No posts found
         </section>
       ) : (
-        <section className="bg-transparent">
-          <ul className="flex flex-col gap-8 pt-4">
-            {posts.map((post) => (
-              <li key={post.id}>
-                <PostPreview post={post}/>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <PostList posts={displayedPosts} handleDelete={handleDelete} handleLike={handleLike}/>
       )}
       <TeleportButton forwardedRef={topRef} />
     </div>

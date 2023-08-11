@@ -3,8 +3,8 @@
 import { useState } from "react";
 import postService from "../services/postService";
 import Header from "../components/Header";
-import { useQuery } from "react-query";
-import PostsPage from "../components/Posts"
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import PostFeed from "../components/PostFeed";
 
 export default function AllPostsPage() {
   const sortFields = [
@@ -19,22 +19,35 @@ export default function AllPostsPage() {
   const [sortOrder, setSortOrder] = useState(sortOrders[0].value);
 
   const { isLoading, isError, data } = useQuery(
-    ["posts", sortBy, sortOrder],
+    ["posts", "all", sortBy, sortOrder],
     () => postService.getAll(sortBy, sortOrder)
   );
+
+  const queryClient = useQueryClient()
+
+  const deleteMutation = useMutation(
+    (postId) => postService.deletePost(postId),
+    {
+      onSuccess: () => queryClient.invalidateQueries(["posts", "all"]),
+    }
+  );
+
+  const likeMutation = useMutation((postId) => postService.like(postId));
 
   return (
     <main>
       <div className="flex flex-col items-center">
         <Header />
       </div>
-        <PostsPage
-          isLoading={isLoading}
-          isError={isError}
-          posts={data}
-          setSortBy={setSortBy}
-          setSortOrder={setSortOrder}
-        ></PostsPage>
+      <PostFeed
+        isLoading={isLoading}
+        isError={isError}
+        posts={data}
+        setSortBy={setSortBy}
+        setSortOrder={setSortOrder}
+        handleDelete={(postId) => deleteMutation.mutate(postId)}
+        handleLike={(postId) => likeMutation.mutate(postId)}
+      ></PostFeed>
     </main>
   );
 }

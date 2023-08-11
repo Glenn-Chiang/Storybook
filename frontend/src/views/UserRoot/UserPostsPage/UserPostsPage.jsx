@@ -2,11 +2,11 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import PostsPage from "../../../components/Posts"
+import PostFeed from "../../../components/PostFeed";
 import postService from "../../../services/postService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 export default function UserPostsPage() {
   const [sortBy, setSortBy] = useState("datePosted");
@@ -14,10 +14,24 @@ export default function UserPostsPage() {
 
   const userId = useParams().userId;
 
-  const { isLoading, isError, data } = useQuery(
-    ["userPosts", sortBy, sortOrder],
-    () => postService.getByUser(userId, sortBy, sortOrder)
+  const {
+    isLoading,
+    isError,
+    data: posts,
+  } = useQuery(["posts", "user", sortBy, sortOrder], () =>
+    postService.getByUser(userId, sortBy, sortOrder)
   );
+
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation(
+    (postId) => postService.deletePost(postId),
+    {
+      onSuccess: () => queryClient.invalidateQueries(["posts", "user"]),
+    }
+  );
+
+  const likeMutation = useMutation((postId) => postService.like(postId));
 
   return (
     <main>
@@ -25,12 +39,14 @@ export default function UserPostsPage() {
         <FontAwesomeIcon icon={faBookOpen} />
         Posts
       </h1>
-      <PostsPage
+      <PostFeed
         isLoading={isLoading}
         isError={isError}
-        posts={data}
+        posts={posts}
         setSortBy={setSortBy}
         setSortOrder={setSortOrder}
+        handleDelete={(postId) => deleteMutation.mutate(postId)}
+        handleLike={(postId) => likeMutation.mutate(postId)}
       />
     </main>
   );
