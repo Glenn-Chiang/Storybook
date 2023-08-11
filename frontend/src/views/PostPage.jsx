@@ -104,8 +104,10 @@ export default function PostPage() {
 
   return (
     <PostContext.Provider value={post}>
-      <div className="flex justify-start fixed left-2 top-12"><BackButton/></div>
-      <main className="px-4 flex flex-col gap-4">
+      <div className="flex justify-start fixed left-2 bottom-2">
+        <BackButton />
+      </div>
+      <main className="p-4 flex flex-col gap-4">
         <Post
           post={post}
           liked={liked}

@@ -17,7 +17,7 @@ export default function Root() {
   return (
     <AuthContext.Provider value={{currentUser, setCurrentUser}}>
       <Navbar />
-      <div className="pt-20">
+      <div className="pt-10">
         <Outlet />
       </div>
       <ScrollRestoration getKey={location => location.pathname}/>

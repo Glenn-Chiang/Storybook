@@ -30,9 +30,7 @@ export default function LikedPostsPage() {
   );
 
   const likeMutation = useMutation((postId) => postService.like(postId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["posts", userId, "liked"])
-    }
+    onSuccess: () => queryClient.invalidateQueries(["posts", userId]) 
   });
 
   return (

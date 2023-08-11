@@ -12,23 +12,16 @@ import NameLink from "./NameLink";
 import { Link } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
 
-export default function PostPreview({
-  post,
-  handleLike,
-  handleDelete,
-}) {
+export default function PostPreview({ post, handleLike, handleDelete }) {
   const currentUser = userService.getCurrentUser();
   const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
-  const [likeCount, setLikeCount] = useState(post.likedBy.length)
-  const [liked, setLiked] = useState(post.likedBy.includes(currentUser.userId))
-
+  const likeCount = post.likedBy.length
+  const liked = post.likedBy.includes(currentUser.userId)
   const onLike = () => {
-    setLiked(prev => !prev)
-    setLikeCount(prev => liked ? prev - 1 : prev + 1)
-    handleLike(post.id)
-  }
+    handleLike(post.id);
+  };
 
   return (
     <article value={post}>
@@ -76,7 +69,10 @@ export default function PostPreview({
                 likeCount={likeCount}
                 disabled={!currentUser}
               />
-              <CommentButton commentCount={post.comments.length} postId={post.id}/>
+              <CommentButton
+                commentCount={post.comments.length}
+                postId={post.id}
+              />
             </div>
             <div className="flex text-xl gap-2 justify-center">
               {IsOwnPost && (

@@ -44,7 +44,7 @@ export default function CommentSection({ postId }) {
   };
 
   return (
-    <section className="w-full">
+    <section className="w-full shadow">
       <div className="w-full p-4">
         {commentFormVisible && (
           <CommentForm

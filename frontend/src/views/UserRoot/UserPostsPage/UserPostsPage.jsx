@@ -33,6 +33,7 @@ export default function UserPostsPage() {
 
   const likeMutation = useMutation(
     (postId) => postService.like(postId), {
+      onSuccess: () => queryClient.invalidateQueries(["posts", userId])
   });
 
   return (
