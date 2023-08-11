@@ -10,6 +10,7 @@ import userService from "../services/userService";
 import EditModal from "../components/EditModal";
 import DeleteModal from "../components/DeleteModal";
 import { PostContext } from "../contexts/PostContext";
+import BackButton from "../components/BackButton";
 
 export default function PostPage() {
   const postId = useParams().postId;
@@ -103,7 +104,8 @@ export default function PostPage() {
 
   return (
     <PostContext.Provider value={post}>
-      <main className="p-4 flex flex-col gap-4">
+      <div className="flex justify-start fixed left-4 bottom-4"><BackButton/></div>
+      <main className="px-4 flex flex-col gap-4">
         <Post
           post={post}
           liked={liked}
