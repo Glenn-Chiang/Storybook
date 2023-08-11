@@ -16,7 +16,7 @@ export default function LikedPostsPage() {
     data: likedPosts,
     isLoading,
     isError,
-  } = useQuery(["posts", "liked", userId, sortBy, sortOrder], () =>
+  } = useQuery(["posts", userId, "liked", sortBy, sortOrder], () =>
     postService.getLikedByUser(userId, sortBy, sortOrder)
   );
 
@@ -25,12 +25,14 @@ export default function LikedPostsPage() {
   const deleteMutation = useMutation(
     (postId) => postService.deletePost(postId),
     {
-      onSuccess: () => queryClient.invalidateQueries(["posts", "liked", userId]),
+      onSuccess: () => queryClient.invalidateQueries(["posts", userId, "liked"]),
     }
   );
 
   const likeMutation = useMutation((postId) => postService.like(postId), {
-    onSuccess: () => queryClient.invalidateQueries(["posts", "liked", userId]),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts", userId, "liked"])
+    }
   });
 
   return (
