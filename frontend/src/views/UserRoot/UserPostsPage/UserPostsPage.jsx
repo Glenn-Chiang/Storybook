@@ -18,7 +18,7 @@ export default function UserPostsPage() {
     isLoading,
     isError,
     data: posts,
-  } = useQuery(["posts", "user", sortBy, sortOrder], () =>
+  } = useQuery(["posts", "user", userId, sortBy, sortOrder], () =>
     postService.getByUser(userId, sortBy, sortOrder)
   );
 
@@ -27,7 +27,7 @@ export default function UserPostsPage() {
   const deleteMutation = useMutation(
     (postId) => postService.deletePost(postId),
     {
-      onSuccess: () => queryClient.invalidateQueries(["posts", "user"]),
+      onSuccess: () => queryClient.invalidateQueries(["posts", "user", userId]),
     }
   );
 
