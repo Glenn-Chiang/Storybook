@@ -9,30 +9,16 @@ const {
   authorAuthenticator,
 } = require("../utils/middleware");
 
+// Get all posts
 postsRouter.get("/", async (req, res, next) => {
   const sortBy = req.query.sortBy; // dateAdded or lastUpdated
   const sortOrder = req.query.sortOrder; // desc or asc
 
   try {
-    const posts = await Post.find({})
-      .sort({ [sortBy]: sortOrder })
-      .populate("author", { username: 1, displayName: 1 });
+    const posts = await Post.find({}).sort({ [sortBy]: sortOrder });
 
     console.log(posts[0]);
     res.json(posts);
-  } catch (error) {
-    next(error);
-  }
-});
-
-postsRouter.get("/:postId", async (req, res, next) => {
-  try {
-    const post = await Post.findById(req.params.postId).populate("author");
-    if (post) {
-      res.json(post);
-    } else {
-      res.status(404).end();
-    }
   } catch (error) {
     next(error);
   }
@@ -43,11 +29,25 @@ postsRouter.get("/users/:userId/posts", async (req, res, next) => {
   const { sortBy, sortOrder } = req.query;
 
   try {
-    const posts = await Post.find({ author: req.params.userId })
-      .sort({ [sortBy]: sortOrder })
-      .populate("author");
+    const posts = await Post.find({ author: req.params.userId }).sort({
+      [sortBy]: sortOrder,
+    });
 
     res.json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get individual post
+postsRouter.get("/:postId", async (req, res, next) => {
+  try {
+    const post = await Post.findById(req.params.postId).populate("author");
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).end();
+    }
   } catch (error) {
     next(error);
   }
@@ -64,7 +64,6 @@ postsRouter.get(
     try {
       const posts = await Post.find({ likedBy: { $in: [req.params.userId] } })
         .sort({ [sortBy]: sortOrder })
-        .populate("author");
 
       res.json(posts);
     } catch (error) {
