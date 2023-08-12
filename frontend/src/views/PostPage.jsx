@@ -28,8 +28,10 @@ export default function PostPage() {
     },
   });
 
-  const [likeCount, setLikeCount] = useState(0);
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(
+    post ? post.likedBy.includes(currentUser.userId) : false
+  );
+  const [likeCount, setLikeCount] = useState(post ? post.likedBy.length : 0);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
