@@ -3,7 +3,7 @@ import { EditButton, DeleteButton } from "../../../components/buttons";
 import DeleteModal from "../../../components/DeleteModal";
 import commentService from "../../../services/commentService";
 import CommentForm from "../../../components/CommentForm";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import userService from "../../../services/userService";
 
 /* eslint-disable react/prop-types */
@@ -40,7 +40,13 @@ export default function Comment({ comment, loadComments }) {
       <p>
         {comment.author.displayName}{" "}
         <span className="text-slate-500">commented on</span>{" "}
-        <span className="hover:underline">{comment.post?.title}</span>
+        {comment.post ? (
+          <Link to={`/posts/${comment.post.id}`} className="hover:underline">
+            {comment.post?.title}
+          </Link>
+        ) : (
+          <span className="text-slate-400">deleted post</span>
+        )}
       </p>
       <p className="text-slate-400">
         {new Date(comment.datePosted).toLocaleString()}
