@@ -39,7 +39,7 @@ export default function PostPreview({ postId, handleDelete }) {
   const queryClient = useQueryClient();
   const likeMutation = useMutation(() => postService.like(postId), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", currentUser.userId, "liked"]) // LikedPosts should be refetched whenever user likes or unlikes a post
+      queryClient.invalidateQueries(["posts", "liked", currentUser.userId]) // LikedPosts should be refetched whenever user likes or unlikes a post
       queryClient.invalidateQueries(["posts", postId])
     },
     onMutate: () => {

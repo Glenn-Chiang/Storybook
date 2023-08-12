@@ -23,12 +23,16 @@ export default function AllPostsPage() {
     () => postService.getAll(sortBy, sortOrder)
   );
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const deleteMutation = useMutation(
     (postId) => postService.deletePost(postId),
     {
-      onSuccess: () => queryClient.invalidateQueries(["posts", "all"]),
+      onSuccess: () => {
+        queryClient.refetchQueries(["posts", "all"]);
+        queryClient.refetchQueries(["posts", "own"]);
+        queryClient.refetchQueries(["posts", "liked"]);
+      },
     }
   );
 

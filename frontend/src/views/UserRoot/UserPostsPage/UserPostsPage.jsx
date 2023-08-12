@@ -14,7 +14,7 @@ export default function UserPostsPage() {
 
   const userId = useParams().userId;
 
-  const queryKey = ["posts", userId, "own", sortBy, sortOrder];
+  const queryKey = ["posts", "own", userId, sortBy, sortOrder];
 
   const {
     isLoading,
@@ -29,7 +29,11 @@ export default function UserPostsPage() {
   const deleteMutation = useMutation(
     (postId) => postService.deletePost(postId),
     {
-      onSuccess: () => queryClient.invalidateQueries(queryKey),
+      onSuccess: () => {
+        queryClient.refetchQueries(["posts", "all"]);
+        queryClient.refetchQueries(["posts", "own"]);
+        queryClient.refetchQueries(["posts", "liked"]);
+      }
     }
   );
 
