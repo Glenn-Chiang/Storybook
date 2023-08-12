@@ -24,12 +24,12 @@ export default function PostPage() {
   } = useQuery(["posts", postId], () => postService.getById(postId), {
     onSuccess: (data) => {
       setLikeCount(data.likedBy.length);
-      setLiked(data.likedBy.includes(currentUser.userId));
+      setLiked(data.likedBy.includes(currentUser?.userId));
     },
   });
 
   const [liked, setLiked] = useState(
-    post ? post.likedBy.includes(currentUser.userId) : false
+    post ? post.likedBy.includes(currentUser?.userId) : false
   );
   const [likeCount, setLikeCount] = useState(post ? post.likedBy.length : 0);
   const [editModalVisible, setEditModalVisible] = useState(false);

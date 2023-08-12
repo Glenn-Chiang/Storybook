@@ -25,20 +25,21 @@ export default function PostPreview({ postId, handleDelete }) {
   } = useQuery(["posts", postId], () => postService.getById(postId), {
     onSuccess: (data) => {
       setLikeCount(data.likedBy.length);
-      setLiked(data.likedBy.includes(currentUser.userId));
+      setLiked(data.likedBy.includes(currentUser?.userId));
     },
   });
 
+
   const IsOwnPost = currentUser && currentUser.userId === post?.author?.id;
   const [liked, setLiked] = useState(
-    post ? post.likedBy.includes(currentUser.userId) : false
+    post ? post.likedBy.includes(currentUser?.userId) : false
   );
   const [likeCount, setLikeCount] = useState(post ? post.likedBy.length : 0);
 
   const queryClient = useQueryClient();
   const likeMutation = useMutation(() => postService.like(postId), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", "liked", currentUser.userId]); // LikedPosts should be refetched whenever user likes or unlikes a post
+      queryClient.invalidateQueries(["posts", "liked", currentUser?.userId]); // LikedPosts should be refetched whenever user likes or unlikes a post
       queryClient.invalidateQueries(["posts", postId]);
     },
     onMutate: () => {
