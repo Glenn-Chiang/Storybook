@@ -32,8 +32,6 @@ export default function AllPostsPage() {
     }
   );
 
-  const likeMutation = useMutation((postId) => postService.like(postId));
-
   return (
     <main>
       <div className="flex flex-col items-center">
@@ -46,7 +44,6 @@ export default function AllPostsPage() {
         setSortBy={setSortBy}
         setSortOrder={setSortOrder}
         handleDelete={(postId) => deleteMutation.mutate(postId)}
-        handleLike={(postId) => likeMutation.mutate(postId)}
       ></PostFeed>
     </main>
   );

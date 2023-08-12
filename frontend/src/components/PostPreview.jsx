@@ -11,17 +11,50 @@ import userService from "../services/userService";
 import NameLink from "./NameLink";
 import { Link } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
+import postService from "../services/postService";
 
-export default function PostPreview({ post, handleLike, handleDelete }) {
+export default function PostPreview({ postId, handleDelete }) {
   const currentUser = userService.getCurrentUser();
-  const IsOwnPost = currentUser && currentUser.userId === post.author?.id;
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const {
+    isLoading,
+    isError,
+    data: post,
+  } = useQuery(["posts", postId], () => postService.getById(postId), {
+    onSuccess: (data) => {
+      setLikeCount(data.likedBy.length);
+      setLiked(data.likedBy.includes(currentUser.userId));
+    },
+  });
 
-  const likeCount = post.likedBy.length
-  const liked = post.likedBy.includes(currentUser.userId)
-  const onLike = () => {
-    handleLike(post.id);
-  };
+  const IsOwnPost = currentUser && currentUser.userId === post?.author?.id;
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  const queryClient = useQueryClient();
+  const likeMutation = useMutation(() => postService.like(postId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts", currentUser.userId, "liked"]) // LikedPosts should be refetched whenever user likes or unlikes a post
+      queryClient.invalidateQueries(["posts", postId])
+    },
+    onMutate: () => {
+      setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
+      setLiked((prev) => !prev);
+    },
+  });
+
+  if (isLoading) {
+    return <section>Loading post...</section>;
+  }
+
+  if (isError) {
+    return <section>Error loading post...</section>;
+  }
 
   return (
     <article value={post}>
@@ -65,7 +98,7 @@ export default function PostPreview({ post, handleLike, handleDelete }) {
             <div className="flex gap-2 text-xl">
               <LikeButton
                 liked={liked}
-                onClick={onLike}
+                onClick={likeMutation.mutate}
                 likeCount={likeCount}
                 disabled={!currentUser}
               />

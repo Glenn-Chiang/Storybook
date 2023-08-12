@@ -7,7 +7,7 @@ export default function PostList({ posts, handleDelete, handleLike }) {
       <ul className="flex flex-col gap-8 pt-4">
         {posts.map((post) => (
           <li key={post.id}>
-            <PostPreview post={post} handleDelete={handleDelete} handleLike={handleLike}/>
+            <PostPreview postId={post.id} handleDelete={handleDelete} handleLike={handleLike}/>
           </li>
         ))}
       </ul>

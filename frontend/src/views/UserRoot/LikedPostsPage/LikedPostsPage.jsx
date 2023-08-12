@@ -29,10 +29,6 @@ export default function LikedPostsPage() {
     }
   );
 
-  const likeMutation = useMutation((postId) => postService.like(postId), {
-    onSuccess: () => queryClient.invalidateQueries(["posts", userId]) 
-  });
-
   return (
     <main>
       <h1>
@@ -46,7 +42,6 @@ export default function LikedPostsPage() {
         sortBy={setSortBy}
         setSortOrder={setSortOrder}
         handleDelete={(postId) => deleteMutation.mutate(postId)}
-        handleLike={(postId) => likeMutation.mutate(postId)}
       />
     </main>
   );
