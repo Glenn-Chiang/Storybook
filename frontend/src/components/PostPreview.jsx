@@ -11,12 +11,9 @@ import userService from "../services/userService";
 import NameLink from "./NameLink";
 import { Link } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import postService from "../services/postService";
+import ErrorMessage from "./ErrorMessage";
 
 export default function PostPreview({ postId, handleDelete }) {
   const currentUser = userService.getCurrentUser();
@@ -39,8 +36,8 @@ export default function PostPreview({ postId, handleDelete }) {
   const queryClient = useQueryClient();
   const likeMutation = useMutation(() => postService.like(postId), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", "liked", currentUser.userId]) // LikedPosts should be refetched whenever user likes or unlikes a post
-      queryClient.invalidateQueries(["posts", postId])
+      queryClient.invalidateQueries(["posts", "liked", currentUser.userId]); // LikedPosts should be refetched whenever user likes or unlikes a post
+      queryClient.invalidateQueries(["posts", postId]);
     },
     onMutate: () => {
       setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
@@ -49,11 +46,15 @@ export default function PostPreview({ postId, handleDelete }) {
   });
 
   if (isLoading) {
-    return <section>Loading post...</section>;
+    return <section className="w-full">Loading post...</section>;
   }
 
   if (isError) {
-    return <section>Error loading post...</section>;
+    return (
+      <section className="w-full">
+        <ErrorMessage>Error loading post</ErrorMessage>
+      </section>
+    );
   }
 
   return (
