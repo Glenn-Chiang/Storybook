@@ -10,3 +10,8 @@ Features:
 - Edit their own profiles
 - Search for other users and view their profiles
 - Send friend requests, as well as accept or reject received friend requests
+
+Technologies:
+- React, TailwindCSS, React Query
+- Node.js, Express
+- MongoDB
